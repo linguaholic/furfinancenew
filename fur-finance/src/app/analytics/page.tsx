@@ -34,9 +34,11 @@ import {
   CheckCircle,
   PawPrint,
   Download,
-  Filter
+  Filter,
+  ArrowLeft
 } from 'lucide-react';
 import { useState, useMemo } from 'react';
+import Link from 'next/link';
 
 const COLORS = ['#10B981', '#3B82F6', '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4', '#84CC16', '#F97316', '#EC4899', '#6366F1'];
 
@@ -168,6 +170,14 @@ export default function AnalyticsPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {/* Back Button */}
+      <div className="mb-6">
+        <Link href="/" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back to Home
+        </Link>
+      </div>
+
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-4">

@@ -15,7 +15,8 @@ import {
   AlertTriangle,
   CheckCircle,
   Calendar,
-  PawPrint
+  PawPrint,
+  ArrowLeft
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -57,6 +58,14 @@ export default function BudgetsPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {/* Back Button */}
+      <div className="mb-6">
+        <Link href="/" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back to Home
+        </Link>
+      </div>
+
       {/* Header */}
       <div className="mb-12">
         <div className="flex items-center justify-between">
