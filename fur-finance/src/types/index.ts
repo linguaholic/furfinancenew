@@ -21,6 +21,7 @@ export interface Expense {
   petId: string;
   categoryId: string;
   amount: number;
+  currency: string;
   description: string;
   date: string;
   receipt?: string;
@@ -33,16 +34,42 @@ export interface Budget {
   petId: string;
   categoryId: string;
   amount: number;
+  currency: string;
   period: 'monthly' | 'yearly';
   createdAt: string;
   updatedAt: string;
 }
+
+export interface AppSettings {
+  defaultCurrency: string;
+  availableCurrencies: Currency[];
+}
+
+export interface Currency {
+  code: string;
+  name: string;
+  symbol: string;
+}
+
+export const AVAILABLE_CURRENCIES: Currency[] = [
+  { code: 'USD', name: 'US Dollar', symbol: '$' },
+  { code: 'EUR', name: 'Euro', symbol: '€' },
+  { code: 'GBP', name: 'British Pound', symbol: '£' },
+  { code: 'CHF', name: 'Swiss Franc', symbol: 'CHF' },
+  { code: 'CAD', name: 'Canadian Dollar', symbol: 'C$' },
+  { code: 'AUD', name: 'Australian Dollar', symbol: 'A$' },
+  { code: 'JPY', name: 'Japanese Yen', symbol: '¥' },
+  { code: 'SEK', name: 'Swedish Krona', symbol: 'kr' },
+  { code: 'NOK', name: 'Norwegian Krone', symbol: 'kr' },
+  { code: 'DKK', name: 'Danish Krone', symbol: 'kr' },
+];
 
 export interface AppData {
   pets: Pet[];
   expenses: Expense[];
   categories: ExpenseCategory[];
   budgets: Budget[];
+  settings: AppSettings;
 }
 
 export const DEFAULT_CATEGORIES: Omit<ExpenseCategory, 'id'>[] = [

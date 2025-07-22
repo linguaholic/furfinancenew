@@ -15,7 +15,8 @@ import {
   Users,
   Sparkles,
   Heart,
-  Star
+  Star,
+  Target
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -25,6 +26,7 @@ export default function HomePage() {
     pets, 
     expenses, 
     categories, 
+    settings,
     getTotalExpenses, 
     getMonthlyExpenses 
   } = useFurFinanceStore();
@@ -93,7 +95,7 @@ export default function HomePage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-happy-green">{formatCurrency(totalExpenses)}</div>
+                          <div className="text-3xl font-bold text-happy-green">{formatCurrency(totalExpenses, settings.defaultCurrency)}</div>
             <p className="text-xs text-muted-foreground mt-1">
               All time spending
             </p>
@@ -108,7 +110,7 @@ export default function HomePage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-happy-blue">{formatCurrency(monthlyExpenses)}</div>
+                          <div className="text-3xl font-bold text-happy-blue">{formatCurrency(monthlyExpenses, settings.defaultCurrency)}</div>
             <p className="text-xs text-muted-foreground mt-1">
               {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
             </p>
@@ -205,7 +207,7 @@ export default function HomePage() {
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="font-bold text-happy-green">{formatCurrency(expense.amount)}</p>
+                          <p className="font-bold text-happy-green">{formatCurrency(expense.amount, expense.currency)}</p>
                           <p className="text-sm text-muted-foreground">
                             {new Date(expense.date).toLocaleDateString()}
                           </p>
@@ -276,6 +278,15 @@ export default function HomePage() {
                   <div className="text-left">
                     <div className="font-medium">Manage Categories</div>
                     <div className="text-xs opacity-75">Customize expense categories</div>
+                  </div>
+                </Button>
+              </Link>
+              <Link href="/budgets">
+                <Button variant="outline" className="w-full justify-start h-12 border-2 border-happy-yellow text-happy-yellow hover:bg-happy-yellow hover:text-white transition-all duration-300">
+                  <Target className="h-5 w-5 mr-3" />
+                  <div className="text-left">
+                    <div className="font-medium">Set Budgets</div>
+                    <div className="text-xs opacity-75">Track spending limits</div>
                   </div>
                 </Button>
               </Link>

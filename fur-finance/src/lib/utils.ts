@@ -5,11 +5,27 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function formatCurrency(amount: number): string {
+export function formatCurrency(amount: number, currency: string = 'USD'): string {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: 'USD',
+    currency: currency,
   }).format(amount);
+}
+
+export function getCurrencySymbol(currency: string): string {
+  const currencyMap: { [key: string]: string } = {
+    USD: '$',
+    EUR: '€',
+    GBP: '£',
+    CHF: 'CHF',
+    CAD: 'C$',
+    AUD: 'A$',
+    JPY: '¥',
+    SEK: 'kr',
+    NOK: 'kr',
+    DKK: 'kr',
+  };
+  return currencyMap[currency] || currency;
 }
 
 export function formatDate(date: string): string {

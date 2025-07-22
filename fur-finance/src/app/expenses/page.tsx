@@ -174,9 +174,9 @@ export default function ExpensesPage() {
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
-                        <div className="text-right">
-                          <div className="text-xl font-bold text-happy-green">{formatCurrency(expense.amount)}</div>
-                        </div>
+                                                            <div className="text-right">
+                                      <div className="text-xl font-bold text-happy-green">{formatCurrency(expense.amount, expense.currency)}</div>
+                                    </div>
                         <div className="flex gap-2">
                           <Link href={`/expenses/${expense.id}/edit`}>
                             <Button size="sm" variant="outline" className="border-2 border-happy-blue text-happy-blue hover:bg-happy-blue hover:text-white transition-all duration-300">

@@ -8,34 +8,31 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useFurFinanceStore } from '@/store';
-import { Expense } from '@/types';
+import { Budget } from '@/types';
 import { ArrowLeft, DollarSign } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 
-const expenseSchema = z.object({
-  petId: z.string().min(1, 'Pet is required'),
-  categoryId: z.string().min(1, 'Category is required'),
+const budgetSchema = z.object({
+  petId: z.string().min(1, 'Please select a pet'),
+  categoryId: z.string().min(1, 'Please select a category'),
   amount: z.number().min(0.01, 'Amount must be greater than 0'),
   currency: z.string().min(1, 'Please select a currency'),
-  description: z.string().min(1, 'Description is required'),
-  date: z.string().min(1, 'Date is required'),
-  receipt: z.string().optional(),
+  period: z.enum(['monthly', 'yearly']),
 });
 
-type ExpenseFormData = z.infer<typeof expenseSchema>;
+type BudgetFormData = z.infer<typeof budgetSchema>;
 
-interface ExpenseFormProps {
-  expense?: Expense;
+interface BudgetFormProps {
+  budget?: Budget;
   onSuccess?: () => void;
 }
 
-export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
-  const { addExpense, updateExpense, pets, categories, settings } = useFurFinanceStore();
+export function BudgetForm({ budget, onSuccess }: BudgetFormProps) {
+  const { addBudget, updateBudget, pets, categories, settings } = useFurFinanceStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const searchParams = useSearchParams();
   const defaultPetId = searchParams.get('petId') || '';
@@ -45,41 +42,37 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<ExpenseFormData>({
-    resolver: zodResolver(expenseSchema),
-    defaultValues: expense ? {
-      petId: expense.petId,
-      categoryId: expense.categoryId,
-      amount: expense.amount,
-      currency: expense.currency,
-      description: expense.description,
-      date: expense.date.split('T')[0],
-      receipt: expense.receipt || '',
+  } = useForm<BudgetFormData>({
+    resolver: zodResolver(budgetSchema),
+    defaultValues: budget ? {
+      petId: budget.petId,
+      categoryId: budget.categoryId,
+      amount: budget.amount,
+      currency: budget.currency,
+      period: budget.period,
     } : {
       petId: defaultPetId,
       categoryId: '',
       amount: 0,
       currency: settings.defaultCurrency,
-      description: '',
-      date: new Date().toISOString().split('T')[0],
-      receipt: '',
+      period: 'monthly',
     },
   });
 
-  const onSubmit = async (data: ExpenseFormData) => {
+  const onSubmit = async (data: BudgetFormData) => {
     setIsSubmitting(true);
     try {
-      if (expense) {
-        updateExpense(expense.id, data);
-        toast.success('Expense updated successfully! 🎉');
+      if (budget) {
+        updateBudget(budget.id, data);
+        toast.success('Budget updated successfully! 🎯');
       } else {
-        addExpense(data);
-        toast.success('Expense added successfully! 🎉');
+        addBudget(data);
+        toast.success('Budget set successfully! 🎯');
       }
       onSuccess?.();
     } catch (error) {
-      console.error('Error saving expense:', error);
-      toast.error('Failed to save expense. Please try again.');
+      console.error('Error saving budget:', error);
+      toast.error('Failed to save budget. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -93,22 +86,24 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
   return (
     <div className="max-w-2xl mx-auto">
       <div className="mb-6">
-        <Link href="/expenses" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
-          <ArrowLeft className="h-4 w-4 mr-1" />
-          Back to Expenses
+        <Link href="/budgets" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back to Budgets
         </Link>
       </div>
 
       <Card className="bg-gradient-card border-0 shadow-xl">
         <CardHeader>
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-gradient-primary rounded-lg">
+            <div className="p-3 bg-gradient-primary rounded-xl">
               <DollarSign className="h-6 w-6 text-white" />
             </div>
             <div>
-              <CardTitle className="text-2xl">{expense ? 'Edit Expense' : 'Add New Expense'}</CardTitle>
-              <CardDescription>
-                {expense ? 'Update expense details' : 'Track a new expense for your pet'}
+              <CardTitle className="text-2xl font-bold">
+                {budget ? 'Edit Budget' : 'Set Budget'}
+              </CardTitle>
+              <CardDescription className="text-lg">
+                {budget ? 'Update your pet budget settings' : 'Set spending limits for your furry friend'}
               </CardDescription>
             </div>
           </div>
@@ -178,16 +173,15 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
               <div className="space-y-2">
                 <Label htmlFor="amount" className="text-foreground">Amount *</Label>
                 <Input
-                  id="amount"
+                  {...register('amount', { valueAsNumber: true })}
                   type="number"
                   step="0.01"
                   min="0"
-                  {...register('amount', { valueAsNumber: true })}
-                  placeholder="0.00"
                   className="bg-secondary border-border focus:border-happy-green"
+                  placeholder="0.00"
                 />
                 {errors.amount && (
-                  <p className="text-sm text-destructive">{errors.amount.message}</p>
+                  <p className="text-sm text-destructive mt-1">{errors.amount.message}</p>
                 )}
               </div>
 
@@ -221,56 +215,48 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
                 )}
               </div>
 
-              {/* Date */}
+              {/* Period */}
               <div className="space-y-2">
-                <Label htmlFor="date" className="text-foreground">Date *</Label>
-                <Input
-                  id="date"
-                  type="date"
-                  {...register('date')}
-                  className="bg-secondary border-border focus:border-happy-green"
+                <Label htmlFor="period" className="text-foreground">Period *</Label>
+                <Controller
+                  name="period"
+                  control={control}
+                  render={({ field }) => (
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger className="bg-secondary border-border focus:border-happy-green">
+                        <SelectValue placeholder="Select period" />
+                      </SelectTrigger>
+                      <SelectContent style={{ backgroundColor: '#000000', border: '1px solid #333333' }}>
+                        <SelectItem value="monthly" style={{ backgroundColor: '#000000', color: '#ffffff' }}>
+                          Monthly
+                        </SelectItem>
+                        <SelectItem value="yearly" style={{ backgroundColor: '#000000', color: '#ffffff' }}>
+                          Yearly
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
                 />
-                {errors.date && (
-                  <p className="text-sm text-destructive">{errors.date.message}</p>
+                {errors.period && (
+                  <p className="text-sm text-destructive mt-1">{errors.period.message}</p>
                 )}
               </div>
             </div>
 
-            {/* Description */}
-            <div className="space-y-2">
-              <Label htmlFor="description" className="text-foreground">Description *</Label>
-              <Textarea
-                id="description"
-                {...register('description')}
-                placeholder="What was this expense for?"
-                className="bg-secondary border-border focus:border-happy-green min-h-[100px]"
-              />
-              {errors.description && (
-                <p className="text-sm text-destructive">{errors.description.message}</p>
-              )}
-            </div>
-
-            {/* Receipt URL */}
-            <div className="space-y-2">
-              <Label htmlFor="receipt" className="text-foreground">Receipt URL</Label>
-              <Input
-                id="receipt"
-                {...register('receipt')}
-                placeholder="https://example.com/receipt.jpg"
-                className="bg-secondary border-border focus:border-happy-green"
-              />
-              <p className="text-sm text-muted-foreground">
-                Optional: Add a URL to your receipt image
-              </p>
-            </div>
-
-            {/* Submit Button */}
-            <div className="flex gap-4 pt-4">
-              <Button type="submit" disabled={isSubmitting} className="bg-gradient-primary hover:bg-gradient-primary/90 text-white border-0 px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
-                {isSubmitting ? 'Saving...' : (expense ? 'Update Expense' : 'Add Expense')}
+            <div className="flex gap-4 pt-6">
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="bg-gradient-primary hover:bg-gradient-primary/90 text-white border-0 px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex-1"
+              >
+                {isSubmitting ? 'Saving...' : (budget ? 'Update Budget' : 'Set Budget')}
               </Button>
-              <Link href="/expenses">
-                <Button type="button" variant="outline" className="border-2 border-muted-foreground text-muted-foreground hover:bg-muted-foreground hover:text-background px-8 py-3 rounded-xl transition-all duration-300">
+              <Link href="/budgets">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="border-2 border-happy-blue text-happy-blue hover:bg-happy-blue hover:text-white transition-all duration-300 px-8 py-3 rounded-xl"
+                >
                   Cancel
                 </Button>
               </Link>
