@@ -11,11 +11,7 @@ import {
   DollarSign, 
   TrendingUp, 
   Plus,
-  Calendar,
-  Users,
   Sparkles,
-  Heart,
-  Star,
   Target
 } from 'lucide-react';
 import Link from 'next/link';

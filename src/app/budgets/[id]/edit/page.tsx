@@ -1,5 +1,3 @@
-'use client';
-
 import { BudgetForm } from '@/components/forms/BudgetForm';
 import { useFurFinanceStore } from '@/store';
 import { useRouter } from 'next/navigation';
@@ -8,39 +6,37 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
 import { Budget } from '@/types';
 
-interface EditBudgetPageProps {
+type EditBudgetPageProps = {
   params: Promise<{
     id: string;
   }>;
 }
 
-export default function EditBudgetPage({ params }: EditBudgetPageProps) {
+// Server component wrapper
+async function EditBudgetPageServer({ params }: EditBudgetPageProps) {
+  const resolvedParams = await params;
+  return <EditBudgetPageClient budgetId={resolvedParams.id} />;
+}
+
+// Client component
+'use client';
+
+function EditBudgetPageClient({ budgetId }: { budgetId: string }) {
   const { budgets } = useFurFinanceStore();
   const router = useRouter();
   const [budget, setBudget] = useState<Budget | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadBudget = async () => {
-      try {
-        const resolvedParams = await params;
-        const foundBudget = budgets.find(b => b.id === resolvedParams.id);
-        if (foundBudget) {
-          setBudget(foundBudget);
-        } else {
-          // Budget not found, redirect to budgets page
-          router.push('/budgets');
-        }
-      } catch (error) {
-        console.error('Error loading budget:', error);
-        router.push('/budgets');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadBudget();
-  }, [params, budgets, router]);
+    const foundBudget = budgets.find(b => b.id === budgetId);
+    if (foundBudget) {
+      setBudget(foundBudget);
+    } else {
+      // Budget not found, redirect to budgets page
+      router.push('/budgets');
+    }
+    setLoading(false);
+  }, [budgetId, budgets, router]);
 
   const handleSuccess = () => {
     router.push('/budgets');
@@ -70,4 +66,6 @@ export default function EditBudgetPage({ params }: EditBudgetPageProps) {
       <BudgetForm budget={budget} onSuccess={handleSuccess} />
     </div>
   );
-} 
+}
+
+export default EditBudgetPageServer; 
