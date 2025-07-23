@@ -132,14 +132,14 @@ export function PetForm({ pet, onSuccess }: PetFormProps) {
                   <SelectTrigger className="bg-secondary border-border focus:border-happy-green">
                     <SelectValue placeholder="Select pet type" />
                   </SelectTrigger>
-                  <SelectContent className="bg-secondary border-border">
-                    <SelectItem value="dog">Dog</SelectItem>
-                    <SelectItem value="cat">Cat</SelectItem>
-                    <SelectItem value="bird">Bird</SelectItem>
-                    <SelectItem value="fish">Fish</SelectItem>
-                    <SelectItem value="reptile">Reptile</SelectItem>
-                    <SelectItem value="small_animal">Small Animal</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
+                  <SelectContent style={{ backgroundColor: '#000000', border: '1px solid #333333' }}>
+                    <SelectItem value="dog" style={{ backgroundColor: '#000000', color: '#ffffff' }}>Dog</SelectItem>
+                    <SelectItem value="cat" style={{ backgroundColor: '#000000', color: '#ffffff' }}>Cat</SelectItem>
+                    <SelectItem value="bird" style={{ backgroundColor: '#000000', color: '#ffffff' }}>Bird</SelectItem>
+                    <SelectItem value="fish" style={{ backgroundColor: '#000000', color: '#ffffff' }}>Fish</SelectItem>
+                    <SelectItem value="reptile" style={{ backgroundColor: '#000000', color: '#ffffff' }}>Reptile</SelectItem>
+                    <SelectItem value="small_animal" style={{ backgroundColor: '#000000', color: '#ffffff' }}>Small Animal</SelectItem>
+                    <SelectItem value="other" style={{ backgroundColor: '#000000', color: '#ffffff' }}>Other</SelectItem>
                   </SelectContent>
                 </Select>
                 {errors.type && (
