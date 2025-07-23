@@ -88,7 +88,7 @@ export default function HomePage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
         <Card className="bg-gradient-card border-0 shadow-xl hover:shadow-2xl transition-all duration-300 group">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Total Expenses</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Expenses</CardTitle>
             <div className="p-2 bg-happy-green/20 rounded-lg group-hover:bg-happy-green/30 transition-colors">
               <DollarSign className="h-4 w-4 text-happy-green" />
             </div>
@@ -103,7 +103,7 @@ export default function HomePage() {
 
         <Card className="bg-gradient-card border-0 shadow-xl hover:shadow-2xl transition-all duration-300 group">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">This Month</CardTitle>
+            <CardTitle className="text-sm font-medium">This Month</CardTitle>
             <div className="p-2 bg-happy-blue/20 rounded-lg group-hover:bg-happy-blue/30 transition-colors">
               <Calendar className="h-4 w-4 text-happy-blue" />
             </div>
@@ -118,7 +118,7 @@ export default function HomePage() {
 
         <Card className="bg-gradient-card border-0 shadow-xl hover:shadow-2xl transition-all duration-300 group">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Furry Friends</CardTitle>
+            <CardTitle className="text-sm font-medium">Furry Friends</CardTitle>
             <div className="p-2 bg-happy-purple/20 rounded-lg group-hover:bg-happy-purple/30 transition-colors">
               <PawPrint className="h-4 w-4 text-happy-purple" />
             </div>
@@ -133,7 +133,7 @@ export default function HomePage() {
 
         <Card className="bg-gradient-card border-0 shadow-xl hover:shadow-2xl transition-all duration-300 group">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Categories</CardTitle>
+            <CardTitle className="text-sm font-medium">Categories</CardTitle>
             <div className="p-2 bg-happy-orange/20 rounded-lg group-hover:bg-happy-orange/30 transition-colors">
               <Users className="h-4 w-4 text-happy-orange" />
             </div>
