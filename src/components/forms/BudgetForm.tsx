@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
@@ -78,8 +78,8 @@ export function BudgetForm({ budget, onSuccess }: BudgetFormProps) {
     }
   };
 
-  const onError = (errors: any) => {
-    const errorMessages = Object.values(errors).map((error: any) => error?.message || 'Invalid field').filter(Boolean);
+  const onError = (errors: FieldErrors<BudgetFormData>) => {
+    const errorMessages = Object.values(errors).map((error) => error?.message || 'Invalid field').filter(Boolean);
     toast.error(`Please fill in all required fields: ${errorMessages.join(', ')}`);
   };
 
