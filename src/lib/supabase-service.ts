@@ -39,7 +39,7 @@ export const petsService = {
     return data
   },
 
-  async create(pet: Omit<Pet, 'id' | 'created_at' | 'updated_at'>): Promise<Pet> {
+  async create(pet: Omit<Pet, 'id' | 'createdAt' | 'updatedAt'>): Promise<Pet> {
     const userId = await getCurrentUserId()
     const { data, error } = await supabase
       .from('pets')
@@ -112,7 +112,7 @@ export const expensesService = {
     return data
   },
 
-  async create(expense: Omit<Expense, 'id' | 'created_at' | 'updated_at'>): Promise<Expense> {
+  async create(expense: Omit<Expense, 'id' | 'createdAt' | 'updatedAt'>): Promise<Expense> {
     const userId = await getCurrentUserId()
     const { data, error } = await supabase
       .from('expenses')
@@ -177,7 +177,7 @@ export const categoriesService = {
     return data
   },
 
-  async create(category: Omit<ExpenseCategory, 'id' | 'created_at' | 'updated_at'>): Promise<ExpenseCategory> {
+  async create(category: Omit<ExpenseCategory, 'id' | 'createdAt' | 'updatedAt'>): Promise<ExpenseCategory> {
     const userId = await getCurrentUserId()
     const { data, error } = await supabase
       .from('expense_categories')
@@ -250,7 +250,7 @@ export const budgetsService = {
     return data
   },
 
-  async create(budget: Omit<Budget, 'id' | 'created_at' | 'updated_at'>): Promise<Budget> {
+  async create(budget: Omit<Budget, 'id' | 'createdAt' | 'updatedAt'>): Promise<Budget> {
     const userId = await getCurrentUserId()
     const { data, error } = await supabase
       .from('budgets')
@@ -302,7 +302,7 @@ export const settingsService = {
     return data
   },
 
-  async create(settings: Omit<AppSettings, 'id' | 'created_at' | 'updated_at'>): Promise<AppSettings> {
+  async create(settings: Omit<AppSettings, 'id' | 'createdAt' | 'updatedAt'>): Promise<AppSettings> {
     const userId = await getCurrentUserId()
     const { data, error } = await supabase
       .from('app_settings')

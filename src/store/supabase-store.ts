@@ -28,7 +28,7 @@ interface FurFinanceStore {
   loadExpenses: () => Promise<void>;
 
   // Category actions
-  addCategory: (category: Omit<ExpenseCategory, 'id'>) => Promise<void>;
+  addCategory: (category: Omit<ExpenseCategory, 'id' | 'createdAt' | 'updatedAt'>) => Promise<void>;
   updateCategory: (id: string, updates: Partial<ExpenseCategory>) => Promise<void>;
   deleteCategory: (id: string) => Promise<void>;
   loadCategories: () => Promise<void>;

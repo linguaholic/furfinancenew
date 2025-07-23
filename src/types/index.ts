@@ -14,6 +14,8 @@ export interface ExpenseCategory {
   name: string;
   color: string;
   icon?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Expense {
@@ -45,6 +47,8 @@ export type Currency = 'USD' | 'EUR' | 'GBP' | 'CAD' | 'AUD' | 'JPY' | 'CHF' | '
 export interface AppSettings {
   defaultCurrency: Currency;
   availableCurrencies: Currency[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 export const AVAILABLE_CURRENCIES: Currency[] = [
