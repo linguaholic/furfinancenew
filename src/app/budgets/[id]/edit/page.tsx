@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
+import { Budget } from '@/types';
 
 interface EditBudgetPageProps {
   params: {
@@ -16,7 +17,7 @@ interface EditBudgetPageProps {
 export default function EditBudgetPage({ params }: EditBudgetPageProps) {
   const { budgets } = useFurFinanceStore();
   const router = useRouter();
-  const [budget, setBudget] = useState<any>(null);
+  const [budget, setBudget] = useState<Budget | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

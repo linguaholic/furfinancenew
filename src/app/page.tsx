@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useFurFinanceStore } from '@/store';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+
 import { formatCurrency, getCurrentMonth, getCurrentYear } from '@/lib/utils';
 import { 
   PawPrint, 
@@ -35,8 +35,7 @@ export default function HomePage() {
     setIsClient(true);
   }, []);
 
-  const currentMonth = getCurrentMonth();
-  const currentYear = getCurrentYear();
+
   const totalExpenses = isClient ? getTotalExpenses() : 0;
   const monthlyExpenses = isClient ? getMonthlyExpenses() : 0;
   const totalPets = isClient ? pets.length : 0;

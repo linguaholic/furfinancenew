@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useFurFinanceStore } from '@/store';
 import { Pet } from '@/types';
@@ -77,8 +77,8 @@ export function PetForm({ pet, onSuccess }: PetFormProps) {
     }
   };
 
-  const onError = (errors: any) => {
-    const errorMessages = Object.values(errors).map((error: any) => error.message);
+  const onError = (errors: Record<string, { message: string }>) => {
+    const errorMessages = Object.values(errors).map((error: { message: string }) => error.message);
     toast.error(`Please fill in all required fields: ${errorMessages.join(', ')}`);
   };
 
@@ -127,7 +127,7 @@ export function PetForm({ pet, onSuccess }: PetFormProps) {
                 <Label htmlFor="type" className="text-foreground">Pet Type *</Label>
                 <Select
                   value={watch('type')}
-                  onValueChange={(value) => setValue('type', value as any)}
+                  onValueChange={(value) => setValue('type', value as 'dog' | 'cat' | 'bird' | 'fish' | 'reptile' | 'small_animal' | 'other')}
                 >
                   <SelectTrigger className="bg-secondary border-border focus:border-happy-green">
                     <SelectValue placeholder="Select pet type" />
@@ -179,9 +179,9 @@ export function PetForm({ pet, onSuccess }: PetFormProps) {
                 placeholder="https://example.com/pet-photo.jpg"
                 className="bg-secondary border-border focus:border-happy-green"
               />
-              <p className="text-sm text-muted-foreground">
-                Optional: Add a URL to your pet's photo
-              </p>
+                              <p className="text-sm text-muted-foreground">
+                  Optional: Add a URL to your pet&apos;s photo
+                </p>
             </div>
 
             {/* Submit Button */}

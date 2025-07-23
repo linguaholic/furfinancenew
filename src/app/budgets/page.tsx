@@ -1,12 +1,11 @@
 'use client';
 
 import { useFurFinanceStore } from '@/store';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { formatCurrency, getCurrencySymbol } from '@/lib/utils';
+import { formatCurrency } from '@/lib/utils';
 import { 
-  DollarSign, 
   Plus,
   Edit,
   Trash2,
@@ -20,9 +19,10 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
+import { Budget } from '@/types';
 
 export default function BudgetsPage() {
-  const { budgets, pets, categories, deleteBudget, getPetExpenses, getMonthlyExpenses } = useFurFinanceStore();
+  const { budgets, pets, categories, deleteBudget, getMonthlyExpenses } = useFurFinanceStore();
   const [deletingBudgetId, setDeletingBudgetId] = useState<string | null>(null);
 
   const handleDeleteBudget = async (budgetId: string) => {
@@ -36,7 +36,7 @@ export default function BudgetsPage() {
     }
   };
 
-  const getBudgetStatus = (budget: any) => {
+  const getBudgetStatus = (budget: Budget) => {
     const pet = pets.find(p => p.id === budget.petId);
     const monthlyExpenses = getMonthlyExpenses(budget.petId);
     const budgetAmount = budget.period === 'monthly' ? budget.amount : budget.amount / 12;
@@ -50,7 +50,7 @@ export default function BudgetsPage() {
     }
   };
 
-  const getBudgetProgress = (budget: any) => {
+  const getBudgetProgress = (budget: Budget) => {
     const monthlyExpenses = getMonthlyExpenses(budget.petId);
     const budgetAmount = budget.period === 'monthly' ? budget.amount : budget.amount / 12;
     return Math.min((monthlyExpenses / budgetAmount) * 100, 100);

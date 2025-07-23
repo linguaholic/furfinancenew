@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { Pet, Expense, ExpenseCategory, Budget, AppData, DEFAULT_CATEGORIES, AVAILABLE_CURRENCIES, AppSettings } from '@/types';
+import { Pet, Expense, ExpenseCategory, Budget, DEFAULT_CATEGORIES, AVAILABLE_CURRENCIES, AppSettings } from '@/types';
 
 interface FurFinanceStore {
   // Data

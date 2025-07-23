@@ -4,7 +4,7 @@ import { useFurFinanceStore } from '@/store';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { formatCurrency, getMonthName, getCurrentMonth, getCurrentYear } from '@/lib/utils';
+import { formatCurrency } from '@/lib/utils';
 import { 
   BarChart, 
   Bar, 
@@ -16,15 +16,14 @@ import {
   PieChart,
   Pie,
   Cell,
-  LineChart,
-  Line,
+
   Area,
   AreaChart,
   Legend
 } from 'recharts';
 import { 
   TrendingUp, 
-  TrendingDown, 
+ 
   DollarSign, 
   Calendar,
   PieChart as PieChartIcon,
@@ -43,7 +42,7 @@ import Link from 'next/link';
 const COLORS = ['#10B981', '#3B82F6', '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4', '#84CC16', '#F97316', '#EC4899', '#6366F1'];
 
 export default function AnalyticsPage() {
-  const { expenses, pets, categories, budgets, getPetExpenses, getMonthlyExpenses } = useFurFinanceStore();
+  const { expenses, pets, categories, budgets } = useFurFinanceStore();
   const [selectedPet, setSelectedPet] = useState<string>('all');
   const [selectedPeriod, setSelectedPeriod] = useState<'month' | 'year'>('month');
 
@@ -314,7 +313,7 @@ export default function AnalyticsPage() {
                     border: '1px solid #374151',
                     borderRadius: '8px'
                   }}
-                  formatter={(value: any) => [formatCurrency(value, displayCurrency), 'Amount']}
+                  formatter={(value: number) => [formatCurrency(value, displayCurrency), 'Amount']}
                 />
                 <Area 
                   type="monotone" 
@@ -360,7 +359,7 @@ export default function AnalyticsPage() {
                     border: '1px solid #374151',
                     borderRadius: '8px'
                   }}
-                  formatter={(value: any) => [formatCurrency(value, displayCurrency), 'Amount']}
+                  formatter={(value: number) => [formatCurrency(value, displayCurrency), 'Amount']}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -388,7 +387,7 @@ export default function AnalyticsPage() {
                     border: '1px solid #374151',
                     borderRadius: '8px'
                   }}
-                  formatter={(value: any) => [formatCurrency(value, displayCurrency), 'Amount']}
+                  formatter={(value: number) => [formatCurrency(value, displayCurrency), 'Amount']}
                 />
                 <Bar dataKey="amount" fill="#3B82F6" radius={[4, 4, 0, 0]} />
               </BarChart>
@@ -404,7 +403,7 @@ export default function AnalyticsPage() {
                 <Target className="h-5 w-5 text-happy-yellow" />
                 Budget vs Actual
               </CardTitle>
-              <CardDescription>How you're tracking against your budgets</CardDescription>
+              <CardDescription>How you&apos;re tracking against your budgets</CardDescription>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
@@ -418,7 +417,7 @@ export default function AnalyticsPage() {
                       border: '1px solid #374151',
                       borderRadius: '8px'
                     }}
-                    formatter={(value: any) => [formatCurrency(value, displayCurrency), 'Amount']}
+                    formatter={(value: number) => [formatCurrency(value, displayCurrency), 'Amount']}
                   />
                   <Legend />
                   <Bar dataKey="budget" fill="#F59E0B" radius={[4, 4, 0, 0]} />
