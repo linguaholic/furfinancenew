@@ -2,6 +2,7 @@
 
 import { ExpenseForm } from '@/components/forms/ExpenseForm';
 import { useRouter } from 'next/navigation';
+import { Suspense } from 'react';
 
 export default function NewExpensePage() {
   const router = useRouter();
@@ -12,7 +13,9 @@ export default function NewExpensePage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <ExpenseForm onSuccess={handleSuccess} />
+      <Suspense fallback={<div>Loading...</div>}>
+        <ExpenseForm onSuccess={handleSuccess} />
+      </Suspense>
     </div>
   );
 } 
