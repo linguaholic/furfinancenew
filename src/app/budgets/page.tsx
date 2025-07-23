@@ -37,7 +37,6 @@ export default function BudgetsPage() {
   };
 
   const getBudgetStatus = (budget: Budget) => {
-    const pet = pets.find(p => p.id === budget.petId);
     const monthlyExpenses = getMonthlyExpenses(budget.petId);
     const budgetAmount = budget.period === 'monthly' ? budget.amount : budget.amount / 12;
     

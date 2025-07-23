@@ -12,7 +12,11 @@ import {
   TrendingUp, 
   Plus,
   Sparkles,
-  Target
+  Target,
+  Calendar,
+  Users,
+  Heart,
+  Star
 } from 'lucide-react';
 import Link from 'next/link';
 

@@ -145,7 +145,6 @@ export default function AnalyticsPage() {
     if (selectedPet === 'all') return [];
     
     const petBudgets = budgets.filter(budget => budget.petId === selectedPet);
-    const monthlyExpenses = getMonthlyExpenses(selectedPet);
     
     return petBudgets.map(budget => {
       const category = categories.find(c => c.id === budget.categoryId);
@@ -162,7 +161,7 @@ export default function AnalyticsPage() {
         percentage: budgetAmount > 0 ? (actualAmount / budgetAmount) * 100 : 0
       };
     });
-  }, [budgets, categories, selectedPet, filteredExpenses, getMonthlyExpenses]);
+  }, [budgets, categories, selectedPet, filteredExpenses]);
 
   // Get currency for display (use first expense currency or default to USD)
   const displayCurrency = filteredExpenses.length > 0 ? filteredExpenses[0].currency : 'USD';
