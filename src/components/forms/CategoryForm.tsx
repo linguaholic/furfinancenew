@@ -31,17 +31,30 @@ interface CategoryFormProps {
 }
 
 const AVAILABLE_ICONS = [
-  { value: 'utensils', label: '🍽️ Food & Dining', emoji: '🍽️' },
-  { value: 'heart-pulse', label: '💊 Health & Medical', emoji: '💊' },
-  { value: 'scissors', label: '✂️ Grooming & Care', emoji: '✂️' },
-  { value: 'gamepad-2', label: '🎮 Toys & Entertainment', emoji: '🎮' },
-  { value: 'package', label: '📦 Supplies & Equipment', emoji: '📦' },
-  { value: 'graduation-cap', label: '🎓 Training & Education', emoji: '🎓' },
-  { value: 'shield', label: '🛡️ Insurance & Protection', emoji: '🛡️' },
-  { value: 'home', label: '🏠 Home & Living', emoji: '🏠' },
-  { value: 'car', label: '🚗 Transportation', emoji: '🚗' },
-  { value: 'gift', label: '🎁 Gifts & Special', emoji: '🎁' },
-  { value: 'star', label: '⭐ Premium & Luxury', emoji: '⭐' },
+  { value: 'paw-print', label: '🐾 Pet Care', emoji: '🐾' },
+  { value: 'heart', label: '❤️ Love & Care', emoji: '❤️' },
+  { value: 'star', label: '⭐ Premium', emoji: '⭐' },
+  { value: 'gift', label: '🎁 Gifts & Treats', emoji: '🎁' },
+  { value: 'crown', label: '👑 Luxury', emoji: '👑' },
+  { value: 'sparkles', label: '✨ Special', emoji: '✨' },
+  { value: 'trophy', label: '🏆 Achievement', emoji: '🏆' },
+  { value: 'fire', label: '🔥 Hot & Trending', emoji: '🔥' },
+  { value: 'diamond', label: '💎 Premium Care', emoji: '💎' },
+  { value: 'rainbow', label: '🌈 Fun & Colorful', emoji: '🌈' },
+  { value: 'rocket', label: '🚀 High-End', emoji: '🚀' },
+  { value: 'magic-wand', label: '🪄 Magical', emoji: '🪄' },
+  { value: 'camera', label: '📸 Photo & Memory', emoji: '📸' },
+  { value: 'music', label: '🎵 Entertainment', emoji: '🎵' },
+  { value: 'book', label: '📚 Education', emoji: '📚' },
+  { value: 'leaf', label: '🌿 Natural & Organic', emoji: '🌿' },
+  { value: 'sun', label: '☀️ Outdoor & Activity', emoji: '☀️' },
+  { value: 'moon', label: '🌙 Night & Sleep', emoji: '🌙' },
+  { value: 'umbrella', label: '☔ Protection', emoji: '☔' },
+  { value: 'anchor', label: '⚓ Stability', emoji: '⚓' },
+  { value: 'compass', label: '🧭 Adventure', emoji: '🧭' },
+  { value: 'target', label: '🎯 Goal & Achievement', emoji: '🎯' },
+  { value: 'lightning', label: '⚡ Quick & Fast', emoji: '⚡' },
+  { value: 'shield-check', label: '🛡️ Safety & Security', emoji: '🛡️' },
   { value: 'more-horizontal', label: '⋯ Other', emoji: '⋯' },
 ];
 
@@ -77,11 +90,11 @@ export function CategoryForm({ category, onSuccess }: CategoryFormProps) {
     defaultValues: category ? {
       name: category.name,
       color: category.color,
-      icon: category.icon,
+      icon: category.icon || 'paw-print',
     } : {
       name: '',
       color: '#10b981',
-      icon: 'utensils',
+      icon: 'paw-print',
     },
   });
 
@@ -177,6 +190,7 @@ export function CategoryForm({ category, onSuccess }: CategoryFormProps) {
               </p>
             </div>
 
+
             {/* Icon Selection */}
             <div className="space-y-2">
               <Label htmlFor="icon" className="text-foreground">Category Icon *</Label>
@@ -216,7 +230,7 @@ export function CategoryForm({ category, onSuccess }: CategoryFormProps) {
                     className="w-8 h-8 rounded-full flex items-center justify-center text-lg"
                     style={{ backgroundColor: `${selectedColor}20` }}
                   >
-                    {AVAILABLE_ICONS.find(icon => icon.value === watch('icon'))?.emoji || '📋'}
+                    {AVAILABLE_ICONS.find(icon => icon.value === watch('icon'))?.emoji || '🐾'}
                   </div>
                   <span className="font-medium">
                     {watch('name') || 'Category Name'}

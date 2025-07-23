@@ -39,8 +39,9 @@ export default function CategoriesPage() {
   };
 
   const getCategoryIcon = (icon: string) => {
-    // For now, we'll use a simple approach. In a real app, you might want to use a proper icon library
+    // Map icon values to emojis
     const iconMap: Record<string, string> = {
+      // Default categories
       'utensils': '🍽️',
       'heart-pulse': '💊',
       'scissors': '✂️',
@@ -49,8 +50,33 @@ export default function CategoriesPage() {
       'graduation-cap': '🎓',
       'shield': '🛡️',
       'more-horizontal': '⋯',
+      // New custom category icons
+      'paw-print': '🐾',
+      'heart': '❤️',
+      'star': '⭐',
+      'gift': '🎁',
+      'crown': '👑',
+      'sparkles': '✨',
+      'trophy': '🏆',
+      'fire': '🔥',
+      'diamond': '💎',
+      'rainbow': '🌈',
+      'rocket': '🚀',
+      'magic-wand': '🪄',
+      'camera': '📸',
+      'music': '🎵',
+      'book': '📚',
+      'leaf': '🌿',
+      'sun': '☀️',
+      'moon': '🌙',
+      'umbrella': '☔',
+      'anchor': '⚓',
+      'compass': '🧭',
+      'target': '🎯',
+      'lightning': '⚡',
+      'shield-check': '🛡️',
     };
-    return iconMap[icon] || '📋';
+    return iconMap[icon] || '🐾';
   };
 
   return (
@@ -122,7 +148,7 @@ export default function CategoriesPage() {
                         className="w-12 h-12 rounded-full flex items-center justify-center text-2xl"
                         style={{ backgroundColor: `${category.color}20` }}
                       >
-                        {getCategoryIcon(category.icon)}
+                        {getCategoryIcon(category.icon || 'more-horizontal')}
                       </div>
                       <div>
                         <CardTitle className="text-xl">{category.name}</CardTitle>

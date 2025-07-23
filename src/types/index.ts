@@ -13,7 +13,7 @@ export interface ExpenseCategory {
   id: string;
   name: string;
   color: string;
-  icon: string;
+  icon?: string;
 }
 
 export interface Expense {
