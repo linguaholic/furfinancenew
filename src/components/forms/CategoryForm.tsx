@@ -31,31 +31,31 @@ interface CategoryFormProps {
 }
 
 const AVAILABLE_ICONS = [
-  { value: 'paw-print', label: '🐾 Pet Care', emoji: '🐾' },
-  { value: 'heart', label: '❤️ Love & Care', emoji: '❤️' },
-  { value: 'star', label: '⭐ Premium', emoji: '⭐' },
-  { value: 'gift', label: '🎁 Gifts & Treats', emoji: '🎁' },
-  { value: 'crown', label: '👑 Luxury', emoji: '👑' },
-  { value: 'sparkles', label: '✨ Special', emoji: '✨' },
-  { value: 'trophy', label: '🏆 Achievement', emoji: '🏆' },
-  { value: 'fire', label: '🔥 Hot & Trending', emoji: '🔥' },
-  { value: 'diamond', label: '💎 Premium Care', emoji: '💎' },
-  { value: 'rainbow', label: '🌈 Fun & Colorful', emoji: '🌈' },
-  { value: 'rocket', label: '🚀 High-End', emoji: '🚀' },
-  { value: 'magic-wand', label: '🪄 Magical', emoji: '🪄' },
-  { value: 'camera', label: '📸 Photo & Memory', emoji: '📸' },
-  { value: 'music', label: '🎵 Entertainment', emoji: '🎵' },
-  { value: 'book', label: '📚 Education', emoji: '📚' },
-  { value: 'leaf', label: '🌿 Natural & Organic', emoji: '🌿' },
-  { value: 'sun', label: '☀️ Outdoor & Activity', emoji: '☀️' },
-  { value: 'moon', label: '🌙 Night & Sleep', emoji: '🌙' },
-  { value: 'umbrella', label: '☔ Protection', emoji: '☔' },
-  { value: 'anchor', label: '⚓ Stability', emoji: '⚓' },
-  { value: 'compass', label: '🧭 Adventure', emoji: '🧭' },
-  { value: 'target', label: '🎯 Goal & Achievement', emoji: '🎯' },
-  { value: 'lightning', label: '⚡ Quick & Fast', emoji: '⚡' },
-  { value: 'shield-check', label: '🛡️ Safety & Security', emoji: '🛡️' },
-  { value: 'more-horizontal', label: '⋯ Other', emoji: '⋯' },
+  { value: 'paw-print', emoji: '🐾' },
+  { value: 'heart', emoji: '❤️' },
+  { value: 'star', emoji: '⭐' },
+  { value: 'gift', emoji: '🎁' },
+  { value: 'crown', emoji: '👑' },
+  { value: 'sparkles', emoji: '✨' },
+  { value: 'trophy', emoji: '🏆' },
+  { value: 'fire', emoji: '🔥' },
+  { value: 'diamond', emoji: '💎' },
+  { value: 'rainbow', emoji: '🌈' },
+  { value: 'rocket', emoji: '🚀' },
+  { value: 'magic-wand', emoji: '🪄' },
+  { value: 'camera', emoji: '📸' },
+  { value: 'music', emoji: '🎵' },
+  { value: 'book', emoji: '📚' },
+  { value: 'leaf', emoji: '🌿' },
+  { value: 'sun', emoji: '☀️' },
+  { value: 'moon', emoji: '🌙' },
+  { value: 'umbrella', emoji: '☔' },
+  { value: 'anchor', emoji: '⚓' },
+  { value: 'compass', emoji: '🧭' },
+  { value: 'target', emoji: '🎯' },
+  { value: 'lightning', emoji: '⚡' },
+  { value: 'shield-check', emoji: '🛡️' },
+  { value: 'more-horizontal', emoji: '⋯' },
 ];
 
 const PRESET_COLORS = [
@@ -199,7 +199,9 @@ export function CategoryForm({ category, onSuccess }: CategoryFormProps) {
                 onValueChange={(value) => setValue('icon', value)}
               >
                 <SelectTrigger className="bg-secondary border-border focus:border-happy-green">
-                  <SelectValue placeholder="Select an icon" />
+                  <SelectValue placeholder="Select an icon">
+                    {AVAILABLE_ICONS.find(icon => icon.value === watch('icon'))?.emoji || '🐾'}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent style={{ backgroundColor: '#000000', border: '1px solid #333333' }}>
                   {AVAILABLE_ICONS.map((icon) => (
@@ -208,10 +210,7 @@ export function CategoryForm({ category, onSuccess }: CategoryFormProps) {
                       value={icon.value} 
                       style={{ backgroundColor: '#000000', color: '#ffffff' }}
                     >
-                      <div className="flex items-center gap-3">
-                        <span className="text-lg">{icon.emoji}</span>
-                        <span>{icon.label}</span>
-                      </div>
+                      <span className="text-lg">{icon.emoji}</span>
                     </SelectItem>
                   ))}
                 </SelectContent>
