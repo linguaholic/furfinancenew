@@ -78,8 +78,8 @@ export function BudgetForm({ budget, onSuccess }: BudgetFormProps) {
     }
   };
 
-  const onError = (errors: Record<string, { message: string }>) => {
-    const errorMessages = Object.values(errors).map((error: { message: string }) => error.message);
+  const onError = (errors: any) => {
+    const errorMessages = Object.values(errors).map((error: any) => error?.message || 'Invalid field').filter(Boolean);
     toast.error(`Please fill in all required fields: ${errorMessages.join(', ')}`);
   };
 
