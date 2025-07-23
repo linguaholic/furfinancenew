@@ -60,6 +60,8 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
   settings: {
     defaultCurrency: 'USD',
     availableCurrencies: ['USD', 'EUR', 'GBP', 'CAD', 'AUD', 'JPY', 'CHF', 'SEK', 'NOK', 'DKK'],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   },
   isLoading: false,
   error: null,
