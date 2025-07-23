@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useFurFinanceStore } from '@/store';
-import { Expense } from '@/types';
+import { Expense, Currency } from '@/types';
 import { ArrowLeft, DollarSign } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
@@ -21,7 +21,7 @@ const expenseSchema = z.object({
   petId: z.string().min(1, 'Pet is required'),
   categoryId: z.string().min(1, 'Category is required'),
   amount: z.number().min(0.01, 'Amount must be greater than 0'),
-  currency: z.string().min(1, 'Please select a currency'),
+  currency: z.enum(['USD', 'EUR', 'GBP', 'CAD', 'AUD', 'JPY', 'CHF', 'SEK', 'NOK', 'DKK'] as const),
   description: z.string().min(1, 'Description is required'),
   date: z.string().min(1, 'Date is required'),
   receipt: z.string().optional(),

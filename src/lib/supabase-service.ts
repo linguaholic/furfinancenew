@@ -1,5 +1,5 @@
 import { supabase } from './supabase'
-import { Pet, Expense, Budget, ExpenseCategory, AppSettings, Currency } from '@/types'
+import { Pet, Expense, Budget, ExpenseCategory, AppSettings } from '@/types'
 
 // Helper to get current user ID (anonymous or authenticated)
 const getCurrentUserId = async () => {

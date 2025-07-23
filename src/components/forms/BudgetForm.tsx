@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useFurFinanceStore } from '@/store';
-import { Budget } from '@/types';
+import { Budget, Currency } from '@/types';
 import { ArrowLeft, DollarSign } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
@@ -20,7 +20,7 @@ const budgetSchema = z.object({
   petId: z.string().min(1, 'Please select a pet'),
   categoryId: z.string().min(1, 'Please select a category'),
   amount: z.number().min(0.01, 'Amount must be greater than 0'),
-  currency: z.string().min(1, 'Please select a currency'),
+  currency: z.enum(['USD', 'EUR', 'GBP', 'CAD', 'AUD', 'JPY', 'CHF', 'SEK', 'NOK', 'DKK'] as const),
   period: z.enum(['monthly', 'yearly']),
 });
 
