@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useFurFinanceStore } from '@/store';
 import { Budget, Currency } from '@/types';
+import { getCurrencySymbol } from '@/lib/utils';
 import { ArrowLeft, DollarSign } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
@@ -198,11 +199,10 @@ export function BudgetForm({ budget, onSuccess }: BudgetFormProps) {
                       </SelectTrigger>
                       <SelectContent style={{ backgroundColor: '#000000', border: '1px solid #333333' }}>
                         {settings.availableCurrencies.map((currency) => (
-                          <SelectItem key={currency.code} value={currency.code} style={{ backgroundColor: '#000000', color: '#ffffff' }}>
+                          <SelectItem key={currency} value={currency} style={{ backgroundColor: '#000000', color: '#ffffff' }}>
                             <div className="flex items-center gap-2">
-                              <span className="font-mono">{currency.symbol}</span>
-                              <span>{currency.code}</span>
-                              <span className="text-muted-foreground">({currency.name})</span>
+                              <span className="font-mono">{getCurrencySymbol(currency)}</span>
+                              <span>{currency}</span>
                             </div>
                           </SelectItem>
                         ))}
