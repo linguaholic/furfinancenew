@@ -12,10 +12,14 @@ type EditBudgetPageProps = {
   }>;
 }
 
-// Server component wrapper
-async function EditBudgetPageServer({ params }: EditBudgetPageProps) {
+export default async function EditBudgetPage({ params }: EditBudgetPageProps) {
   const resolvedParams = await params;
-  return <EditBudgetPageClient budgetId={resolvedParams.id} />;
+  
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <EditBudgetPageClient budgetId={resolvedParams.id} />
+    </div>
+  );
 }
 
 // Client component
@@ -44,16 +48,14 @@ function EditBudgetPageClient({ budgetId }: { budgetId: string }) {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <Card className="bg-gradient-card border-0 shadow-xl">
-          <CardContent className="flex items-center justify-center py-16">
-            <div className="flex items-center gap-3">
-              <Loader2 className="h-6 w-6 animate-spin text-happy-green" />
-              <span className="text-lg">Loading budget...</span>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <Card className="bg-gradient-card border-0 shadow-xl">
+        <CardContent className="flex items-center justify-center py-16">
+          <div className="flex items-center gap-3">
+            <Loader2 className="h-6 w-6 animate-spin text-happy-green" />
+            <span className="text-lg">Loading budget...</span>
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 
@@ -61,11 +63,5 @@ function EditBudgetPageClient({ budgetId }: { budgetId: string }) {
     return null; // Will redirect in useEffect
   }
 
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <BudgetForm budget={budget} onSuccess={handleSuccess} />
-    </div>
-  );
-}
-
-export default EditBudgetPageServer; 
+  return <BudgetForm budget={budget} onSuccess={handleSuccess} />;
+} 
