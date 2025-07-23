@@ -7,7 +7,7 @@ import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useFurFinanceStore } from '@/store';
@@ -192,29 +192,26 @@ export function CategoryForm({ category, onSuccess }: CategoryFormProps) {
 
 
             {/* Icon Selection */}
-            <div className="space-y-2">
-              <Label htmlFor="icon" className="text-foreground">Category Icon *</Label>
-              <Select
-                value={watch('icon')}
-                onValueChange={(value) => setValue('icon', value)}
-              >
-                <SelectTrigger className="bg-secondary border-border focus:border-happy-green">
-                  <SelectValue placeholder="Select an icon">
-                    {AVAILABLE_ICONS.find(icon => icon.value === watch('icon'))?.emoji || '🐾'}
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent style={{ backgroundColor: '#000000', border: '1px solid #333333' }}>
-                  {AVAILABLE_ICONS.map((icon) => (
-                    <SelectItem 
-                      key={icon.value} 
-                      value={icon.value} 
-                      style={{ backgroundColor: '#000000', color: '#ffffff' }}
-                    >
-                      <span className="text-lg">{icon.emoji}</span>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="space-y-3">
+              <Label className="text-foreground">Category Icon *</Label>
+              <div className="grid grid-cols-8 gap-3 p-4 bg-secondary rounded-lg border border-border">
+                {AVAILABLE_ICONS.map((icon) => (
+                  <button
+                    key={icon.value}
+                    type="button"
+                    onClick={() => setValue('icon', icon.value)}
+                    className={`
+                      w-12 h-12 rounded-lg flex items-center justify-center text-2xl transition-all duration-200
+                      ${watch('icon') === icon.value 
+                        ? 'bg-happy-green text-white shadow-lg scale-110' 
+                        : 'bg-background hover:bg-muted hover:scale-105'
+                      }
+                    `}
+                  >
+                    {icon.emoji}
+                  </button>
+                ))}
+              </div>
               {errors.icon && (
                 <p className="text-sm text-destructive">{errors.icon.message}</p>
               )}
