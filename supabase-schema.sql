@@ -1,5 +1,5 @@
--- Enable Row Level Security
-ALTER TABLE auth.users ENABLE ROW LEVEL SECURITY;
+-- Note: auth.users RLS is managed by Supabase automatically
+-- We don't need to enable it manually
 
 -- Create custom types
 CREATE TYPE pet_type AS ENUM ('dog', 'cat', 'bird', 'fish', 'reptile', 'other');
@@ -64,7 +64,7 @@ CREATE TABLE app_settings (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE UNIQUE,
   default_currency currency NOT NULL DEFAULT 'USD',
-  available_currencies currency[] NOT NULL DEFAULT ARRAY['USD', 'EUR', 'GBP', 'CAD', 'AUD', 'JPY', 'CHF', 'SEK', 'NOK', 'DKK'],
+  available_currencies currency[] NOT NULL DEFAULT ARRAY['USD'::currency, 'EUR'::currency, 'GBP'::currency, 'CAD'::currency, 'AUD'::currency, 'JPY'::currency, 'CHF'::currency, 'SEK'::currency, 'NOK'::currency, 'DKK'::currency],
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );

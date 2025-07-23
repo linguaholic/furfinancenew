@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
+import { SupabaseInitializer } from "@/components/SupabaseInitializer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,10 +28,11 @@ export default function RootLayout({
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-happy-purple/5 rounded-full blur-3xl animate-pulse delay-2000"></div>
           </div>
           
-                                {/* Main content */}
-                      <div className="relative z-10">
-                        {children}
-                      </div>
+                                          {/* Main content */}
+          <div className="relative z-10">
+            <SupabaseInitializer />
+            {children}
+          </div>
                       
                       {/* Toast notifications */}
                       <Toaster 
