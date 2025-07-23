@@ -1,3 +1,16 @@
+# 🐾 Fur Finance - Pet Expense Tracker
+
+**🎉 LIVE ON VERCEL!** - Modern Pet Expense Tracker with multi-currency support, budgets, analytics, and dark mode.
+
+## 🚀 Deployment Status
+✅ **Successfully deployed on Vercel**  
+✅ **All Next.js 15 compatibility issues resolved**  
+✅ **TypeScript compilation errors fixed**  
+✅ **React Hook Form type mismatches resolved**  
+✅ **Suspense boundaries implemented for useSearchParams**  
+
+---
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
