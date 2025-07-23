@@ -120,7 +120,7 @@ export default function PetsPage() {
               .slice(0, 3);
 
             return (
-              <Card key={pet.id} className="bg-gradient-card border-0 shadow-xl hover:shadow-2xl transition-all duration-300 group">
+              <Card key={pet.id} className="bg-gradient-card border-0 shadow-xl hover:shadow-2xl transition-all duration-300 group flex flex-col h-full">
                 <CardHeader>
                   <div className="flex items-start justify-between">
                                       <div className="flex items-center gap-4">
@@ -169,8 +169,8 @@ export default function PetsPage() {
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-6">
+                <CardContent className="flex-1 flex flex-col">
+                  <div className="space-y-6 flex-1 flex flex-col">
                     {/* Total Spent */}
                     <div className="flex items-center justify-between p-4 bg-happy-green/10 rounded-xl border border-happy-green/20">
                       <div className="flex items-center gap-3">
@@ -185,13 +185,13 @@ export default function PetsPage() {
                     </div>
 
                     {/* Recent Expenses */}
-                    <div>
+                    <div className="flex-1 flex flex-col">
                       <div className="flex items-center gap-2 mb-3">
                         <Heart className="h-4 w-4 text-happy-purple" />
                         <h4 className="font-medium text-sm">Recent Expenses</h4>
                       </div>
                       {recentExpenses.length === 0 ? (
-                        <div className="text-center py-4">
+                        <div className="text-center py-4 flex-1 flex flex-col justify-center">
                           <p className="text-sm text-muted-foreground">No expenses yet</p>
                           <p className="text-xs text-muted-foreground">Start tracking expenses for {pet.name}</p>
                         </div>
@@ -208,7 +208,7 @@ export default function PetsPage() {
                     </div>
 
                     {/* Actions */}
-                    <div className="flex gap-3 pt-2">
+                    <div className="flex gap-3 pt-2 mt-auto">
                       <Link href={`/expenses/new?petId=${pet.id}`} className="flex-1">
                         <Button size="sm" className="w-full bg-gradient-primary hover:bg-gradient-primary/90 text-white border-0">
                           <Plus className="h-3 w-3 mr-1" />
