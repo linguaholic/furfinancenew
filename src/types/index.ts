@@ -21,7 +21,7 @@ export interface Expense {
   petId: string;
   categoryId: string;
   amount: number;
-  currency: string;
+  currency: Currency;
   description: string;
   date: string;
   receipt?: string;
@@ -34,34 +34,21 @@ export interface Budget {
   petId: string;
   categoryId: string;
   amount: number;
-  currency: string;
+  currency: Currency;
   period: 'monthly' | 'yearly';
   createdAt: string;
   updatedAt: string;
 }
 
+export type Currency = 'USD' | 'EUR' | 'GBP' | 'CAD' | 'AUD' | 'JPY' | 'CHF' | 'SEK' | 'NOK' | 'DKK';
+
 export interface AppSettings {
-  defaultCurrency: string;
+  defaultCurrency: Currency;
   availableCurrencies: Currency[];
 }
 
-export interface Currency {
-  code: string;
-  name: string;
-  symbol: string;
-}
-
 export const AVAILABLE_CURRENCIES: Currency[] = [
-  { code: 'USD', name: 'US Dollar', symbol: '$' },
-  { code: 'EUR', name: 'Euro', symbol: '€' },
-  { code: 'GBP', name: 'British Pound', symbol: '£' },
-  { code: 'CHF', name: 'Swiss Franc', symbol: 'CHF' },
-  { code: 'CAD', name: 'Canadian Dollar', symbol: 'C$' },
-  { code: 'AUD', name: 'Australian Dollar', symbol: 'A$' },
-  { code: 'JPY', name: 'Japanese Yen', symbol: '¥' },
-  { code: 'SEK', name: 'Swedish Krona', symbol: 'kr' },
-  { code: 'NOK', name: 'Norwegian Krone', symbol: 'kr' },
-  { code: 'DKK', name: 'Danish Krone', symbol: 'kr' },
+  'USD', 'EUR', 'GBP', 'CAD', 'AUD', 'JPY', 'CHF', 'SEK', 'NOK', 'DKK'
 ];
 
 export interface AppData {

@@ -331,8 +331,8 @@ export const settingsService = {
     let settings = await this.get()
     if (!settings) {
       settings = await this.create({
-        defaultCurrency: 'USD' as Currency,
-        availableCurrencies: ['USD', 'EUR', 'GBP', 'CAD', 'AUD', 'JPY', 'CHF', 'SEK', 'NOK', 'DKK'] as Currency[]
+        defaultCurrency: 'USD',
+        availableCurrencies: ['USD', 'EUR', 'GBP', 'CAD', 'AUD', 'JPY', 'CHF', 'SEK', 'NOK', 'DKK']
       })
     }
     return settings
