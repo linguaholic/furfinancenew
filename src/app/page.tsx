@@ -5,7 +5,7 @@ import { useFurFinanceStore } from '@/store';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
-import { formatCurrency, getCurrentMonth, getCurrentYear } from '@/lib/utils';
+import { formatCurrency } from '@/lib/utils';
 import { 
   PawPrint, 
   DollarSign, 

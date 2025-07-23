@@ -9,33 +9,45 @@ import { Loader2 } from 'lucide-react';
 import { Budget } from '@/types';
 
 interface EditBudgetPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default function EditBudgetPage({ params }: EditBudgetPageProps) {
+  const [budgetId, setBudgetId] = useState<string>('');
+  const [isLoadingParams, setIsLoadingParams] = useState(true);
   const { budgets } = useFurFinanceStore();
   const router = useRouter();
   const [budget, setBudget] = useState<Budget | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const foundBudget = budgets.find(b => b.id === params.id);
-    if (foundBudget) {
-      setBudget(foundBudget);
-    } else {
-      // Budget not found, redirect to budgets page
-      router.push('/budgets');
+    // Handle async params
+    params.then((resolvedParams) => {
+      setBudgetId(resolvedParams.id);
+      setIsLoadingParams(false);
+    });
+  }, [params]);
+
+  useEffect(() => {
+    if (!isLoadingParams && budgetId) {
+      const foundBudget = budgets.find(b => b.id === budgetId);
+      if (foundBudget) {
+        setBudget(foundBudget);
+      } else {
+        // Budget not found, redirect to budgets page
+        router.push('/budgets');
+      }
+      setLoading(false);
     }
-    setLoading(false);
-  }, [params.id, budgets, router]);
+  }, [budgetId, budgets, router, isLoadingParams]);
 
   const handleSuccess = () => {
     router.push('/budgets');
   };
 
-  if (loading) {
+  if (loading || isLoadingParams) {
     return (
       <div className="container mx-auto px-4 py-8">
         <Card className="bg-gradient-card border-0 shadow-xl">
