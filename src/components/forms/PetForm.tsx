@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useForm, FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useFurFinanceStore } from '@/store';
 import { Pet } from '@/types';
-import { ArrowLeft, PawPrint } from 'lucide-react';
+import { ArrowLeft, PawPrint, Upload, X } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
 
@@ -34,6 +34,8 @@ interface PetFormProps {
 export function PetForm({ pet, onSuccess }: PetFormProps) {
   const { addPet, updatePet } = useFurFinanceStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState<string | null>(pet?.photo || null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
     register,
@@ -80,6 +82,40 @@ export function PetForm({ pet, onSuccess }: PetFormProps) {
   const onError = (errors: FieldErrors<PetFormData>) => {
     const errorMessages = Object.values(errors).map((error) => error?.message || 'Invalid field').filter(Boolean);
     toast.error(`Please fill in all required fields: ${errorMessages.join(', ')}`);
+  };
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image size must be less than 5MB');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const result = e.target?.result as string;
+      setUploadedImage(result);
+      setValue('photo', result);
+      toast.success('Image uploaded successfully! 📸');
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const removeImage = () => {
+    setUploadedImage(null);
+    setValue('photo', '');
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   return (
@@ -170,18 +206,56 @@ export function PetForm({ pet, onSuccess }: PetFormProps) {
               </div>
             </div>
 
-            {/* Photo URL */}
-            <div className="space-y-2">
-              <Label htmlFor="photo" className="text-foreground">Photo URL</Label>
-              <Input
-                id="photo"
-                {...register('photo')}
-                placeholder="https://example.com/pet-photo.jpg"
-                className="bg-secondary border-border focus:border-happy-green"
+            {/* Photo Upload */}
+            <div className="space-y-4">
+              <Label className="text-foreground">Pet Photo</Label>
+              
+              {uploadedImage ? (
+                <div className="relative">
+                  <img 
+                    src={uploadedImage} 
+                    alt="Pet preview" 
+                    className="w-32 h-32 object-cover rounded-lg border-2 border-border"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={removeImage}
+                    className="absolute -top-2 -right-2 p-1 h-6 w-6 bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                </div>
+              ) : (
+                <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-happy-green transition-colors">
+                  <Upload className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                  <p className="text-sm text-muted-foreground mb-2">
+                    Click to upload a photo of your pet
+                  </p>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="bg-secondary border-border hover:bg-happy-green hover:text-white"
+                  >
+                    Choose Image
+                  </Button>
+                </div>
+              )}
+              
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleFileUpload}
+                className="hidden"
               />
-                              <p className="text-sm text-muted-foreground">
-                  Optional: Add a URL to your pet&apos;s photo
-                </p>
+              
+              <p className="text-sm text-muted-foreground">
+                Optional: Upload a photo of your pet (max 5MB)
+              </p>
             </div>
 
             {/* Submit Button */}

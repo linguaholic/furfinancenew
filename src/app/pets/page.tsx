@@ -123,10 +123,20 @@ export default function PetsPage() {
               <Card key={pet.id} className="bg-gradient-card border-0 shadow-xl hover:shadow-2xl transition-all duration-300 group">
                 <CardHeader>
                   <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="text-4xl">
-                        {getPetTypeIcon(pet.type)}
-                      </div>
+                                      <div className="flex items-center gap-4">
+                    <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-border flex items-center justify-center bg-secondary">
+                      {pet.photo ? (
+                        <img 
+                          src={pet.photo} 
+                          alt={`${pet.name}`} 
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="text-2xl">
+                          {getPetTypeIcon(pet.type)}
+                        </div>
+                      )}
+                    </div>
                       <div>
                         <CardTitle className="text-2xl">{pet.name}</CardTitle>
                         <div className="flex items-center gap-2 mt-2">
