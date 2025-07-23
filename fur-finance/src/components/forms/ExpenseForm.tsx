@@ -44,6 +44,8 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
     register,
     handleSubmit,
     control,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<ExpenseFormData>({
     resolver: zodResolver(expenseSchema),
