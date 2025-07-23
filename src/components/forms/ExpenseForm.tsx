@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
@@ -86,8 +86,8 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
     }
   };
 
-  const onError = (errors: Record<string, { message: string }>) => {
-    const errorMessages = Object.values(errors).map((error: { message: string }) => error.message);
+  const onError = (errors: FieldErrors<ExpenseFormData>) => {
+    const errorMessages = Object.values(errors).map((error) => error?.message || 'Invalid field').filter(Boolean);
     toast.error(`Please fill in all required fields: ${errorMessages.join(', ')}`);
   };
 
