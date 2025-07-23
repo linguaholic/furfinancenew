@@ -15,39 +15,38 @@ interface EditBudgetPageProps {
 }
 
 export default function EditBudgetPage({ params }: EditBudgetPageProps) {
-  const [budgetId, setBudgetId] = useState<string>('');
-  const [isLoadingParams, setIsLoadingParams] = useState(true);
   const { budgets } = useFurFinanceStore();
   const router = useRouter();
   const [budget, setBudget] = useState<Budget | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Handle async params
-    params.then((resolvedParams) => {
-      setBudgetId(resolvedParams.id);
-      setIsLoadingParams(false);
-    });
-  }, [params]);
-
-  useEffect(() => {
-    if (!isLoadingParams && budgetId) {
-      const foundBudget = budgets.find(b => b.id === budgetId);
-      if (foundBudget) {
-        setBudget(foundBudget);
-      } else {
-        // Budget not found, redirect to budgets page
+    const loadBudget = async () => {
+      try {
+        const resolvedParams = await params;
+        const foundBudget = budgets.find(b => b.id === resolvedParams.id);
+        if (foundBudget) {
+          setBudget(foundBudget);
+        } else {
+          // Budget not found, redirect to budgets page
+          router.push('/budgets');
+        }
+      } catch (error) {
+        console.error('Error loading budget:', error);
         router.push('/budgets');
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
-    }
-  }, [budgetId, budgets, router, isLoadingParams]);
+    };
+
+    loadBudget();
+  }, [params, budgets, router]);
 
   const handleSuccess = () => {
     router.push('/budgets');
   };
 
-  if (loading || isLoadingParams) {
+  if (loading) {
     return (
       <div className="container mx-auto px-4 py-8">
         <Card className="bg-gradient-card border-0 shadow-xl">
