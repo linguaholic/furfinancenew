@@ -1,5 +1,5 @@
 import { supabase } from './supabase'
-import { Pet, Expense, Budget, ExpenseCategory, AppSettings } from '@/types'
+import { Pet, Expense, Budget, ExpenseCategory, AppSettings, Currency } from '@/types'
 
 // Helper to get current user ID (anonymous or authenticated)
 const getCurrentUserId = async () => {
@@ -331,8 +331,8 @@ export const settingsService = {
     let settings = await this.get()
     if (!settings) {
       settings = await this.create({
-        defaultCurrency: 'USD',
-        availableCurrencies: ['USD', 'EUR', 'GBP', 'CAD', 'AUD', 'JPY', 'CHF', 'SEK', 'NOK', 'DKK']
+        defaultCurrency: 'USD' as Currency,
+        availableCurrencies: ['USD', 'EUR', 'GBP', 'CAD', 'AUD', 'JPY', 'CHF', 'SEK', 'NOK', 'DKK'] as Currency[]
       })
     }
     return settings
