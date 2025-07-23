@@ -51,7 +51,6 @@ export default function CategoriesPage() {
       'shield': '🛡️',
       'more-horizontal': '⋯',
       // New custom category icons
-      'paw-print': '🐾',
       'heart': '❤️',
       'star': '⭐',
       'gift': '🎁',
@@ -76,7 +75,7 @@ export default function CategoriesPage() {
       'lightning': '⚡',
       'shield-check': '🛡️',
     };
-    return iconMap[icon] || '🐾';
+    return iconMap[icon] || '❤️';
   };
 
   return (

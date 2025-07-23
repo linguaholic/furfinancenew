@@ -31,7 +31,6 @@ interface CategoryFormProps {
 }
 
 const AVAILABLE_ICONS = [
-  { value: 'paw-print', emoji: '🐾' },
   { value: 'heart', emoji: '❤️' },
   { value: 'star', emoji: '⭐' },
   { value: 'gift', emoji: '🎁' },
@@ -90,11 +89,11 @@ export function CategoryForm({ category, onSuccess }: CategoryFormProps) {
     defaultValues: category ? {
       name: category.name,
       color: category.color,
-      icon: category.icon || 'paw-print',
+      icon: category.icon || 'heart',
     } : {
       name: '',
       color: '#10b981',
-      icon: 'paw-print',
+      icon: 'heart',
     },
   });
 
@@ -203,7 +202,7 @@ export function CategoryForm({ category, onSuccess }: CategoryFormProps) {
                     className={`
                       w-12 h-12 rounded-lg flex items-center justify-center text-2xl transition-all duration-200
                       ${watch('icon') === icon.value 
-                        ? 'bg-happy-green text-white shadow-lg scale-110' 
+                        ? 'border-2 border-white shadow-lg scale-110' 
                         : 'bg-background hover:bg-muted hover:scale-105'
                       }
                     `}
@@ -226,7 +225,7 @@ export function CategoryForm({ category, onSuccess }: CategoryFormProps) {
                     className="w-8 h-8 rounded-full flex items-center justify-center text-lg"
                     style={{ backgroundColor: `${selectedColor}20` }}
                   >
-                    {AVAILABLE_ICONS.find(icon => icon.value === watch('icon'))?.emoji || '🐾'}
+                    {AVAILABLE_ICONS.find(icon => icon.value === watch('icon'))?.emoji || '❤️'}
                   </div>
                   <span className="font-medium">
                     {watch('name') || 'Category Name'}
