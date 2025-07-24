@@ -3,13 +3,37 @@ import { Pet, Expense, Budget, ExpenseCategory, AppSettings } from '@/types'
 
 // Helper to get current user ID (anonymous or authenticated)
 const getCurrentUserId = async () => {
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) {
-    // Create anonymous session if no user exists
-    const { data: { user: anonymousUser } } = await supabase.auth.signInAnonymously()
-    return anonymousUser?.id
+  try {
+    const { data: { user }, error: getUserError } = await supabase.auth.getUser()
+    
+    if (getUserError) {
+      console.error('Error getting user:', getUserError)
+    }
+    
+    if (!user) {
+      console.log('No user found, creating anonymous session...')
+      const { data: { user: anonymousUser }, error: signInError } = await supabase.auth.signInAnonymously()
+      
+      if (signInError) {
+        console.error('Error signing in anonymously:', signInError)
+        throw signInError
+      }
+      
+      if (!anonymousUser?.id) {
+        console.error('Anonymous user created but no ID returned')
+        throw new Error('Failed to create anonymous user')
+      }
+      
+      console.log('Anonymous user created with ID:', anonymousUser.id)
+      return anonymousUser.id
+    }
+    
+    console.log('Using existing user with ID:', user.id)
+    return user.id
+  } catch (error) {
+    console.error('Error in getCurrentUserId:', error)
+    throw error
   }
-  return user.id
 }
 
 // Pets
@@ -40,15 +64,28 @@ export const petsService = {
   },
 
   async create(pet: Omit<Pet, 'id' | 'createdAt' | 'updatedAt'>): Promise<Pet> {
-    const userId = await getCurrentUserId()
-    const { data, error } = await supabase
-      .from('pets')
-      .insert([{ ...pet, user_id: userId }])
-      .select()
-      .single()
+    try {
+      const userId = await getCurrentUserId()
+      console.log('Creating pet with user ID:', userId)
+      console.log('Pet data:', pet)
+      
+      const { data, error } = await supabase
+        .from('pets')
+        .insert([{ ...pet, user_id: userId }])
+        .select()
+        .single()
 
-    if (error) throw error
-    return data
+      if (error) {
+        console.error('Supabase error creating pet:', error)
+        throw error
+      }
+      
+      console.log('Pet created successfully:', data)
+      return data
+    } catch (error) {
+      console.error('Error in petsService.create:', error)
+      throw error
+    }
   },
 
   async update(id: string, pet: Partial<Pet>): Promise<Pet> {
