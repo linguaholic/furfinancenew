@@ -2,26 +2,26 @@ import { supabase } from './supabase'
 import { Pet, Expense, Budget, ExpenseCategory, AppSettings } from '@/types'
 
 // Utility functions to convert between camelCase and snake_case
-const toSnakeCase = (obj: Record<string, unknown> | null | undefined): Record<string, unknown> | null | undefined => {
+const toSnakeCase = (obj: unknown): unknown => {
   if (obj === null || obj === undefined || typeof obj !== 'object') return obj
-  if (Array.isArray(obj)) return obj.map(toSnakeCase) as Record<string, unknown>
+  if (Array.isArray(obj)) return obj.map(toSnakeCase)
   
   const snakeCaseObj: Record<string, unknown> = {}
-  for (const [key, value] of Object.entries(obj)) {
+  for (const [key, value] of Object.entries(obj as Record<string, unknown>)) {
     const snakeKey = key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`)
-    snakeCaseObj[snakeKey] = toSnakeCase(value as Record<string, unknown>)
+    snakeCaseObj[snakeKey] = toSnakeCase(value)
   }
   return snakeCaseObj
 }
 
-const toCamelCase = (obj: Record<string, unknown> | null | undefined): Record<string, unknown> | null | undefined => {
+const toCamelCase = (obj: unknown): unknown => {
   if (obj === null || obj === undefined || typeof obj !== 'object') return obj
-  if (Array.isArray(obj)) return obj.map(toCamelCase) as Record<string, unknown>
+  if (Array.isArray(obj)) return obj.map(toCamelCase)
   
   const camelCaseObj: Record<string, unknown> = {}
-  for (const [key, value] of Object.entries(obj)) {
+  for (const [key, value] of Object.entries(obj as Record<string, unknown>)) {
     const camelKey = key.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase())
-    camelCaseObj[camelKey] = toCamelCase(value as Record<string, unknown>)
+    camelCaseObj[camelKey] = toCamelCase(value)
   }
   return camelCaseObj
 }
