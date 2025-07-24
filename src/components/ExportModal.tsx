@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Download, Calendar, PawPrint, Tag, FileText } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 
@@ -159,36 +158,16 @@ export default function ExportModal({ pets, categories, expenses, trigger }: Exp
           {/* Export Type Selection */}
           <div className="space-y-3">
             <Label className="text-sm font-medium">Export Type</Label>
-            <RadioGroup value={exportType} onValueChange={(value: any) => setExportType(value)}>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="all" id="all" />
-                <Label htmlFor="all" className="flex items-center gap-2 cursor-pointer">
-                  <FileText className="h-4 w-4 text-happy-green" />
-                  All Expenses
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="pet" id="pet" />
-                <Label htmlFor="pet" className="flex items-center gap-2 cursor-pointer">
-                  <PawPrint className="h-4 w-4 text-happy-blue" />
-                  By Pet
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="category" id="category" />
-                <Label htmlFor="category" className="flex items-center gap-2 cursor-pointer">
-                  <Tag className="h-4 w-4 text-happy-purple" />
-                  By Category
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="dateRange" id="dateRange" />
-                <Label htmlFor="dateRange" className="flex items-center gap-2 cursor-pointer">
-                  <Calendar className="h-4 w-4 text-happy-orange" />
-                  By Date Range
-                </Label>
-              </div>
-            </RadioGroup>
+            <select
+              value={exportType}
+              onChange={(e) => setExportType(e.target.value as any)}
+              className="w-full p-3 bg-secondary border border-border rounded-lg focus:border-happy-blue focus:outline-none"
+            >
+              <option value="all">📄 All Expenses</option>
+              <option value="pet">🐾 By Pet</option>
+              <option value="category">🏷️ By Category</option>
+              <option value="dateRange">📅 By Date Range</option>
+            </select>
           </div>
 
           {/* Conditional Options */}
