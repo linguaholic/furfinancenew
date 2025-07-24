@@ -135,11 +135,19 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
   const onSubmit = async (data: ExpenseFormData) => {
     setIsSubmitting(true);
     try {
+      // Clean up the data - convert empty strings to undefined for optional fields
+      const cleanedData = {
+        ...data,
+        description: data.description?.trim() || undefined,
+        receipt: data.receipt?.trim() || undefined,
+        nextDueDate: data.nextDueDate || undefined,
+      };
+      
       if (expense) {
-        updateExpense(expense.id, data);
+        updateExpense(expense.id, cleanedData);
         toast.success('Expense updated successfully! 🎉');
       } else {
-        addExpense(data);
+        addExpense(cleanedData);
         toast.success('Expense added successfully! 🎉');
       }
       onSuccess?.();

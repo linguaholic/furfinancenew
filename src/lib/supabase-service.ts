@@ -309,6 +309,7 @@ export const expensesService = {
     const snakeCaseExpense = toSnakeCase(expense) as Record<string, unknown>
     
     console.log('Creating expense with data:', { ...snakeCaseExpense, user_id: userId })
+    console.log('Original expense data:', expense)
     
     const { data, error } = await supabase
       .from('expenses')
@@ -318,6 +319,12 @@ export const expensesService = {
 
     if (error) {
       console.error('Supabase error:', error)
+      console.error('Error details:', {
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+        code: error.code
+      })
       throw error
     }
     return toCamelCase(data) as Expense
