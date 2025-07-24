@@ -35,7 +35,7 @@ export default function RootLayout({
               <img 
                 src="/images/Fur Finance Logo.png" 
                 alt="Fur Finance Logo" 
-                className="h-12 w-12 object-contain"
+                className="h-36 w-36 object-contain"
               />
             </div>
             
