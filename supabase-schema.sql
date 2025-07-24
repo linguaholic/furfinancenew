@@ -40,6 +40,7 @@ CREATE TABLE expenses (
   currency currency NOT NULL DEFAULT 'USD',
   description TEXT,
   date DATE NOT NULL,
+  receipt TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
