@@ -34,7 +34,8 @@ import {
   PawPrint,
   Download,
   Filter,
-  ArrowLeft
+  ArrowLeft,
+  Heart
 } from 'lucide-react';
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
@@ -999,6 +1000,103 @@ export default function AnalyticsPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* Feedback Section */}
+      <div className="mt-12 mb-8">
+        <Card className="bg-gradient-card border-0 shadow-xl overflow-hidden">
+          <div className="bg-gradient-to-r from-happy-green/10 to-happy-blue/10 p-8">
+            <div className="text-center mb-6">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-happy-green to-happy-blue rounded-full mb-4">
+                <Heart className="h-8 w-8 text-white" />
+              </div>
+              <h2 className="text-3xl font-bold mb-2">We'd Love Your Feedback!</h2>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                Help us make Fur Finance even better for pet parents like you. Share your thoughts, suggestions, or report any issues.
+              </p>
+            </div>
+            
+            <form 
+              action="https://formspree.io/f/YOUR_FORM_ID" 
+              method="POST"
+              className="max-w-2xl mx-auto space-y-6"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium mb-2">
+                    Your Name (Optional)
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    className="w-full px-4 py-3 bg-secondary border border-border rounded-lg focus:border-happy-green focus:outline-none transition-colors"
+                    placeholder="Enter your name"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium mb-2">
+                    Email Address (Optional)
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    className="w-full px-4 py-3 bg-secondary border border-border rounded-lg focus:border-happy-green focus:outline-none transition-colors"
+                    placeholder="your@email.com"
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <label htmlFor="feedback-type" className="block text-sm font-medium mb-2">
+                  Feedback Type
+                </label>
+                <select
+                  id="feedback-type"
+                  name="feedbackType"
+                  className="w-full px-4 py-3 bg-secondary border border-border rounded-lg focus:border-happy-green focus:outline-none transition-colors"
+                  required
+                >
+                  <option value="">Select feedback type</option>
+                  <option value="feature-request">Feature Request</option>
+                  <option value="bug-report">Bug Report</option>
+                  <option value="general-feedback">General Feedback</option>
+                  <option value="praise">Praise</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              
+              <div>
+                <label htmlFor="message" className="block text-sm font-medium mb-2">
+                  Your Message *
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  rows={5}
+                  className="w-full px-4 py-3 bg-secondary border border-border rounded-lg focus:border-happy-green focus:outline-none transition-colors resize-none"
+                  placeholder="Tell us what you think about Fur Finance, what features you'd like to see, or any issues you've encountered..."
+                  required
+                ></textarea>
+              </div>
+              
+              <div className="flex items-center justify-center">
+                <button
+                  type="submit"
+                  className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-happy-green to-happy-blue text-white font-semibold rounded-lg hover:from-happy-green/90 hover:to-happy-blue/90 transition-all duration-200 transform hover:scale-105 shadow-lg"
+                >
+                  <Heart className="h-5 w-5" />
+                  Send Feedback
+                </button>
+              </div>
+              
+              <p className="text-center text-sm text-muted-foreground">
+                Your feedback helps us improve Fur Finance for all pet parents. Thank you! 🐾
+              </p>
+            </form>
+          </div>
+        </Card>
+      </div>
     </div>
   );
 } 
