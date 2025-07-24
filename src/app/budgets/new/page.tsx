@@ -14,7 +14,7 @@ export default function NewBudgetPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <Suspense fallback={<div>Loading...</div>}>
-        <BudgetForm onSuccess={handleSuccess} />
+      <BudgetForm onSuccess={handleSuccess} />
       </Suspense>
     </div>
   );

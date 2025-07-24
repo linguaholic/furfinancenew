@@ -4,6 +4,7 @@
 -- Create custom types
 CREATE TYPE pet_type AS ENUM ('dog', 'cat', 'bird', 'fish', 'reptile', 'other');
 CREATE TYPE budget_period AS ENUM ('monthly', 'yearly');
+CREATE TYPE recurring_type AS ENUM ('none', 'monthly', 'quarterly', 'yearly');
 CREATE TYPE currency AS ENUM ('USD', 'EUR', 'GBP', 'CAD', 'AUD', 'JPY', 'CHF', 'SEK', 'NOK', 'DKK');
 
 -- Create pets table
@@ -41,6 +42,8 @@ CREATE TABLE expenses (
   description TEXT,
   date DATE NOT NULL,
   receipt TEXT,
+  recurring_type recurring_type NOT NULL DEFAULT 'none',
+  next_due_date DATE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -76,6 +79,8 @@ CREATE INDEX idx_expenses_user_id ON expenses(user_id);
 CREATE INDEX idx_expenses_pet_id ON expenses(pet_id);
 CREATE INDEX idx_expenses_category_id ON expenses(category_id);
 CREATE INDEX idx_expenses_date ON expenses(date);
+CREATE INDEX idx_expenses_recurring_type ON expenses(recurring_type);
+CREATE INDEX idx_expenses_next_due_date ON expenses(next_due_date);
 CREATE INDEX idx_budgets_user_id ON budgets(user_id);
 CREATE INDEX idx_budgets_pet_id ON budgets(pet_id);
 CREATE INDEX idx_budgets_category_id ON budgets(category_id);
@@ -103,16 +108,16 @@ CREATE POLICY "Users can delete their own pets" ON pets
   FOR DELETE USING (auth.uid() = user_id);
 
 -- Expense categories policies
-CREATE POLICY "Users can view their own categories" ON expense_categories
+CREATE POLICY "Users can view their own expense categories" ON expense_categories
   FOR SELECT USING (auth.uid() = user_id);
 
-CREATE POLICY "Users can insert their own categories" ON expense_categories
+CREATE POLICY "Users can insert their own expense categories" ON expense_categories
   FOR INSERT WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY "Users can update their own categories" ON expense_categories
+CREATE POLICY "Users can update their own expense categories" ON expense_categories
   FOR UPDATE USING (auth.uid() = user_id);
 
-CREATE POLICY "Users can delete their own categories" ON expense_categories
+CREATE POLICY "Users can delete their own expense categories" ON expense_categories
   FOR DELETE USING (auth.uid() = user_id);
 
 -- Expenses policies
@@ -142,16 +147,16 @@ CREATE POLICY "Users can delete their own budgets" ON budgets
   FOR DELETE USING (auth.uid() = user_id);
 
 -- App settings policies
-CREATE POLICY "Users can view their own settings" ON app_settings
+CREATE POLICY "Users can view their own app settings" ON app_settings
   FOR SELECT USING (auth.uid() = user_id);
 
-CREATE POLICY "Users can insert their own settings" ON app_settings
+CREATE POLICY "Users can insert their own app settings" ON app_settings
   FOR INSERT WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY "Users can update their own settings" ON app_settings
+CREATE POLICY "Users can update their own app settings" ON app_settings
   FOR UPDATE USING (auth.uid() = user_id);
 
--- Create function to update updated_at timestamp
+-- Create function to automatically update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -160,7 +165,7 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
--- Create triggers for updated_at
+-- Create triggers to automatically update updated_at
 CREATE TRIGGER update_pets_updated_at BEFORE UPDATE ON pets
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm, Controller, FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -26,6 +26,8 @@ const expenseSchema = z.object({
   description: z.string().min(1, 'Description is required'),
   date: z.string().min(1, 'Date is required'),
   receipt: z.string().optional(),
+  recurringType: z.enum(['none', 'monthly', 'quarterly', 'yearly']),
+  nextDueDate: z.string().optional(),
 });
 
 type ExpenseFormData = z.infer<typeof expenseSchema>;
@@ -45,7 +47,8 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
     register,
     handleSubmit,
     control,
-
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<ExpenseFormData>({
     resolver: zodResolver(expenseSchema),
@@ -57,6 +60,8 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
       description: expense.description,
       date: expense.date.split('T')[0],
       receipt: expense.receipt || '',
+      recurringType: expense.recurringType || 'none',
+      nextDueDate: expense.nextDueDate || '',
     } : {
       petId: defaultPetId,
       categoryId: '',
@@ -65,8 +70,48 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
       description: '',
       date: new Date().toISOString().split('T')[0],
       receipt: '',
+      recurringType: 'none',
+      nextDueDate: '',
     },
   });
+
+  // Watch for changes in date and recurring type to calculate next due date
+  const watchedDate = watch('date');
+  const watchedRecurringType = watch('recurringType');
+
+  // Calculate next due date when date or recurring type changes
+  const calculateNextDueDate = (date: string, recurringType: string) => {
+    if (recurringType === 'none' || !date) return '';
+    
+    const currentDate = new Date(date);
+    const nextDate = new Date(currentDate);
+    
+    switch (recurringType) {
+      case 'monthly':
+        nextDate.setMonth(nextDate.getMonth() + 1);
+        break;
+      case 'quarterly':
+        nextDate.setMonth(nextDate.getMonth() + 3);
+        break;
+      case 'yearly':
+        nextDate.setFullYear(nextDate.getFullYear() + 1);
+        break;
+      default:
+        return '';
+    }
+    
+    return nextDate.toISOString().split('T')[0];
+  };
+
+  // Update next due date when date or recurring type changes
+  useEffect(() => {
+    if (watchedDate && watchedRecurringType !== 'none') {
+      const nextDueDate = calculateNextDueDate(watchedDate, watchedRecurringType);
+      setValue('nextDueDate', nextDueDate);
+    } else {
+      setValue('nextDueDate', '');
+    }
+  }, [watchedDate, watchedRecurringType, setValue]);
 
   // Wait for data to be loaded
   if (!settings || pets.length === 0 || categories.length === 0) {
@@ -254,6 +299,56 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
                   <p className="text-sm text-destructive">{errors.date.message}</p>
                 )}
               </div>
+
+              {/* Recurring Type */}
+              <div className="space-y-2">
+                <Label htmlFor="recurringType" className="text-foreground">Recurring</Label>
+                <Controller
+                  name="recurringType"
+                  control={control}
+                  render={({ field }) => (
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger className="bg-secondary border-border focus:border-happy-green">
+                        <SelectValue placeholder="Select recurring type" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-black border border-gray-700 z-50">
+                        <SelectItem value="none" className="bg-black text-white hover:bg-gray-800 focus:bg-gray-800">
+                          One-time expense
+                        </SelectItem>
+                        <SelectItem value="monthly" className="bg-black text-white hover:bg-gray-800 focus:bg-gray-800">
+                          Monthly
+                        </SelectItem>
+                        <SelectItem value="quarterly" className="bg-black text-white hover:bg-gray-800 focus:bg-gray-800">
+                          Quarterly
+                        </SelectItem>
+                        <SelectItem value="yearly" className="bg-black text-white hover:bg-gray-800 focus:bg-gray-800">
+                          Yearly
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {errors.recurringType && (
+                  <p className="text-sm text-destructive mt-1">{errors.recurringType.message}</p>
+                )}
+              </div>
+
+              {/* Next Due Date (only show if recurring) */}
+              {watchedRecurringType !== 'none' && (
+                <div className="space-y-2">
+                  <Label htmlFor="nextDueDate" className="text-foreground">Next Due Date</Label>
+                  <Input
+                    id="nextDueDate"
+                    type="date"
+                    {...register('nextDueDate')}
+                    className="bg-secondary border-border focus:border-happy-green"
+                    readOnly
+                  />
+                  <p className="text-sm text-muted-foreground">
+                    Automatically calculated based on your selection
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* Description */}

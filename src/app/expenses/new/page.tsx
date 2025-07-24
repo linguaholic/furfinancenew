@@ -14,7 +14,7 @@ export default function NewExpensePage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <Suspense fallback={<div>Loading...</div>}>
-        <ExpenseForm onSuccess={handleSuccess} />
+      <ExpenseForm onSuccess={handleSuccess} />
       </Suspense>
     </div>
   );

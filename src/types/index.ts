@@ -27,6 +27,8 @@ export interface Expense {
   description: string;
   date: string;
   receipt?: string;
+  recurringType: 'none' | 'monthly' | 'quarterly' | 'yearly';
+  nextDueDate?: string;
   createdAt: string;
   updatedAt: string;
 }

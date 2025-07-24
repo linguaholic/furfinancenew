@@ -29,6 +29,12 @@ const toSnakeCase = (obj: unknown): unknown => {
       case 'endDate':
         snakeKey = 'end_date'
         break
+      case 'recurringType':
+        snakeKey = 'recurring_type'
+        break
+      case 'nextDueDate':
+        snakeKey = 'next_due_date'
+        break
       case 'defaultCurrency':
         snakeKey = 'default_currency'
         break
@@ -75,6 +81,12 @@ const toCamelCase = (obj: unknown): unknown => {
         break
       case 'end_date':
         camelKey = 'endDate'
+        break
+      case 'recurring_type':
+        camelKey = 'recurringType'
+        break
+      case 'next_due_date':
+        camelKey = 'nextDueDate'
         break
       case 'default_currency':
         camelKey = 'defaultCurrency'

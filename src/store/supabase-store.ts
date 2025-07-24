@@ -71,13 +71,24 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
     console.log('Store: Initializing...');
     set({ isLoading: true, error: null });
     try {
+      // Load critical data first (settings and categories needed for forms)
       await Promise.all([
         get().loadSettings(),
         get().loadCategories(),
+      ]);
+      console.log('Store: Critical data loaded');
+      
+      // Load secondary data in parallel (pets, expenses, budgets)
+      Promise.all([
         get().loadPets(),
         get().loadExpenses(),
         get().loadBudgets(),
-      ]);
+      ]).then(() => {
+        console.log('Store: Secondary data loaded');
+      }).catch((error) => {
+        console.error('Store: Secondary data failed:', error);
+      });
+      
       console.log('Store: Initialization complete');
     } catch (error) {
       console.error('Store: Initialization failed:', error);
@@ -193,8 +204,10 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
   loadCategories: async () => {
     try {
       console.log('Store: Loading categories...');
+      const startTime = Date.now();
       const categories = await categoriesService.getOrCreateDefault();
-      console.log('Store: Categories loaded:', categories.length);
+      const endTime = Date.now();
+      console.log(`Store: Categories loaded: ${categories.length} (${endTime - startTime}ms)`);
       set({ categories });
     } catch (error) {
       console.error('Store: Failed to load categories:', error);
@@ -297,9 +310,14 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
   // Settings actions
   loadSettings: async () => {
     try {
+      console.log('Store: Loading settings...');
+      const startTime = Date.now();
       const settings = await settingsService.getOrCreate();
+      const endTime = Date.now();
+      console.log(`Store: Settings loaded (${endTime - startTime}ms)`);
       set({ settings });
     } catch (error) {
+      console.error('Store: Failed to load settings:', error);
       set({ error: error instanceof Error ? error.message : 'Failed to load settings' });
     }
   },

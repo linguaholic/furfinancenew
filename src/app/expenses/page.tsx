@@ -13,7 +13,8 @@ import {
   Filter,
   Calendar,
   PawPrint,
-  ArrowLeft
+  ArrowLeft,
+  Repeat
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -178,7 +179,21 @@ export default function ExpensesPage() {
                               <Calendar className="h-3 w-3" />
                               {formatDate(expense.date)}
                             </span>
+                            {expense.recurringType !== 'none' && (
+                              <>
+                                <span>•</span>
+                                <span className="flex items-center gap-1 text-happy-blue">
+                                  <Repeat className="h-3 w-3" />
+                                  {expense.recurringType.charAt(0).toUpperCase() + expense.recurringType.slice(1)}
+                                </span>
+                              </>
+                            )}
                           </div>
+                          {expense.recurringType !== 'none' && expense.nextDueDate && (
+                            <div className="text-xs text-muted-foreground mt-1">
+                              Next due: {formatDate(expense.nextDueDate)}
+                            </div>
+                          )}
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
