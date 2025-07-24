@@ -1075,7 +1075,7 @@ export default function AnalyticsPage() {
                   name="message"
                   rows={5}
                   className="w-full px-4 py-3 bg-secondary border border-border rounded-lg focus:border-happy-green focus:outline-none transition-colors resize-none"
-                  placeholder="Tell us what you think about Fur Finance, what features you'd like to see, or any issues you've encountered..."
+                  placeholder="Tell us what you think about Fur Finance, what features you&apos;d like to see, or any issues you&apos;ve encountered..."
                   required
                 ></textarea>
               </div>
