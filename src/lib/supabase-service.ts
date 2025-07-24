@@ -380,6 +380,49 @@ export const categoriesService = {
       .eq('user_id', userId)
 
     if (error) throw error
+  },
+
+  async getOrCreateDefault(): Promise<ExpenseCategory[]> {
+    const userId = await getCurrentUserId()
+    
+    // First, try to get existing categories
+    const { data: existingCategories, error: getError } = await supabase
+      .from('expense_categories')
+      .select('*')
+      .eq('user_id', userId)
+      .order('name', { ascending: true })
+
+    if (getError) throw getError
+
+    // If categories exist, return them
+    if (existingCategories && existingCategories.length > 0) {
+      return existingCategories.map(toCamelCase) as ExpenseCategory[]
+    }
+
+    // If no categories exist, create default ones
+    const defaultCategories = [
+      { name: 'Food & Treats', color: '#10b981', icon: '🍖' },
+      { name: 'Veterinary Care', color: '#ef4444', icon: '🏥' },
+      { name: 'Grooming', color: '#8b5cf6', icon: '✂️' },
+      { name: 'Toys & Entertainment', color: '#f59e0b', icon: '🎾' },
+      { name: 'Supplies & Equipment', color: '#06b6d4', icon: '📦' },
+      { name: 'Training', color: '#84cc16', icon: '🎓' },
+      { name: 'Insurance', color: '#6366f1', icon: '🛡️' },
+      { name: 'Other', color: '#6b7280', icon: '📝' },
+    ]
+
+    const categoriesToInsert = defaultCategories.map(category => ({
+      ...category,
+      user_id: userId
+    }))
+
+    const { data: newCategories, error: createError } = await supabase
+      .from('expense_categories')
+      .insert(categoriesToInsert)
+      .select()
+
+    if (createError) throw createError
+    return (newCategories || []).map(toCamelCase) as ExpenseCategory[]
   }
 }
 

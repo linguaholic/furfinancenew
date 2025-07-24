@@ -189,7 +189,7 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
   // Category actions
   loadCategories: async () => {
     try {
-      const categories = await categoriesService.getAll();
+      const categories = await categoriesService.getOrCreateDefault();
       set({ categories });
     } catch (error) {
       set({ error: error instanceof Error ? error.message : 'Failed to load categories' });
