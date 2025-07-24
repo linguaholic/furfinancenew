@@ -392,6 +392,7 @@ export const categoriesService = {
 
   async getOrCreateDefault(): Promise<ExpenseCategory[]> {
     const userId = await getCurrentUserId()
+    console.log('Loading categories for user:', userId)
     
     // First, try to get existing categories
     const { data: existingCategories, error: getError } = await supabase
@@ -400,12 +401,19 @@ export const categoriesService = {
       .eq('user_id', userId)
       .order('name', { ascending: true })
 
-    if (getError) throw getError
+    if (getError) {
+      console.error('Error getting categories:', getError)
+      throw getError
+    }
+
+    console.log('Existing categories found:', existingCategories?.length || 0)
 
     // If categories exist, return them
     if (existingCategories && existingCategories.length > 0) {
       return existingCategories.map(toCamelCase) as ExpenseCategory[]
     }
+
+    console.log('No categories found, creating defaults...')
 
     // If no categories exist, create default ones
     const defaultCategories = [
@@ -424,12 +432,19 @@ export const categoriesService = {
       user_id: userId
     }))
 
+    console.log('Inserting default categories:', categoriesToInsert)
+
     const { data: newCategories, error: createError } = await supabase
       .from('expense_categories')
       .insert(categoriesToInsert)
       .select()
 
-    if (createError) throw createError
+    if (createError) {
+      console.error('Error creating default categories:', createError)
+      throw createError
+    }
+
+    console.log('Default categories created successfully:', newCategories?.length || 0)
     return (newCategories || []).map(toCamelCase) as ExpenseCategory[]
   }
 }

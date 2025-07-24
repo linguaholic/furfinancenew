@@ -68,6 +68,7 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
 
   // Initialize store
   initialize: async () => {
+    console.log('Store: Initializing...');
     set({ isLoading: true, error: null });
     try {
       await Promise.all([
@@ -77,7 +78,9 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
         get().loadExpenses(),
         get().loadBudgets(),
       ]);
+      console.log('Store: Initialization complete');
     } catch (error) {
+      console.error('Store: Initialization failed:', error);
       set({ error: error instanceof Error ? error.message : 'Failed to initialize' });
     } finally {
       set({ isLoading: false });
@@ -189,9 +192,12 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
   // Category actions
   loadCategories: async () => {
     try {
+      console.log('Store: Loading categories...');
       const categories = await categoriesService.getOrCreateDefault();
+      console.log('Store: Categories loaded:', categories.length);
       set({ categories });
     } catch (error) {
+      console.error('Store: Failed to load categories:', error);
       set({ error: error instanceof Error ? error.message : 'Failed to load categories' });
     }
   },
