@@ -182,14 +182,31 @@ export const petsService = {
       const snakeCasePet = toSnakeCase(pet) as Record<string, unknown>
       console.log('Snake case pet data:', snakeCasePet)
       
+      // Clean up the data - remove empty strings and null values for optional fields
+      const cleanedData = { ...snakeCasePet }
+      Object.keys(cleanedData).forEach(key => {
+        if (cleanedData[key] === '' || cleanedData[key] === null || cleanedData[key] === undefined) {
+          delete cleanedData[key]
+        }
+      })
+      
+      const insertData = { ...cleanedData, user_id: userId }
+      console.log('Final insert data:', insertData)
+      
       const { data, error } = await supabase
         .from('pets')
-        .insert([{ ...snakeCasePet, user_id: userId }])
+        .insert([insertData])
         .select()
         .single()
 
       if (error) {
         console.error('Supabase error creating pet:', error)
+        console.error('Error details:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        })
         throw error
       }
       
