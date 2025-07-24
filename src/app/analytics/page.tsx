@@ -1009,7 +1009,7 @@ export default function AnalyticsPage() {
               <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-happy-green to-happy-blue rounded-full mb-4">
                 <Heart className="h-8 w-8 text-white" />
               </div>
-              <h2 className="text-3xl font-bold mb-2">We'd Love Your Feedback!</h2>
+              <h2 className="text-3xl font-bold mb-2">We&apos;d Love Your Feedback!</h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                 Help us make Fur Finance even better for pet parents like you. Share your thoughts, suggestions, or report any issues.
               </p>
