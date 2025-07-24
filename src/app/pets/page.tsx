@@ -40,7 +40,6 @@ export default function PetsPage() {
       bird: '🐦',
       fish: '🐠',
       reptile: '🦎',
-      small_animal: '🐹',
       other: '🐾'
     };
     return icons[type] || '🐾';
@@ -53,7 +52,6 @@ export default function PetsPage() {
       bird: 'Bird',
       fish: 'Fish',
       reptile: 'Reptile',
-      small_animal: 'Small Animal',
       other: 'Other'
     };
     return labels[type] || 'Other';
