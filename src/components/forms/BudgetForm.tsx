@@ -151,9 +151,9 @@ export function BudgetForm({ budget, onSuccess }: BudgetFormProps) {
                       <SelectTrigger className="bg-secondary border-border focus:border-happy-green">
                         <SelectValue placeholder="Select a pet" />
                       </SelectTrigger>
-                      <SelectContent style={{ backgroundColor: '#000000', border: '1px solid #333333' }}>
+                      <SelectContent className="bg-black border border-gray-700 z-50">
                         {pets.map((pet) => (
-                          <SelectItem key={pet.id} value={pet.id} style={{ backgroundColor: '#000000', color: '#ffffff' }}>
+                          <SelectItem key={pet.id} value={pet.id} className="bg-black text-white hover:bg-gray-800 focus:bg-gray-800">
                             {pet.name}
                           </SelectItem>
                         ))}
@@ -177,9 +177,9 @@ export function BudgetForm({ budget, onSuccess }: BudgetFormProps) {
                       <SelectTrigger className="bg-secondary border-border focus:border-happy-green">
                         <SelectValue placeholder="Select category" />
                       </SelectTrigger>
-                      <SelectContent style={{ backgroundColor: '#000000', border: '1px solid #333333' }}>
+                      <SelectContent className="bg-black border border-gray-700 z-50">
                         {categories.map((category) => (
-                          <SelectItem key={category.id} value={category.id} style={{ backgroundColor: '#000000', color: '#ffffff' }}>
+                          <SelectItem key={category.id} value={category.id} className="bg-black text-white hover:bg-gray-800 focus:bg-gray-800">
                             <div className="flex items-center gap-2">
                               <div 
                                 className="w-3 h-3 rounded-full flex-shrink-0"
@@ -225,9 +225,9 @@ export function BudgetForm({ budget, onSuccess }: BudgetFormProps) {
                       <SelectTrigger className="bg-secondary border-border focus:border-happy-green">
                         <SelectValue placeholder="Select currency" />
                       </SelectTrigger>
-                      <SelectContent style={{ backgroundColor: '#000000', border: '1px solid #333333' }}>
+                      <SelectContent className="bg-black border border-gray-700 z-50">
                         {settings.availableCurrencies.map((currency) => (
-                          <SelectItem key={currency} value={currency} style={{ backgroundColor: '#000000', color: '#ffffff' }}>
+                          <SelectItem key={currency} value={currency} className="bg-black text-white hover:bg-gray-800 focus:bg-gray-800">
                             <div className="flex items-center gap-2">
                               <span className="font-mono">{getCurrencySymbol(currency)}</span>
                               <span>{currency}</span>
@@ -254,11 +254,11 @@ export function BudgetForm({ budget, onSuccess }: BudgetFormProps) {
                       <SelectTrigger className="bg-secondary border-border focus:border-happy-green">
                         <SelectValue placeholder="Select period" />
                       </SelectTrigger>
-                      <SelectContent style={{ backgroundColor: '#000000', border: '1px solid #333333' }}>
-                        <SelectItem value="monthly" style={{ backgroundColor: '#000000', color: '#ffffff' }}>
+                      <SelectContent className="bg-black border border-gray-700 z-50">
+                        <SelectItem value="monthly" className="bg-black text-white hover:bg-gray-800 focus:bg-gray-800">
                           Monthly
                         </SelectItem>
-                        <SelectItem value="yearly" style={{ backgroundColor: '#000000', color: '#ffffff' }}>
+                        <SelectItem value="yearly" className="bg-black text-white hover:bg-gray-800 focus:bg-gray-800">
                           Yearly
                         </SelectItem>
                       </SelectContent>
