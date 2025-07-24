@@ -1,7 +1,7 @@
 export interface Pet {
   id: string;
   name: string;
-  type: 'dog' | 'cat' | 'bird' | 'fish' | 'reptile' | 'small_animal' | 'other';
+  type: 'dog' | 'cat' | 'bird' | 'fish' | 'reptile' | 'other';
   breed?: string;
   birthDate?: string;
   photo?: string;

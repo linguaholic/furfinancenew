@@ -8,7 +8,36 @@ const toSnakeCase = (obj: unknown): unknown => {
   
   const snakeCaseObj: Record<string, unknown> = {}
   for (const [key, value] of Object.entries(obj as Record<string, unknown>)) {
-    const snakeKey = key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`)
+    // Handle specific field mappings
+    let snakeKey: string
+    switch (key) {
+      case 'birthDate':
+        snakeKey = 'birth_date'
+        break
+      case 'photo':
+        snakeKey = 'photo_url'
+        break
+      case 'petId':
+        snakeKey = 'pet_id'
+        break
+      case 'categoryId':
+        snakeKey = 'category_id'
+        break
+      case 'defaultCurrency':
+        snakeKey = 'default_currency'
+        break
+      case 'availableCurrencies':
+        snakeKey = 'available_currencies'
+        break
+      case 'createdAt':
+        snakeKey = 'created_at'
+        break
+      case 'updatedAt':
+        snakeKey = 'updated_at'
+        break
+      default:
+        snakeKey = key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`)
+    }
     snakeCaseObj[snakeKey] = toSnakeCase(value)
   }
   return snakeCaseObj
@@ -20,7 +49,36 @@ const toCamelCase = (obj: unknown): unknown => {
   
   const camelCaseObj: Record<string, unknown> = {}
   for (const [key, value] of Object.entries(obj as Record<string, unknown>)) {
-    const camelKey = key.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase())
+    // Handle specific field mappings
+    let camelKey: string
+    switch (key) {
+      case 'birth_date':
+        camelKey = 'birthDate'
+        break
+      case 'photo_url':
+        camelKey = 'photo'
+        break
+      case 'pet_id':
+        camelKey = 'petId'
+        break
+      case 'category_id':
+        camelKey = 'categoryId'
+        break
+      case 'default_currency':
+        camelKey = 'defaultCurrency'
+        break
+      case 'available_currencies':
+        camelKey = 'availableCurrencies'
+        break
+      case 'created_at':
+        camelKey = 'createdAt'
+        break
+      case 'updated_at':
+        camelKey = 'updatedAt'
+        break
+      default:
+        camelKey = key.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase())
+    }
     camelCaseObj[camelKey] = toCamelCase(value)
   }
   return camelCaseObj
