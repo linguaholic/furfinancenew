@@ -2,26 +2,26 @@ import { supabase } from './supabase'
 import { Pet, Expense, Budget, ExpenseCategory, AppSettings } from '@/types'
 
 // Utility functions to convert between camelCase and snake_case
-const toSnakeCase = (obj: any): any => {
-  if (obj === null || typeof obj !== 'object') return obj
-  if (Array.isArray(obj)) return obj.map(toSnakeCase)
+const toSnakeCase = (obj: Record<string, unknown> | null | undefined): Record<string, unknown> => {
+  if (obj === null || obj === undefined || typeof obj !== 'object') return obj as Record<string, unknown>
+  if (Array.isArray(obj)) return obj.map(toSnakeCase) as Record<string, unknown>
   
-  const snakeCaseObj: any = {}
+  const snakeCaseObj: Record<string, unknown> = {}
   for (const [key, value] of Object.entries(obj)) {
     const snakeKey = key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`)
-    snakeCaseObj[snakeKey] = toSnakeCase(value)
+    snakeCaseObj[snakeKey] = toSnakeCase(value as Record<string, unknown>)
   }
   return snakeCaseObj
 }
 
-const toCamelCase = (obj: any): any => {
-  if (obj === null || typeof obj !== 'object') return obj
-  if (Array.isArray(obj)) return obj.map(toCamelCase)
+const toCamelCase = (obj: Record<string, unknown> | null | undefined): Record<string, unknown> => {
+  if (obj === null || obj === undefined || typeof obj !== 'object') return obj as Record<string, unknown>
+  if (Array.isArray(obj)) return obj.map(toCamelCase) as Record<string, unknown>
   
-  const camelCaseObj: any = {}
+  const camelCaseObj: Record<string, unknown> = {}
   for (const [key, value] of Object.entries(obj)) {
     const camelKey = key.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase())
-    camelCaseObj[camelKey] = toCamelCase(value)
+    camelCaseObj[camelKey] = toCamelCase(value as Record<string, unknown>)
   }
   return camelCaseObj
 }
@@ -438,7 +438,7 @@ export const fileService = {
     const fileExt = file.name.split('.').pop()
     const fileName = `${petId}-${Date.now()}.${fileExt}`
     
-    const { data, error } = await supabase.storage
+    const { error } = await supabase.storage
       .from('pet-photos')
       .upload(fileName, file)
 
