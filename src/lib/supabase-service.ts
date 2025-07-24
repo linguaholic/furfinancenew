@@ -97,7 +97,7 @@ export const petsService = {
 
     if (error) throw error
     // Convert snake_case to camelCase for frontend
-    return (data || []).map(toCamelCase)
+    return (data || []).map(toCamelCase) as Pet[]
   },
 
   async getById(id: string): Promise<Pet | null> {
@@ -111,7 +111,7 @@ export const petsService = {
 
     if (error) throw error
     // Convert snake_case to camelCase for frontend
-    return data ? toCamelCase(data) : null
+    return data ? toCamelCase(data) as Pet : null
   },
 
   async create(pet: Omit<Pet, 'id' | 'createdAt' | 'updatedAt'>): Promise<Pet> {
@@ -137,7 +137,7 @@ export const petsService = {
       
       console.log('Pet created successfully:', data)
       // Convert snake_case back to camelCase for frontend
-      return toCamelCase(data)
+      return toCamelCase(data) as Pet
     } catch (error) {
       console.error('Error in petsService.create:', error)
       throw error
@@ -155,7 +155,7 @@ export const petsService = {
       .single()
 
     if (error) throw error
-    return data
+    return toCamelCase(data) as Pet
   },
 
   async delete(id: string): Promise<void> {
@@ -185,7 +185,7 @@ export const expensesService = {
       .order('date', { ascending: false })
 
     if (error) throw error
-    return data || []
+    return (data || []).map(toCamelCase) as Expense[]
   },
 
   async getById(id: string): Promise<Expense | null> {
@@ -202,7 +202,7 @@ export const expensesService = {
       .single()
 
     if (error) throw error
-    return data
+    return data ? toCamelCase(data) as Expense : null
   },
 
   async create(expense: Omit<Expense, 'id' | 'createdAt' | 'updatedAt'>): Promise<Expense> {
@@ -214,7 +214,7 @@ export const expensesService = {
       .single()
 
     if (error) throw error
-    return data
+    return toCamelCase(data) as Expense
   },
 
   async update(id: string, expense: Partial<Expense>): Promise<Expense> {
@@ -228,7 +228,7 @@ export const expensesService = {
       .single()
 
     if (error) throw error
-    return data
+    return toCamelCase(data) as Expense
   },
 
   async delete(id: string): Promise<void> {
@@ -254,7 +254,7 @@ export const categoriesService = {
       .order('name', { ascending: true })
 
     if (error) throw error
-    return data || []
+    return (data || []).map(toCamelCase) as ExpenseCategory[]
   },
 
   async getById(id: string): Promise<ExpenseCategory | null> {
@@ -267,7 +267,7 @@ export const categoriesService = {
       .single()
 
     if (error) throw error
-    return data
+    return data ? toCamelCase(data) as ExpenseCategory : null
   },
 
   async create(category: Omit<ExpenseCategory, 'id' | 'createdAt' | 'updatedAt'>): Promise<ExpenseCategory> {
@@ -279,7 +279,7 @@ export const categoriesService = {
       .single()
 
     if (error) throw error
-    return data
+    return toCamelCase(data) as ExpenseCategory
   },
 
   async update(id: string, category: Partial<ExpenseCategory>): Promise<ExpenseCategory> {
@@ -293,7 +293,7 @@ export const categoriesService = {
       .single()
 
     if (error) throw error
-    return data
+    return toCamelCase(data) as ExpenseCategory
   },
 
   async delete(id: string): Promise<void> {
@@ -323,7 +323,7 @@ export const budgetsService = {
       .order('created_at', { ascending: false })
 
     if (error) throw error
-    return data || []
+    return (data || []).map(toCamelCase) as Budget[]
   },
 
   async getById(id: string): Promise<Budget | null> {
@@ -340,7 +340,7 @@ export const budgetsService = {
       .single()
 
     if (error) throw error
-    return data
+    return data ? toCamelCase(data) as Budget : null
   },
 
   async create(budget: Omit<Budget, 'id' | 'createdAt' | 'updatedAt'>): Promise<Budget> {
@@ -352,7 +352,7 @@ export const budgetsService = {
       .single()
 
     if (error) throw error
-    return data
+    return toCamelCase(data) as Budget
   },
 
   async update(id: string, budget: Partial<Budget>): Promise<Budget> {
@@ -366,7 +366,7 @@ export const budgetsService = {
       .single()
 
     if (error) throw error
-    return data
+    return toCamelCase(data) as Budget
   },
 
   async delete(id: string): Promise<void> {
@@ -392,7 +392,7 @@ export const settingsService = {
       .single()
 
     if (error && error.code !== 'PGRST116') throw error // PGRST116 = no rows returned
-    return data
+    return data ? toCamelCase(data) as AppSettings : null
   },
 
   async create(settings: Omit<AppSettings, 'id' | 'createdAt' | 'updatedAt'>): Promise<AppSettings> {
@@ -404,7 +404,7 @@ export const settingsService = {
       .single()
 
     if (error) throw error
-    return data
+    return toCamelCase(data) as AppSettings
   },
 
   async update(settings: Partial<AppSettings>): Promise<AppSettings> {
@@ -417,7 +417,7 @@ export const settingsService = {
       .single()
 
     if (error) throw error
-    return data
+    return toCamelCase(data) as AppSettings
   },
 
   async getOrCreate(): Promise<AppSettings> {
