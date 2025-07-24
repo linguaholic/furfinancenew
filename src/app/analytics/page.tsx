@@ -23,7 +23,7 @@ import {
 } from 'recharts';
 import { 
   TrendingUp, 
- 
+  Repeat,
   DollarSign, 
   Calendar,
   PieChart as PieChartIcon,
@@ -166,6 +166,70 @@ export default function AnalyticsPage() {
   // Get currency for display (use first expense currency or default to USD)
   const displayCurrency = filteredExpenses.length > 0 ? filteredExpenses[0].currency : 'USD';
 
+  // Calculate spending insights
+  const spendingInsights = useMemo(() => {
+    if (filteredExpenses.length === 0) return null;
+
+    const sortedExpenses = [...filteredExpenses].sort((a, b) => b.amount - a.amount);
+    const highestExpense = sortedExpenses[0];
+    const lowestExpense = sortedExpenses[sortedExpenses.length - 1];
+    
+    const recurringExpenses = filteredExpenses.filter(expense => expense.recurringType !== 'none');
+    const oneTimeExpenses = filteredExpenses.filter(expense => expense.recurringType === 'none');
+    
+    const totalRecurring = recurringExpenses.reduce((sum, expense) => sum + expense.amount, 0);
+    const totalOneTime = oneTimeExpenses.reduce((sum, expense) => sum + expense.amount, 0);
+
+    return {
+      highestExpense,
+      lowestExpense,
+      recurringExpenses: recurringExpenses.length,
+      oneTimeExpenses: oneTimeExpenses.length,
+      totalRecurring,
+      totalOneTime,
+      recurringPercentage: totalExpenses > 0 ? (totalRecurring / totalExpenses) * 100 : 0
+    };
+  }, [filteredExpenses, totalExpenses]);
+
+  // Calculate category breakdown for pie chart
+  const categoryPieData = useMemo(() => {
+    return expensesByCategory.map((category, index) => ({
+      name: category.name,
+      value: category.amount,
+      color: COLORS[index % COLORS.length]
+    }));
+  }, [expensesByCategory]);
+
+  // Calculate pet breakdown for pie chart
+  const petPieData = useMemo(() => {
+    return expensesByPet.map((pet, index) => ({
+      name: pet.name,
+      value: pet.amount,
+      color: COLORS[index % COLORS.length]
+    }));
+  }, [expensesByPet]);
+
+  // Calculate budget performance
+  const budgetPerformance = useMemo(() => {
+    if (selectedPet === 'all') return null;
+    
+    const petBudgets = budgets.filter(budget => budget.petId === selectedPet);
+    const totalBudget = petBudgets.reduce((sum, budget) => {
+      const budgetAmount = budget.period === 'monthly' ? budget.amount : budget.amount / 12;
+      return sum + budgetAmount;
+    }, 0);
+    
+    const totalActual = filteredExpenses.reduce((sum, expense) => sum + expense.amount, 0);
+    const percentage = totalBudget > 0 ? (totalActual / totalBudget) * 100 : 0;
+    
+    return {
+      totalBudget,
+      totalActual,
+      percentage,
+      status: percentage > 100 ? 'over' : percentage > 80 ? 'warning' : 'good'
+    };
+  }, [budgets, selectedPet, filteredExpenses]);
+
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Back Button */}
@@ -223,7 +287,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
         <Card className="bg-gradient-card border-0 shadow-xl">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
@@ -287,6 +351,33 @@ export default function AnalyticsPage() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Budget Summary Card */}
+        <Card className="bg-gradient-card border-0 shadow-xl">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Budget Status</p>
+                {budgetPerformance ? (
+                  <div>
+                    <p className="text-2xl font-bold text-happy-orange">
+                      {budgetPerformance.percentage.toFixed(1)}%
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {budgetPerformance.status === 'over' ? 'Over Budget' : 
+                       budgetPerformance.status === 'warning' ? 'Near Limit' : 'Within Budget'}
+                    </p>
+                  </div>
+                ) : (
+                  <p className="text-2xl font-bold text-muted-foreground">N/A</p>
+                )}
+              </div>
+              <div className="p-3 bg-happy-orange/20 rounded-lg">
+                <Target className="h-6 w-6 text-happy-orange" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Charts Grid */}
@@ -336,32 +427,56 @@ export default function AnalyticsPage() {
             <CardDescription>Breakdown of spending by category</CardDescription>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={expensesByCategory}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="amount"
-                >
-                  {expensesByCategory.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: '#1F2937', 
-                    border: '1px solid #374151',
-                    borderRadius: '8px'
-                  }}
-                  formatter={(value: number) => [formatCurrency(value, displayCurrency), 'Amount']}
-                />
-              </PieChart>
-            </ResponsiveContainer>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <ResponsiveContainer width="100%" height={250}>
+                <PieChart>
+                  <Pie
+                    data={categoryPieData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
+                    outerRadius={70}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {categoryPieData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#1F2937', 
+                      border: '1px solid #374151',
+                      borderRadius: '8px'
+                    }}
+                    formatter={(value: number) => [formatCurrency(value, displayCurrency), 'Amount']}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+              
+              {/* Category Legend */}
+              <div className="space-y-2">
+                <h4 className="font-semibold text-sm mb-3">Category Breakdown</h4>
+                {categoryPieData.map((category, index) => (
+                  <div key={index} className="flex items-center justify-between p-2 bg-secondary rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <div 
+                        className="w-3 h-3 rounded-full"
+                        style={{ backgroundColor: category.color }}
+                      />
+                      <span className="text-sm font-medium">{category.name}</span>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-sm font-bold">{formatCurrency(category.value, displayCurrency)}</div>
+                      <div className="text-xs text-muted-foreground">
+                        {((category.value / totalExpenses) * 100).toFixed(1)}%
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </CardContent>
         </Card>
 
@@ -375,22 +490,56 @@ export default function AnalyticsPage() {
             <CardDescription>Spending breakdown by pet</CardDescription>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={expensesByPet}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                <XAxis dataKey="name" stroke="#9CA3AF" />
-                <YAxis stroke="#9CA3AF" />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: '#1F2937', 
-                    border: '1px solid #374151',
-                    borderRadius: '8px'
-                  }}
-                  formatter={(value: number) => [formatCurrency(value, displayCurrency), 'Amount']}
-                />
-                <Bar dataKey="amount" fill="#3B82F6" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <ResponsiveContainer width="100%" height={250}>
+                <PieChart>
+                  <Pie
+                    data={petPieData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
+                    outerRadius={70}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {petPieData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#1F2937', 
+                      border: '1px solid #374151',
+                      borderRadius: '8px'
+                    }}
+                    formatter={(value: number) => [formatCurrency(value, displayCurrency), 'Amount']}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+              
+              {/* Pet Legend */}
+              <div className="space-y-2">
+                <h4 className="font-semibold text-sm mb-3">Pet Breakdown</h4>
+                {petPieData.map((pet, index) => (
+                  <div key={index} className="flex items-center justify-between p-2 bg-secondary rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <div 
+                        className="w-3 h-3 rounded-full"
+                        style={{ backgroundColor: pet.color }}
+                      />
+                      <span className="text-sm font-medium">{pet.name}</span>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-sm font-bold">{formatCurrency(pet.value, displayCurrency)}</div>
+                      <div className="text-xs text-muted-foreground">
+                        {((pet.value / totalExpenses) * 100).toFixed(1)}%
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </CardContent>
         </Card>
 
@@ -459,6 +608,114 @@ export default function AnalyticsPage() {
         )}
       </div>
 
+      {/* Enhanced Analytics - Spending Insights */}
+      {spendingInsights && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          {/* Spending Insights */}
+          <Card className="bg-gradient-card border-0 shadow-xl">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <TrendingUp className="h-5 w-5 text-happy-green" />
+                Spending Insights
+              </CardTitle>
+              <CardDescription>Key insights about your spending patterns</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center p-3 bg-secondary rounded-lg">
+                  <span className="text-sm text-muted-foreground">Highest Expense</span>
+                  <span className="font-semibold text-red-500">
+                    {formatCurrency(spendingInsights.highestExpense.amount, displayCurrency)}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-secondary rounded-lg">
+                  <span className="text-sm text-muted-foreground">Lowest Expense</span>
+                  <span className="font-semibold text-green-500">
+                    {formatCurrency(spendingInsights.lowestExpense.amount, displayCurrency)}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-secondary rounded-lg">
+                  <span className="text-sm text-muted-foreground">Recurring Expenses</span>
+                  <span className="font-semibold text-blue-500">
+                    {spendingInsights.recurringExpenses} ({spendingInsights.recurringPercentage.toFixed(1)}%)
+                  </span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-secondary rounded-lg">
+                  <span className="text-sm text-muted-foreground">One-time Expenses</span>
+                  <span className="font-semibold text-purple-500">
+                    {spendingInsights.oneTimeExpenses}
+                  </span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Budget Performance Dashboard */}
+          <Card className="bg-gradient-card border-0 shadow-xl">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Target className="h-5 w-5 text-happy-orange" />
+                Budget Performance
+              </CardTitle>
+              <CardDescription>Overall budget tracking</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {budgetPerformance ? (
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">Total Budget</span>
+                    <span className="font-semibold">{formatCurrency(budgetPerformance.totalBudget, displayCurrency)}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">Actual Spending</span>
+                    <span className="font-semibold">{formatCurrency(budgetPerformance.totalActual, displayCurrency)}</span>
+                  </div>
+                  <div className="w-full bg-gray-700 rounded-full h-3">
+                    <div 
+                      className={`h-3 rounded-full transition-all duration-300 ${
+                        budgetPerformance.status === 'over' ? 'bg-red-500' : 
+                        budgetPerformance.status === 'warning' ? 'bg-yellow-500' : 'bg-green-500'
+                      }`}
+                      style={{ width: `${Math.min(budgetPerformance.percentage, 100)}%` }}
+                    ></div>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">Budget Usage</span>
+                    <span className={`font-semibold ${
+                      budgetPerformance.status === 'over' ? 'text-red-500' : 
+                      budgetPerformance.status === 'warning' ? 'text-yellow-500' : 'text-green-500'
+                    }`}>
+                      {budgetPerformance.percentage.toFixed(1)}%
+                    </span>
+                  </div>
+                  <div className="mt-4 p-3 bg-secondary rounded-lg">
+                    <div className="flex items-center gap-2">
+                      {budgetPerformance.status === 'over' ? (
+                        <AlertTriangle className="h-4 w-4 text-red-500" />
+                      ) : budgetPerformance.status === 'warning' ? (
+                        <AlertTriangle className="h-4 w-4 text-yellow-500" />
+                      ) : (
+                        <CheckCircle className="h-4 w-4 text-green-500" />
+                      )}
+                      <span className="text-sm">
+                        {budgetPerformance.status === 'over' ? 'Over budget' : 
+                         budgetPerformance.status === 'warning' ? 'Approaching budget limit' : 
+                         'Within budget'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center text-muted-foreground py-8">
+                  <Target className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                  <p>Select a specific pet to view budget performance</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
       {/* Budget Status (if pet is selected) */}
       {selectedPet !== 'all' && budgetComparison.length > 0 && (
         <Card className="bg-gradient-card border-0 shadow-xl mb-8">
@@ -515,47 +772,85 @@ export default function AnalyticsPage() {
         </Card>
       )}
 
-      {/* Recent High-Value Expenses */}
+      {/* Recent Expenses Table */}
       <Card className="bg-gradient-card border-0 shadow-xl">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <DollarSign className="h-5 w-5 text-happy-green" />
-            Recent High-Value Expenses
+            Recent Expenses
           </CardTitle>
-          <CardDescription>Your most expensive recent transactions</CardDescription>
+          <CardDescription>Your most recent transactions with detailed breakdown</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {filteredExpenses
-              .sort((a, b) => b.amount - a.amount)
-              .slice(0, 10)
-              .map((expense) => {
-                const pet = pets.find(p => p.id === expense.petId);
-                const category = categories.find(c => c.id === expense.categoryId);
-                
-                return (
-                  <div key={expense.id} className="flex items-center justify-between p-4 bg-secondary rounded-lg">
-                    <div className="flex items-center gap-4">
-                      <div 
-                        className="w-4 h-4 rounded-full"
-                        style={{ backgroundColor: category?.color }}
-                      />
-                      <div>
-                        <div className="font-medium">{expense.description}</div>
-                        <div className="text-sm text-muted-foreground">
-                          {pet?.name} • {category?.name} • {new Date(expense.date).toLocaleDateString()}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="font-bold text-happy-green">
-                        {formatCurrency(expense.amount, expense.currency)}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-border">
+                  <th className="text-left py-3 px-4 font-semibold text-sm">Date</th>
+                  <th className="text-left py-3 px-4 font-semibold text-sm">Description</th>
+                  <th className="text-left py-3 px-4 font-semibold text-sm">Category</th>
+                  <th className="text-left py-3 px-4 font-semibold text-sm">Pet</th>
+                  <th className="text-left py-3 px-4 font-semibold text-sm">Type</th>
+                  <th className="text-right py-3 px-4 font-semibold text-sm">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredExpenses
+                  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                  .slice(0, 10)
+                  .map((expense) => {
+                    const pet = pets.find(p => p.id === expense.petId);
+                    const category = categories.find(c => c.id === expense.categoryId);
+                    
+                    return (
+                      <tr key={expense.id} className="border-b border-border/50 hover:bg-secondary/50 transition-colors">
+                        <td className="py-3 px-4 text-sm">
+                          {new Date(expense.date).toLocaleDateString()}
+                        </td>
+                        <td className="py-3 px-4">
+                          <div className="font-medium text-sm">
+                            {expense.description || 'No description'}
+                          </div>
+                        </td>
+                        <td className="py-3 px-4">
+                          <div className="flex items-center gap-2">
+                            <div 
+                              className="w-3 h-3 rounded-full"
+                              style={{ backgroundColor: category?.color }}
+                            />
+                            <span className="text-sm">{category?.name}</span>
+                          </div>
+                        </td>
+                        <td className="py-3 px-4 text-sm">
+                          {pet?.name}
+                        </td>
+                        <td className="py-3 px-4">
+                          {expense.recurringType !== 'none' ? (
+                            <Badge variant="secondary" className="text-xs">
+                              <Repeat className="h-3 w-3 mr-1" />
+                              {expense.recurringType}
+                            </Badge>
+                          ) : (
+                            <Badge variant="outline" className="text-xs">One-time</Badge>
+                          )}
+                        </td>
+                        <td className="py-3 px-4 text-right">
+                          <div className="font-bold text-happy-green">
+                            {formatCurrency(expense.amount, expense.currency)}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+              </tbody>
+            </table>
           </div>
+          {filteredExpenses.length === 0 && (
+            <div className="text-center text-muted-foreground py-8">
+              <DollarSign className="h-12 w-12 mx-auto mb-2 opacity-50" />
+              <p>No expenses found for the selected filters</p>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
