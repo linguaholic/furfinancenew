@@ -167,6 +167,87 @@ export default function AnalyticsPage() {
   // Get currency for display (use first expense currency or default to USD)
   const displayCurrency = filteredExpenses.length > 0 ? filteredExpenses[0].currency : 'USD';
 
+  // Export analytics report function
+  const exportAnalyticsReport = () => {
+    if (filteredExpenses.length === 0) {
+      alert('No data to export');
+      return;
+    }
+
+    // Create CSV content
+    const headers = [
+      'Date',
+      'Description', 
+      'Category',
+      'Pet',
+      'Amount',
+      'Currency',
+      'Recurring Type'
+    ];
+
+    const csvData = filteredExpenses.map(expense => {
+      const pet = pets.find(p => p.id === expense.petId);
+      const category = categories.find(c => c.id === expense.categoryId);
+      
+      return [
+        new Date(expense.date).toLocaleDateString(),
+        expense.description || 'No description',
+        category?.name || 'Unknown',
+        pet?.name || 'Unknown',
+        expense.amount.toString(),
+        expense.currency,
+        expense.recurringType
+      ];
+    });
+
+    // Add summary data
+    const summaryData = [
+      [],
+      ['ANALYTICS SUMMARY'],
+      ['Total Expenses', formatCurrency(totalExpenses, displayCurrency)],
+      ['Average Expense', formatCurrency(averageExpense, displayCurrency)],
+      ['Total Transactions', filteredExpenses.length.toString()],
+      ['Categories Used', expensesByCategory.length.toString()],
+      ['Period', selectedPeriod === 'month' ? 'This Month' : 'This Year'],
+      ['Pet Filter', selectedPet === 'all' ? 'All Pets' : pets.find(p => p.id === selectedPet)?.name || 'Unknown'],
+      [],
+      ['CATEGORY BREAKDOWN'],
+      ['Category', 'Amount', 'Percentage'],
+      ...expensesByCategory.map(category => [
+        category.name,
+        formatCurrency(category.amount, displayCurrency),
+        `${((category.amount / totalExpenses) * 100).toFixed(1)}%`
+      ]),
+      [],
+      ['PET BREAKDOWN'],
+      ['Pet', 'Amount', 'Percentage'],
+      ...expensesByPet.map(pet => [
+        pet.name,
+        formatCurrency(pet.amount, displayCurrency),
+        `${((pet.amount / totalExpenses) * 100).toFixed(1)}%`
+      ]),
+      [],
+      ['DETAILED EXPENSES'],
+      headers,
+      ...csvData
+    ];
+
+    const csvContent = summaryData.map(row => 
+      row.map(cell => `"${cell}"`).join(',')
+    ).join('\n');
+
+    // Create and download file
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `fur-finance-analytics-${selectedPeriod}-${selectedPet === 'all' ? 'all-pets' : pets.find(p => p.id === selectedPet)?.name || 'unknown'}-${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   // Calculate spending insights
   const spendingInsights = useMemo(() => {
     if (filteredExpenses.length === 0) return null;
@@ -280,7 +361,12 @@ export default function AnalyticsPage() {
             <option value="year">This Year</option>
           </select>
 
-          <Button variant="outline" size="sm" className="border-2 border-happy-blue text-happy-blue hover:bg-happy-blue hover:text-white">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="border-2 border-happy-blue text-happy-blue hover:bg-happy-blue hover:text-white"
+            onClick={exportAnalyticsReport}
+          >
             <Download className="h-4 w-4 mr-2" />
             Export Report
           </Button>
