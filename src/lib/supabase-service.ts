@@ -1,6 +1,30 @@
 import { supabase } from './supabase'
 import { Pet, Expense, Budget, ExpenseCategory, AppSettings } from '@/types'
 
+// Test function to check Supabase connection
+export const testSupabaseConnection = async () => {
+  try {
+    console.log('Testing Supabase connection...')
+    
+    // Test 1: Check if we can connect
+    const { data: testData, error: testError } = await supabase
+      .from('pets')
+      .select('count')
+      .limit(1)
+    
+    console.log('Connection test result:', { testData, testError })
+    
+    // Test 2: Check auth status
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    console.log('Auth status:', { user: user?.id, authError })
+    
+    return { success: !testError && !authError, testError, authError }
+  } catch (error) {
+    console.error('Connection test failed:', error)
+    return { success: false, error }
+  }
+}
+
 // Helper to get current user ID (anonymous or authenticated)
 const getCurrentUserId = async () => {
   try {
