@@ -472,26 +472,36 @@ export default function AnalyticsPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <ResponsiveContainer width="100%" height={250}>
                 <PieChart>
-                                  <Pie
-                  data={categoryPieData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  outerRadius={70}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
+                  <Pie
+                    data={categoryPieData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    outerRadius={70}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
                     {categoryPieData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
                   <Tooltip 
                     contentStyle={{ 
-                      backgroundColor: '#1F2937', 
-                      border: '1px solid #374151',
-                      borderRadius: '8px'
+                      backgroundColor: '#ffffff', 
+                      border: '2px solid #10B981',
+                      borderRadius: '12px',
+                      boxShadow: '0 10px 25px rgba(0, 0, 0, 0.3)',
+                      color: '#1F2937',
+                      fontSize: '14px',
+                      fontWeight: '600',
+                      padding: '12px 16px'
                     }}
                     formatter={(value: number) => [formatCurrency(value, displayCurrency), 'Amount']}
+                    labelStyle={{
+                      color: '#1F2937',
+                      fontWeight: '600',
+                      fontSize: '14px'
+                    }}
                   />
                 </PieChart>
               </ResponsiveContainer>
@@ -534,26 +544,36 @@ export default function AnalyticsPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <ResponsiveContainer width="100%" height={250}>
                 <PieChart>
-                                  <Pie
-                  data={petPieData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  outerRadius={70}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
+                  <Pie
+                    data={petPieData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    outerRadius={70}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
                     {petPieData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
                   <Tooltip 
                     contentStyle={{ 
-                      backgroundColor: '#1F2937', 
-                      border: '1px solid #374151',
-                      borderRadius: '8px'
+                      backgroundColor: '#ffffff', 
+                      border: '2px solid #10B981',
+                      borderRadius: '12px',
+                      boxShadow: '0 10px 25px rgba(0, 0, 0, 0.3)',
+                      color: '#1F2937',
+                      fontSize: '14px',
+                      fontWeight: '600',
+                      padding: '12px 16px'
                     }}
                     formatter={(value: number) => [formatCurrency(value, displayCurrency), 'Amount']}
+                    labelStyle={{
+                      color: '#1F2937',
+                      fontWeight: '600',
+                      fontSize: '14px'
+                    }}
                   />
                 </PieChart>
               </ResponsiveContainer>
