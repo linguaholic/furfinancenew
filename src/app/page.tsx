@@ -51,17 +51,6 @@ export default function HomePage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Logo - Desktop Only */}
-      <div className="hidden md:block mb-8">
-        <div className="flex items-center">
-          <img 
-            src="/images/Fur Finance Logo.png" 
-            alt="Fur Finance Logo" 
-            className="h-36 w-36 object-contain"
-          />
-        </div>
-      </div>
-
       {/* Hero Section */}
       <div className="text-center mb-12">
         <div className="inline-flex items-center gap-3 mb-6 p-3 bg-gradient-primary rounded-2xl shadow-xl">
