@@ -121,7 +121,7 @@ export const petsService = {
       console.log('Pet data:', pet)
       
       // Convert camelCase to snake_case for database
-      const snakeCasePet = toSnakeCase(pet)
+      const snakeCasePet = toSnakeCase(pet) as Record<string, unknown>
       console.log('Snake case pet data:', snakeCasePet)
       
       const { data, error } = await supabase
