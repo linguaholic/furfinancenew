@@ -45,6 +45,7 @@ export default function AnalyticsPage() {
   const { expenses, pets, categories, budgets } = useFurFinanceStore();
   const [selectedPet, setSelectedPet] = useState<string>('all');
   const [selectedPeriod, setSelectedPeriod] = useState<'month' | 'year'>('month');
+  const [monthlyChartType, setMonthlyChartType] = useState<'area' | 'bar'>('area');
 
   // Filter expenses based on selected pet and period
   const filteredExpenses = useMemo(() => {
@@ -392,27 +393,68 @@ export default function AnalyticsPage() {
             <CardDescription>Your spending pattern over the last 6 months</CardDescription>
           </CardHeader>
           <CardContent>
+            {/* Chart Type Tabs */}
+            <div className="flex space-x-1 mb-4 p-1 bg-secondary rounded-lg w-fit">
+              <button
+                onClick={() => setMonthlyChartType('area')}
+                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                  monthlyChartType === 'area'
+                    ? 'bg-happy-green text-white'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                Area Chart
+              </button>
+              <button
+                onClick={() => setMonthlyChartType('bar')}
+                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                  monthlyChartType === 'bar'
+                    ? 'bg-happy-green text-white'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                Bar Chart
+              </button>
+            </div>
+            
             <ResponsiveContainer width="100%" height={300}>
-              <AreaChart data={monthlyTrends}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                <XAxis dataKey="month" stroke="#9CA3AF" />
-                <YAxis stroke="#9CA3AF" />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: '#1F2937', 
-                    border: '1px solid #374151',
-                    borderRadius: '8px'
-                  }}
-                  formatter={(value: number) => [formatCurrency(value, displayCurrency), 'Amount']}
-                />
-                <Area 
-                  type="monotone" 
-                  dataKey="amount" 
-                  stroke="#10B981" 
-                  fill="#10B981" 
-                  fillOpacity={0.3}
-                />
-              </AreaChart>
+              {monthlyChartType === 'area' ? (
+                <AreaChart data={monthlyTrends}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                  <XAxis dataKey="month" stroke="#9CA3AF" />
+                  <YAxis stroke="#9CA3AF" />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#1F2937', 
+                      border: '1px solid #374151',
+                      borderRadius: '8px'
+                    }}
+                    formatter={(value: number) => [formatCurrency(value, displayCurrency), 'Amount']}
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="amount" 
+                    stroke="#10B981" 
+                    fill="#10B981" 
+                    fillOpacity={0.3}
+                  />
+                </AreaChart>
+              ) : (
+                <BarChart data={monthlyTrends}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                  <XAxis dataKey="month" stroke="#9CA3AF" />
+                  <YAxis stroke="#9CA3AF" />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#1F2937', 
+                      border: '1px solid #374151',
+                      borderRadius: '8px'
+                    }}
+                    formatter={(value: number) => [formatCurrency(value, displayCurrency), 'Amount']}
+                  />
+                  <Bar dataKey="amount" fill="#10B981" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              )}
             </ResponsiveContainer>
           </CardContent>
         </Card>
@@ -430,16 +472,15 @@ export default function AnalyticsPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <ResponsiveContainer width="100%" height={250}>
                 <PieChart>
-                  <Pie
-                    data={categoryPieData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
-                    outerRadius={70}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
+                                  <Pie
+                  data={categoryPieData}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  outerRadius={70}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
                     {categoryPieData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
@@ -493,16 +534,15 @@ export default function AnalyticsPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <ResponsiveContainer width="100%" height={250}>
                 <PieChart>
-                  <Pie
-                    data={petPieData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
-                    outerRadius={70}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
+                                  <Pie
+                  data={petPieData}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  outerRadius={70}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
                     {petPieData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
