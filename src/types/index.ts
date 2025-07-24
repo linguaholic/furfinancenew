@@ -24,7 +24,7 @@ export interface Expense {
   categoryId: string;
   amount: number;
   currency: Currency;
-  description: string;
+  description?: string;
   date: string;
   receipt?: string;
   recurringType: 'none' | 'monthly' | 'quarterly' | 'yearly';
