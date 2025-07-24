@@ -24,7 +24,6 @@ const budgetSchema = z.object({
   currency: z.enum(['USD', 'EUR', 'GBP', 'CAD', 'AUD', 'JPY', 'CHF', 'SEK', 'NOK', 'DKK'] as const),
   period: z.enum(['monthly', 'yearly']),
   startDate: z.string().min(1, 'Start date is required'),
-  endDate: z.string().optional(),
 });
 
 type BudgetFormData = z.infer<typeof budgetSchema>;
@@ -40,6 +39,23 @@ export function BudgetForm({ budget, onSuccess }: BudgetFormProps) {
   const searchParams = useSearchParams();
   const defaultPetId = searchParams.get('petId') || '';
 
+  // Calculate end date based on start date and period
+  const calculateEndDate = (startDate: string, period: 'monthly' | 'yearly'): string => {
+    const start = new Date(startDate);
+    const end = new Date(start);
+    
+    if (period === 'monthly') {
+      end.setMonth(end.getMonth() + 1);
+    } else {
+      end.setFullYear(end.getFullYear() + 1);
+    }
+    
+    // Subtract one day to get the last day of the period
+    end.setDate(end.getDate() - 1);
+    
+    return end.toISOString().split('T')[0];
+  };
+
   const {
     register,
     handleSubmit,
@@ -54,7 +70,6 @@ export function BudgetForm({ budget, onSuccess }: BudgetFormProps) {
       currency: budget.currency,
       period: budget.period,
       startDate: budget.startDate,
-      endDate: budget.endDate || '',
     } : {
       petId: defaultPetId,
       categoryId: '',
@@ -62,18 +77,25 @@ export function BudgetForm({ budget, onSuccess }: BudgetFormProps) {
       currency: settings?.defaultCurrency || 'USD',
       period: 'monthly',
       startDate: new Date().toISOString().split('T')[0],
-      endDate: '',
     },
   });
 
   const onSubmit = async (data: BudgetFormData) => {
     setIsSubmitting(true);
     try {
+      // Calculate end date based on start date and period
+      const endDate = calculateEndDate(data.startDate, data.period);
+      
+      const budgetData = {
+        ...data,
+        endDate,
+      };
+      
       if (budget) {
-        updateBudget(budget.id, data);
+        updateBudget(budget.id, budgetData);
         toast.success('Budget updated successfully! 🎯');
       } else {
-        addBudget(data);
+        addBudget(budgetData);
         toast.success('Budget set successfully! 🎯');
       }
       onSuccess?.();
@@ -258,19 +280,6 @@ export function BudgetForm({ budget, onSuccess }: BudgetFormProps) {
                 />
                 {errors.startDate && (
                   <p className="text-sm text-destructive mt-1">{errors.startDate.message}</p>
-                )}
-              </div>
-
-              {/* End Date */}
-              <div className="space-y-2">
-                <Label htmlFor="endDate" className="text-foreground">End Date (Optional)</Label>
-                <Input
-                  {...register('endDate')}
-                  type="date"
-                  className="bg-secondary border-border focus:border-happy-green"
-                />
-                {errors.endDate && (
-                  <p className="text-sm text-destructive mt-1">{errors.endDate.message}</p>
                 )}
               </div>
             </div>
