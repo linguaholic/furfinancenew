@@ -464,17 +464,18 @@ export const settingsService = {
       .from('app_settings')
       .select('*')
       .eq('user_id', userId)
-      .single()
+      .maybeSingle()
 
-    if (error && error.code !== 'PGRST116') throw error // PGRST116 = no rows returned
+    if (error) throw error
     return data ? toCamelCase(data) as AppSettings : null
   },
 
   async create(settings: Omit<AppSettings, 'id' | 'createdAt' | 'updatedAt'>): Promise<AppSettings> {
     const userId = await getCurrentUserId()
+    const snakeCaseSettings = toSnakeCase(settings) as Record<string, unknown>
     const { data, error } = await supabase
       .from('app_settings')
-      .insert([{ ...settings, user_id: userId }])
+      .insert([{ ...snakeCaseSettings, user_id: userId }])
       .select()
       .single()
 
