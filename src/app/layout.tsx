@@ -30,6 +30,15 @@ export default function RootLayout({
           
                                           {/* Main content */}
           <div className="relative z-10">
+            {/* Logo - Desktop Only */}
+            <div className="hidden md:block absolute top-6 left-6 z-20">
+              <img 
+                src="/images/Fur Finance Logo.png" 
+                alt="Fur Finance Logo" 
+                className="h-12 w-12 object-contain"
+              />
+            </div>
+            
             <SupabaseInitializer />
             {children}
           </div>
