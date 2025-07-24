@@ -283,13 +283,19 @@ export const expensesService = {
   async create(expense: Omit<Expense, 'id' | 'createdAt' | 'updatedAt'>): Promise<Expense> {
     const userId = await getCurrentUserId()
     const snakeCaseExpense = toSnakeCase(expense) as Record<string, unknown>
+    
+    console.log('Creating expense with data:', { ...snakeCaseExpense, user_id: userId })
+    
     const { data, error } = await supabase
       .from('expenses')
       .insert([{ ...snakeCaseExpense, user_id: userId }])
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {
+      console.error('Supabase error:', error)
+      throw error
+    }
     return toCamelCase(data) as Expense
   },
 
