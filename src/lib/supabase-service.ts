@@ -282,9 +282,10 @@ export const expensesService = {
 
   async create(expense: Omit<Expense, 'id' | 'createdAt' | 'updatedAt'>): Promise<Expense> {
     const userId = await getCurrentUserId()
+    const snakeCaseExpense = toSnakeCase(expense) as Record<string, unknown>
     const { data, error } = await supabase
       .from('expenses')
-      .insert([{ ...expense, user_id: userId }])
+      .insert([{ ...snakeCaseExpense, user_id: userId }])
       .select()
       .single()
 
@@ -294,9 +295,10 @@ export const expensesService = {
 
   async update(id: string, expense: Partial<Expense>): Promise<Expense> {
     const userId = await getCurrentUserId()
+    const snakeCaseExpense = toSnakeCase(expense) as Record<string, unknown>
     const { data, error } = await supabase
       .from('expenses')
-      .update(expense)
+      .update(snakeCaseExpense)
       .eq('id', id)
       .eq('user_id', userId)
       .select()
@@ -463,9 +465,10 @@ export const budgetsService = {
 
   async create(budget: Omit<Budget, 'id' | 'createdAt' | 'updatedAt'>): Promise<Budget> {
     const userId = await getCurrentUserId()
+    const snakeCaseBudget = toSnakeCase(budget) as Record<string, unknown>
     const { data, error } = await supabase
       .from('budgets')
-      .insert([{ ...budget, user_id: userId }])
+      .insert([{ ...snakeCaseBudget, user_id: userId }])
       .select()
       .single()
 
@@ -475,9 +478,10 @@ export const budgetsService = {
 
   async update(id: string, budget: Partial<Budget>): Promise<Budget> {
     const userId = await getCurrentUserId()
+    const snakeCaseBudget = toSnakeCase(budget) as Record<string, unknown>
     const { data, error } = await supabase
       .from('budgets')
-      .update(budget)
+      .update(snakeCaseBudget)
       .eq('id', id)
       .eq('user_id', userId)
       .select()
@@ -528,9 +532,10 @@ export const settingsService = {
 
   async update(settings: Partial<AppSettings>): Promise<AppSettings> {
     const userId = await getCurrentUserId()
+    const snakeCaseSettings = toSnakeCase(settings) as Record<string, unknown>
     const { data, error } = await supabase
       .from('app_settings')
-      .update(settings)
+      .update(snakeCaseSettings)
       .eq('user_id', userId)
       .select()
       .single()
