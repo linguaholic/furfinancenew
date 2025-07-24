@@ -4,13 +4,35 @@ import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Download, Calendar, PawPrint, Tag, FileText } from 'lucide-react';
+import { Download as DownloadIcon, Calendar, PawPrint, Tag, FileText } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 
+interface Pet {
+  id: string;
+  name: string;
+}
+
+interface Category {
+  id: string;
+  name: string;
+}
+
+interface Expense {
+  id: string;
+  petId: string;
+  categoryId: string;
+  amount: number;
+  currency: string;
+  date: string;
+  description?: string;
+  recurringType: 'none' | 'monthly' | 'quarterly' | 'yearly';
+  nextDueDate?: string;
+}
+
 interface ExportModalProps {
-  pets: any[];
-  categories: any[];
-  expenses: any[];
+  pets: Pet[];
+  categories: Category[];
+  expenses: Expense[];
   trigger: React.ReactNode;
 }
 
@@ -149,7 +171,7 @@ export default function ExportModal({ pets, categories, expenses, trigger }: Exp
       <DialogContent className="sm:max-w-md bg-gradient-card border-0 shadow-2xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-xl">
-            <Download className="h-5 w-5 text-happy-blue" />
+            <DownloadIcon className="h-5 w-5 text-happy-blue" />
             Export Expenses
           </DialogTitle>
         </DialogHeader>
@@ -160,7 +182,7 @@ export default function ExportModal({ pets, categories, expenses, trigger }: Exp
             <Label className="text-sm font-medium">Export Type</Label>
             <select
               value={exportType}
-              onChange={(e) => setExportType(e.target.value as any)}
+              onChange={(e) => setExportType(e.target.value as 'all' | 'pet' | 'category' | 'dateRange')}
               className="w-full p-3 bg-secondary border border-border rounded-lg focus:border-happy-blue focus:outline-none"
             >
               <option value="all">📄 All Expenses</option>
@@ -247,7 +269,7 @@ export default function ExportModal({ pets, categories, expenses, trigger }: Exp
               disabled={preview.count === 0}
               className="flex-1 bg-gradient-primary hover:bg-gradient-primary/90 text-white border-0"
             >
-              <Download className="h-4 w-4 mr-2" />
+              <DownloadIcon className="h-4 w-4 mr-2" />
               Export CSV
             </Button>
             <Button
