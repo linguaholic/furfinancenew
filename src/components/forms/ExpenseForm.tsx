@@ -41,25 +41,6 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
   const searchParams = useSearchParams();
   const defaultPetId = searchParams.get('petId') || '';
 
-  // Wait for data to be loaded
-  if (!settings || pets.length === 0 || categories.length === 0) {
-    return (
-      <div className="max-w-2xl mx-auto">
-        <div className="mb-6">
-          <Link href="/expenses" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
-            <ArrowLeft className="h-4 w-4 mr-1" />
-            Back to Expenses
-          </Link>
-        </div>
-        <Card className="bg-gradient-card border-0 shadow-xl">
-          <CardContent className="text-center py-16">
-            <div className="text-lg">Loading expense form...</div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
   const {
     register,
     handleSubmit,
@@ -80,12 +61,31 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
       petId: defaultPetId,
       categoryId: '',
       amount: 0,
-      currency: settings.defaultCurrency,
+      currency: settings?.defaultCurrency || 'USD',
       description: '',
       date: new Date().toISOString().split('T')[0],
       receipt: '',
     },
   });
+
+  // Wait for data to be loaded
+  if (!settings || pets.length === 0 || categories.length === 0) {
+    return (
+      <div className="max-w-2xl mx-auto">
+        <div className="mb-6">
+          <Link href="/expenses" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <ArrowLeft className="h-4 w-4 mr-1" />
+            Back to Expenses
+          </Link>
+        </div>
+        <Card className="bg-gradient-card border-0 shadow-xl">
+          <CardContent className="text-center py-16">
+            <div className="text-lg">Loading expense form...</div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   const onSubmit = async (data: ExpenseFormData) => {
     setIsSubmitting(true);
