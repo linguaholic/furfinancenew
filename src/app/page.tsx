@@ -16,7 +16,8 @@ import {
   Calendar,
   Users,
   Heart,
-  Star
+  Star,
+  Download
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -46,6 +47,58 @@ export default function HomePage() {
         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
         .slice(0, 5)
     : [];
+
+  const exportAllExpenses = () => {
+    if (expenses.length === 0) {
+      alert('No expenses to export!');
+      return;
+    }
+
+    // Create CSV headers
+    const headers = [
+      'Date',
+      'Pet',
+      'Category', 
+      'Amount',
+      'Currency',
+      'Description',
+      'Recurring Type',
+      'Next Due Date'
+    ];
+
+    // Create CSV rows
+    const rows = expenses.map(expense => {
+      const pet = pets.find(p => p.id === expense.petId);
+      const category = categories.find(c => c.id === expense.categoryId);
+      
+      return [
+        new Date(expense.date).toLocaleDateString(),
+        pet?.name || 'Unknown Pet',
+        category?.name || 'Unknown Category',
+        expense.amount.toFixed(2),
+        expense.currency,
+        expense.description || '',
+        expense.recurringType === 'none' ? 'One-time' : expense.recurringType.charAt(0).toUpperCase() + expense.recurringType.slice(1),
+        expense.nextDueDate ? new Date(expense.nextDueDate).toLocaleDateString() : ''
+      ];
+    });
+
+    // Combine headers and rows
+    const csvContent = [headers, ...rows]
+      .map(row => row.map(field => `"${field}"`).join(','))
+      .join('\n');
+
+    // Create and download file
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `all-pet-expenses-${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -82,6 +135,16 @@ export default function HomePage() {
             Set Budget
           </Button>
         </Link>
+        <Button 
+          size="lg" 
+          variant="outline"
+          onClick={exportAllExpenses}
+          disabled={!isClient || expenses.length === 0}
+          className="border-2 border-happy-green text-happy-green hover:bg-happy-green hover:text-white px-8 py-3 rounded-xl transition-all duration-300"
+        >
+          <Download className="h-5 w-5 mr-2" />
+          Export All
+        </Button>
       </div>
 
       {/* Stats Cards */}

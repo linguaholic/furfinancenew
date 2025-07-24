@@ -46,8 +46,17 @@ export default function ExpensesPage() {
 
   const totalFilteredAmount = filteredExpenses.reduce((sum, expense) => sum + expense.amount, 0);
 
-  const exportToCSV = () => {
-    if (filteredExpenses.length === 0) {
+  const exportToCSV = (specificPetId?: string) => {
+    let expensesToExport = filteredExpenses;
+    let fileName = 'pet-expenses';
+    
+    if (specificPetId && specificPetId !== 'all') {
+      expensesToExport = expenses.filter(expense => expense.petId === specificPetId);
+      const pet = pets.find(p => p.id === specificPetId);
+      fileName = `${pet?.name?.toLowerCase().replace(/\s+/g, '-')}-expenses`;
+    }
+    
+    if (expensesToExport.length === 0) {
       alert('No expenses to export!');
       return;
     }
@@ -65,7 +74,7 @@ export default function ExpensesPage() {
     ];
 
     // Create CSV rows
-    const rows = filteredExpenses.map(expense => {
+    const rows = expensesToExport.map(expense => {
       const pet = pets.find(p => p.id === expense.petId);
       const category = categories.find(c => c.id === expense.categoryId);
       
@@ -91,7 +100,7 @@ export default function ExpensesPage() {
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);
-    link.setAttribute('download', `pet-expenses-${new Date().toISOString().split('T')[0]}.csv`);
+    link.setAttribute('download', `${fileName}-${new Date().toISOString().split('T')[0]}.csv`);
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
@@ -123,16 +132,32 @@ export default function ExpensesPage() {
             </div>
           </div>
           <div className="flex gap-3">
-            <Button 
-              size="lg" 
-              variant="outline"
-              onClick={exportToCSV}
-              disabled={filteredExpenses.length === 0}
-              className="border-2 border-happy-blue text-happy-blue hover:bg-happy-blue hover:text-white transition-all duration-300 px-8 py-3 rounded-xl"
-            >
-              <Download className="h-5 w-5 mr-2" />
-              Export CSV
-            </Button>
+            <div className="flex gap-2">
+              <Button 
+                size="lg" 
+                variant="outline"
+                onClick={() => exportToCSV()}
+                disabled={filteredExpenses.length === 0}
+                className="border-2 border-happy-blue text-happy-blue hover:bg-happy-blue hover:text-white transition-all duration-300 px-6 py-3 rounded-xl"
+              >
+                <Download className="h-5 w-5 mr-2" />
+                Export Filtered
+              </Button>
+              {pets.length > 1 && (
+                <select 
+                  onChange={(e) => e.target.value && exportToCSV(e.target.value)}
+                  className="px-4 py-3 bg-secondary border-2 border-happy-green text-happy-green rounded-xl focus:border-happy-green focus:outline-none cursor-pointer"
+                  defaultValue=""
+                >
+                  <option value="" disabled>Export Pet...</option>
+                  {pets.map((pet) => (
+                    <option key={pet.id} value={pet.id}>
+                      Export {pet.name}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </div>
             <Link href="/expenses/new">
               <Button size="lg" className="bg-gradient-primary hover:bg-gradient-primary/90 text-white border-0 px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
                 <Plus className="h-5 w-5 mr-2" />
