@@ -313,7 +313,7 @@ export default function HomePage() {
 
         {/* Feedback Section */}
         <div className="mt-12 mb-8 -mx-4">
-          <Card className="bg-gradient-card border-0 shadow-xl overflow-hidden rounded-none">
+          <Card className="bg-gradient-card border-0 shadow-xl overflow-hidden rounded-xl">
             <div className="bg-gradient-to-r from-happy-green/10 to-happy-blue/10 p-8">
               <div className="text-center mb-6">
                 <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-happy-green to-happy-blue rounded-full mb-4">
@@ -328,7 +328,7 @@ export default function HomePage() {
               <form 
                 action="https://formspree.io/f/xjkowkyv" 
                 method="POST"
-                className="max-w-4xl mx-auto space-y-6"
+                className="w-full space-y-6"
               >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
