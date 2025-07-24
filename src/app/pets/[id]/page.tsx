@@ -217,11 +217,7 @@ export default function PetDetailPage({ params }: PetDetailPageProps) {
                         <div className="font-bold text-lg text-happy-green">
                           {formatCurrency(expense.amount)}
                         </div>
-                        {expense.category && (
-                          <div className="text-sm text-muted-foreground">
-                            {expense.category.name}
-                          </div>
-                        )}
+                        {/* Category name would go here if we had the full category object */}
                       </div>
                     </div>
                   ))}
