@@ -50,19 +50,20 @@ export default function HomePage() {
     : [];
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Hero Section */}
-      <div className="text-center mb-12">
-        <div className="inline-flex items-center gap-3 mb-6 p-3 bg-gradient-primary rounded-2xl shadow-xl">
-          <PawPrint className="h-8 w-8 text-white" />
-          <h1 className="text-4xl font-bold text-white">Fur Finance</h1>
-          <Sparkles className="h-6 w-6 text-white/80" />
+    <>
+      <div className="container mx-auto px-4 py-8">
+        {/* Hero Section */}
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-3 mb-6 p-3 bg-gradient-primary rounded-2xl shadow-xl">
+            <PawPrint className="h-8 w-8 text-white" />
+            <h1 className="text-4xl font-bold text-white">Fur Finance</h1>
+            <Sparkles className="h-6 w-6 text-white/80" />
+          </div>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            Track your pet expenses with love and care. Every penny spent on your furry friends, 
+            beautifully organized and analyzed.
+          </p>
         </div>
-        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          Track your pet expenses with love and care. Every penny spent on your furry friends, 
-          beautifully organized and analyzed.
-        </p>
-      </div>
 
       {/* Quick Actions */}
       <div className="mb-12 flex justify-center gap-4 flex-wrap">
@@ -310,9 +311,10 @@ export default function HomePage() {
             </div>
           </CardContent>
         </Card>
+      </div>
 
-        {/* Feedback Section */}
-        <div className="mt-12 mb-8 -mx-4">
+      {/* Feedback Section - Full Width */}
+      <div className="w-full px-4 py-8">
           <Card className="bg-gradient-card border-0 shadow-xl overflow-hidden rounded-xl">
             <div className="bg-gradient-to-r from-happy-green/10 to-happy-blue/10 p-8">
               <div className="text-center mb-6">
@@ -408,6 +410,6 @@ export default function HomePage() {
           </Card>
         </div>
       </div>
-    </div>
+    </>
   );
 }
