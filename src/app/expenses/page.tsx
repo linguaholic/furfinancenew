@@ -141,7 +141,7 @@ export default function ExpensesPage() {
                 className="border-2 border-happy-blue text-happy-blue hover:bg-happy-blue hover:text-white transition-all duration-300 px-6 py-3 rounded-xl"
               >
                 <Download className="h-5 w-5 mr-2" />
-                Export Filtered
+                {selectedPet === 'all' && selectedCategory === 'all' ? 'Export All' : 'Export Filtered'}
               </Button>
               {pets.length > 1 && (
                 <select 
