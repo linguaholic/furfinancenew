@@ -146,7 +146,7 @@ export default function ExpensesPage() {
               {pets.length > 1 && (
                 <select 
                   onChange={(e) => e.target.value && exportToCSV(e.target.value)}
-                  className="px-6 py-3 bg-secondary border-2 border-happy-blue text-happy-blue rounded-xl focus:border-happy-blue focus:outline-none cursor-pointer transition-all duration-300 hover:bg-happy-blue hover:text-white"
+                  className="px-6 py-3 bg-secondary border-2 border-happy-green text-happy-green rounded-xl focus:border-happy-green focus:outline-none cursor-pointer transition-all duration-300 hover:bg-happy-green hover:text-white"
                   defaultValue=""
                 >
                   <option value="" disabled>Export Pet...</option>
