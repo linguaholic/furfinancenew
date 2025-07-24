@@ -1016,7 +1016,7 @@ export default function AnalyticsPage() {
             </div>
             
             <form 
-              action="https://formspree.io/f/YOUR_FORM_ID" 
+              action="https://formspree.io/f/xjkowkyv" 
               method="POST"
               className="max-w-2xl mx-auto space-y-6"
             >
