@@ -23,6 +23,8 @@ const budgetSchema = z.object({
   amount: z.number().min(0.01, 'Amount must be greater than 0'),
   currency: z.enum(['USD', 'EUR', 'GBP', 'CAD', 'AUD', 'JPY', 'CHF', 'SEK', 'NOK', 'DKK'] as const),
   period: z.enum(['monthly', 'yearly']),
+  startDate: z.string().min(1, 'Start date is required'),
+  endDate: z.string().optional(),
 });
 
 type BudgetFormData = z.infer<typeof budgetSchema>;
@@ -51,12 +53,16 @@ export function BudgetForm({ budget, onSuccess }: BudgetFormProps) {
       amount: budget.amount,
       currency: budget.currency,
       period: budget.period,
+      startDate: budget.startDate,
+      endDate: budget.endDate || '',
     } : {
       petId: defaultPetId,
       categoryId: '',
       amount: 0,
-      currency: settings.defaultCurrency,
+      currency: settings?.defaultCurrency || 'USD',
       period: 'monthly',
+      startDate: new Date().toISOString().split('T')[0],
+      endDate: '',
     },
   });
 
@@ -239,6 +245,32 @@ export function BudgetForm({ budget, onSuccess }: BudgetFormProps) {
                 />
                 {errors.period && (
                   <p className="text-sm text-destructive mt-1">{errors.period.message}</p>
+                )}
+              </div>
+
+              {/* Start Date */}
+              <div className="space-y-2">
+                <Label htmlFor="startDate" className="text-foreground">Start Date *</Label>
+                <Input
+                  {...register('startDate')}
+                  type="date"
+                  className="bg-secondary border-border focus:border-happy-green"
+                />
+                {errors.startDate && (
+                  <p className="text-sm text-destructive mt-1">{errors.startDate.message}</p>
+                )}
+              </div>
+
+              {/* End Date */}
+              <div className="space-y-2">
+                <Label htmlFor="endDate" className="text-foreground">End Date (Optional)</Label>
+                <Input
+                  {...register('endDate')}
+                  type="date"
+                  className="bg-secondary border-border focus:border-happy-green"
+                />
+                {errors.endDate && (
+                  <p className="text-sm text-destructive mt-1">{errors.endDate.message}</p>
                 )}
               </div>
             </div>

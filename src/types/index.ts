@@ -38,6 +38,8 @@ export interface Budget {
   amount: number;
   currency: Currency;
   period: 'monthly' | 'yearly';
+  startDate: string;
+  endDate?: string;
   createdAt: string;
   updatedAt: string;
 }

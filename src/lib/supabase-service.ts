@@ -23,6 +23,12 @@ const toSnakeCase = (obj: unknown): unknown => {
       case 'categoryId':
         snakeKey = 'category_id'
         break
+      case 'startDate':
+        snakeKey = 'start_date'
+        break
+      case 'endDate':
+        snakeKey = 'end_date'
+        break
       case 'defaultCurrency':
         snakeKey = 'default_currency'
         break
@@ -63,6 +69,12 @@ const toCamelCase = (obj: unknown): unknown => {
         break
       case 'category_id':
         camelKey = 'categoryId'
+        break
+      case 'start_date':
+        camelKey = 'startDate'
+        break
+      case 'end_date':
+        camelKey = 'endDate'
         break
       case 'default_currency':
         camelKey = 'defaultCurrency'
@@ -487,13 +499,19 @@ export const budgetsService = {
   async create(budget: Omit<Budget, 'id' | 'createdAt' | 'updatedAt'>): Promise<Budget> {
     const userId = await getCurrentUserId()
     const snakeCaseBudget = toSnakeCase(budget) as Record<string, unknown>
+    
+    console.log('Creating budget with data:', { ...snakeCaseBudget, user_id: userId })
+    
     const { data, error } = await supabase
       .from('budgets')
       .insert([{ ...snakeCaseBudget, user_id: userId }])
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {
+      console.error('Supabase budget error:', error)
+      throw error
+    }
     return toCamelCase(data) as Budget
   },
 
