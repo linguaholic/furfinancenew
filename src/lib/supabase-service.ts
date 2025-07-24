@@ -1,6 +1,31 @@
 import { supabase } from './supabase'
 import { Pet, Expense, Budget, ExpenseCategory, AppSettings } from '@/types'
 
+// Utility functions to convert between camelCase and snake_case
+const toSnakeCase = (obj: any): any => {
+  if (obj === null || typeof obj !== 'object') return obj
+  if (Array.isArray(obj)) return obj.map(toSnakeCase)
+  
+  const snakeCaseObj: any = {}
+  for (const [key, value] of Object.entries(obj)) {
+    const snakeKey = key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`)
+    snakeCaseObj[snakeKey] = toSnakeCase(value)
+  }
+  return snakeCaseObj
+}
+
+const toCamelCase = (obj: any): any => {
+  if (obj === null || typeof obj !== 'object') return obj
+  if (Array.isArray(obj)) return obj.map(toCamelCase)
+  
+  const camelCaseObj: any = {}
+  for (const [key, value] of Object.entries(obj)) {
+    const camelKey = key.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase())
+    camelCaseObj[camelKey] = toCamelCase(value)
+  }
+  return camelCaseObj
+}
+
 // Test function to check Supabase connection
 export const testSupabaseConnection = async () => {
   try {
@@ -71,7 +96,8 @@ export const petsService = {
       .order('created_at', { ascending: false })
 
     if (error) throw error
-    return data || []
+    // Convert snake_case to camelCase for frontend
+    return (data || []).map(toCamelCase)
   },
 
   async getById(id: string): Promise<Pet | null> {
@@ -84,7 +110,8 @@ export const petsService = {
       .single()
 
     if (error) throw error
-    return data
+    // Convert snake_case to camelCase for frontend
+    return data ? toCamelCase(data) : null
   },
 
   async create(pet: Omit<Pet, 'id' | 'createdAt' | 'updatedAt'>): Promise<Pet> {
@@ -93,9 +120,13 @@ export const petsService = {
       console.log('Creating pet with user ID:', userId)
       console.log('Pet data:', pet)
       
+      // Convert camelCase to snake_case for database
+      const snakeCasePet = toSnakeCase(pet)
+      console.log('Snake case pet data:', snakeCasePet)
+      
       const { data, error } = await supabase
         .from('pets')
-        .insert([{ ...pet, user_id: userId }])
+        .insert([{ ...snakeCasePet, user_id: userId }])
         .select()
         .single()
 
@@ -105,7 +136,8 @@ export const petsService = {
       }
       
       console.log('Pet created successfully:', data)
-      return data
+      // Convert snake_case back to camelCase for frontend
+      return toCamelCase(data)
     } catch (error) {
       console.error('Error in petsService.create:', error)
       throw error
