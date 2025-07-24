@@ -14,7 +14,8 @@ import {
   Calendar,
   PawPrint,
   ArrowLeft,
-  Repeat
+  Repeat,
+  Download
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -45,6 +46,58 @@ export default function ExpensesPage() {
 
   const totalFilteredAmount = filteredExpenses.reduce((sum, expense) => sum + expense.amount, 0);
 
+  const exportToCSV = () => {
+    if (filteredExpenses.length === 0) {
+      alert('No expenses to export!');
+      return;
+    }
+
+    // Create CSV headers
+    const headers = [
+      'Date',
+      'Pet',
+      'Category', 
+      'Amount',
+      'Currency',
+      'Description',
+      'Recurring Type',
+      'Next Due Date'
+    ];
+
+    // Create CSV rows
+    const rows = filteredExpenses.map(expense => {
+      const pet = pets.find(p => p.id === expense.petId);
+      const category = categories.find(c => c.id === expense.categoryId);
+      
+      return [
+        formatDate(expense.date),
+        pet?.name || 'Unknown Pet',
+        category?.name || 'Unknown Category',
+        expense.amount.toFixed(2),
+        expense.currency,
+        expense.description || '',
+        expense.recurringType === 'none' ? 'One-time' : expense.recurringType.charAt(0).toUpperCase() + expense.recurringType.slice(1),
+        expense.nextDueDate ? formatDate(expense.nextDueDate) : ''
+      ];
+    });
+
+    // Combine headers and rows
+    const csvContent = [headers, ...rows]
+      .map(row => row.map(field => `"${field}"`).join(','))
+      .join('\n');
+
+    // Create and download file
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `pet-expenses-${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Back Button */}
@@ -69,12 +122,24 @@ export default function ExpensesPage() {
               </div>
             </div>
           </div>
-          <Link href="/expenses/new">
-            <Button size="lg" className="bg-gradient-primary hover:bg-gradient-primary/90 text-white border-0 px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
-              <Plus className="h-5 w-5 mr-2" />
-              Add Expense
+          <div className="flex gap-3">
+            <Button 
+              size="lg" 
+              variant="outline"
+              onClick={exportToCSV}
+              disabled={filteredExpenses.length === 0}
+              className="border-2 border-happy-blue text-happy-blue hover:bg-happy-blue hover:text-white transition-all duration-300 px-8 py-3 rounded-xl"
+            >
+              <Download className="h-5 w-5 mr-2" />
+              Export CSV
             </Button>
-          </Link>
+            <Link href="/expenses/new">
+              <Button size="lg" className="bg-gradient-primary hover:bg-gradient-primary/90 text-white border-0 px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+                <Plus className="h-5 w-5 mr-2" />
+                Add Expense
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
 
