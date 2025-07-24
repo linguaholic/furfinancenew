@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Download as DownloadIcon, Calendar, PawPrint, Tag, FileText } from 'lucide-react';
+import { Download as DownloadIcon } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 
 interface Pet {

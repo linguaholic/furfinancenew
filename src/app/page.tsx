@@ -16,7 +16,8 @@ import {
   Calendar,
   Users,
   Heart,
-  Star
+  Star,
+  Download
 } from 'lucide-react';
 import Link from 'next/link';
 import ExportModal from '@/components/ExportModal';
