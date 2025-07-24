@@ -166,7 +166,9 @@ export default function ExpensesPage() {
                           style={{ backgroundColor: category?.color }}
                         />
                         <div>
-                          <h3 className="text-lg font-semibold">{expense.description}</h3>
+                          <h3 className="text-lg font-semibold">
+                            {expense.description || `${category?.name} Expense`}
+                          </h3>
                           <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
                             <span className="flex items-center gap-1">
                               <PawPrint className="h-3 w-3" />

@@ -23,7 +23,7 @@ const expenseSchema = z.object({
   categoryId: z.string().min(1, 'Category is required'),
   amount: z.number().min(0.01, 'Amount must be greater than 0'),
   currency: z.enum(['USD', 'EUR', 'GBP', 'CAD', 'AUD', 'JPY', 'CHF', 'SEK', 'NOK', 'DKK'] as const),
-  description: z.string().min(1, 'Description is required'),
+  description: z.string().optional(),
   date: z.string().min(1, 'Date is required'),
   receipt: z.string().optional(),
   recurringType: z.enum(['none', 'monthly', 'quarterly', 'yearly']),
@@ -353,11 +353,11 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
 
             {/* Description */}
             <div className="space-y-2">
-              <Label htmlFor="description" className="text-foreground">Description *</Label>
+              <Label htmlFor="description" className="text-foreground">Description</Label>
               <Textarea
                 id="description"
                 {...register('description')}
-                placeholder="What was this expense for?"
+                placeholder="What was this expense for? (optional)"
                 className="bg-secondary border-border focus:border-happy-green min-h-[100px]"
               />
               {errors.description && (
