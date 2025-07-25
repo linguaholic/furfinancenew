@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { SupabaseInitializer } from "@/components/SupabaseInitializer";
+import { Footer } from "@/components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,9 +30,12 @@ export default function RootLayout({
           </div>
           
                                           {/* Main content */}
-          <div className="relative z-10">
+          <div className="relative z-10 flex flex-col min-h-screen">
             <SupabaseInitializer />
-            {children}
+            <main className="flex-1">
+              {children}
+            </main>
+            <Footer />
           </div>
                       
                       {/* Toast notifications */}
