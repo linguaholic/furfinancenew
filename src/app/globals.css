@@ -349,3 +349,30 @@
 .dark .SelectItem:hover {
   background-color: #333333 !important;
 }
+
+/* Make calendar icon white in date inputs */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(1);
+  cursor: pointer;
+}
+
+/* For Firefox */
+input[type="date"]::-moz-calendar-picker-indicator {
+  filter: invert(1) brightness(1);
+  cursor: pointer;
+}
+
+/* For Edge/IE */
+input[type="date"]::-ms-clear,
+input[type="date"]::-ms-expand {
+  filter: invert(1) brightness(1);
+}
+
+/* Ensure the calendar icon is visible in dark mode */
+.dark input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(1) !important;
+}
+
+.dark input[type="date"]::-moz-calendar-picker-indicator {
+  filter: invert(1) brightness(1) !important;
+}
