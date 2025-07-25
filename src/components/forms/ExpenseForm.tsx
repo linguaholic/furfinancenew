@@ -165,7 +165,7 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-2xl mx-auto px-4 sm:px-6">
       <div className="mb-6">
         <Link href="/expenses" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
           <ArrowLeft className="h-4 w-4 mr-1" />
@@ -189,7 +189,7 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit, onError)} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Pet Selection */}
               <div className="space-y-2">
                 <Label htmlFor="petId" className="text-foreground">Pet *</Label>
@@ -343,7 +343,7 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
 
               {/* Next Due Date (only show if recurring) */}
               {watchedRecurringType !== 'none' && (
-                <div className="space-y-2">
+                <div className="space-y-2 lg:col-span-2">
                   <Label htmlFor="nextDueDate" className="text-foreground">Next Due Date</Label>
                   <Input
                     id="nextDueDate"
@@ -388,12 +388,12 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
             </div>
 
             {/* Submit Button */}
-            <div className="flex gap-4 pt-4">
-              <Button type="submit" disabled={isSubmitting} className="bg-gradient-primary hover:bg-gradient-primary/90 text-white border-0 px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto bg-gradient-primary hover:bg-gradient-primary/90 text-white border-0 px-6 sm:px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
                 {isSubmitting ? 'Saving...' : (expense ? 'Update Expense' : 'Add Expense')}
               </Button>
-              <Link href="/expenses">
-                <Button type="button" variant="outline" className="border-2 border-muted-foreground text-muted-foreground hover:bg-muted-foreground hover:text-background px-8 py-3 rounded-xl transition-all duration-300">
+              <Link href="/expenses" className="w-full sm:w-auto">
+                <Button type="button" variant="outline" className="w-full sm:w-auto border-2 border-muted-foreground text-muted-foreground hover:bg-muted-foreground hover:text-background px-6 sm:px-8 py-3 rounded-xl transition-all duration-300">
                   Cancel
                 </Button>
               </Link>

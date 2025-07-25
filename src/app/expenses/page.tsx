@@ -108,7 +108,7 @@ export default function ExpensesPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-8">
       {/* Back Button */}
       <div className="mb-6">
         <Link href="/" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
@@ -119,34 +119,34 @@ export default function ExpensesPage() {
 
       {/* Header */}
       <div className="mb-12">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
           <div>
             <div className="flex items-center gap-3 mb-2">
               <div className="p-3 bg-gradient-primary rounded-xl">
                 <DollarSign className="h-8 w-8 text-white" />
               </div>
               <div>
-                <h1 className="text-4xl font-bold">Expenses</h1>
-                <p className="text-xl text-muted-foreground">Track all your pet expenses</p>
+                <h1 className="text-3xl lg:text-4xl font-bold">Expenses</h1>
+                <p className="text-lg lg:text-xl text-muted-foreground">Track all your pet expenses</p>
               </div>
             </div>
           </div>
-          <div className="flex gap-3">
-            <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex flex-col sm:flex-row gap-2">
               <Button 
                 size="lg" 
                 variant="outline"
                 onClick={() => exportToCSV()}
                 disabled={filteredExpenses.length === 0}
-                className="border-2 border-happy-blue text-happy-blue hover:bg-happy-blue hover:text-white transition-all duration-300 px-6 py-3 rounded-xl"
+                className="border-2 border-happy-blue text-happy-blue hover:bg-happy-blue hover:text-white transition-all duration-300 px-4 sm:px-6 py-3 rounded-xl text-sm sm:text-base"
               >
-                <Download className="h-5 w-5 mr-2" />
+                <Download className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                 {selectedPet === 'all' && selectedCategory === 'all' ? 'Export All' : 'Export Filtered'}
               </Button>
               {pets.length > 1 && (
                 <select 
                   onChange={(e) => e.target.value && exportToCSV(e.target.value)}
-                  className="h-10 px-6 bg-secondary border-2 border-happy-green text-happy-green rounded-xl focus:border-happy-green focus:outline-none cursor-pointer transition-all duration-300 hover:bg-happy-green hover:text-white text-sm font-medium leading-none"
+                  className="h-10 px-4 sm:px-6 bg-secondary border-2 border-happy-green text-happy-green rounded-xl focus:border-happy-green focus:outline-none cursor-pointer transition-all duration-300 hover:bg-happy-green hover:text-white text-sm font-medium leading-none"
                   defaultValue=""
                 >
                   <option value="" disabled>Export Pet...</option>
@@ -158,9 +158,9 @@ export default function ExpensesPage() {
                 </select>
               )}
             </div>
-            <Link href="/expenses/new">
-              <Button size="lg" className="bg-gradient-primary hover:bg-gradient-primary/90 text-white border-0 px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
-                <Plus className="h-5 w-5 mr-2" />
+            <Link href="/expenses/new" className="w-full sm:w-auto">
+              <Button size="lg" className="w-full sm:w-auto bg-gradient-primary hover:bg-gradient-primary/90 text-white border-0 px-6 sm:px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+                <Plus className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                 Add Expense
               </Button>
             </Link>
@@ -177,7 +177,7 @@ export default function ExpensesPage() {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
               <label className="text-sm font-medium text-muted-foreground mb-2 block">Pet</label>
               <select 
@@ -204,10 +204,10 @@ export default function ExpensesPage() {
                 ))}
               </select>
             </div>
-            <div className="flex items-end">
-              <div className="p-3 bg-happy-green/10 rounded-lg border border-happy-green/20">
+            <div className="flex items-end sm:col-span-2 lg:col-span-1">
+              <div className="w-full p-3 bg-happy-green/10 rounded-lg border border-happy-green/20">
                 <span className="text-sm text-muted-foreground">Total:</span>
-                <div className="text-xl font-bold text-happy-green">{formatCurrency(totalFilteredAmount)}</div>
+                <div className="text-lg sm:text-xl font-bold text-happy-green">{formatCurrency(totalFilteredAmount)}</div>
               </div>
             </div>
           </div>
@@ -248,32 +248,32 @@ export default function ExpensesPage() {
               
               return (
                 <Card key={expense.id} className="bg-gradient-card border-0 shadow-xl hover:shadow-2xl transition-all duration-300">
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                      <div className="flex items-start gap-4 flex-1">
                         <div 
-                          className="w-4 h-4 rounded-full"
+                          className="w-4 h-4 rounded-full flex-shrink-0 mt-1"
                           style={{ backgroundColor: category?.color }}
                         />
-                        <div>
-                          <h3 className="text-lg font-semibold">
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-base sm:text-lg font-semibold break-words">
                             {expense.description || `${category?.name} Expense`}
                           </h3>
-                          <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
+                          <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-muted-foreground mt-1">
                             <span className="flex items-center gap-1">
                               <PawPrint className="h-3 w-3" />
                               {pet?.name}
                             </span>
-                            <span>•</span>
+                            <span className="hidden sm:inline">•</span>
                             <span>{category?.name}</span>
-                            <span>•</span>
+                            <span className="hidden sm:inline">•</span>
                             <span className="flex items-center gap-1">
                               <Calendar className="h-3 w-3" />
                               {formatDate(expense.date)}
                             </span>
                             {expense.recurringType !== 'none' && (
                               <>
-                                <span>•</span>
+                                <span className="hidden sm:inline">•</span>
                                 <span className="flex items-center gap-1 text-happy-blue">
                                   <Repeat className="h-3 w-3" />
                                   {expense.recurringType.charAt(0).toUpperCase() + expense.recurringType.slice(1)}
@@ -288,10 +288,10 @@ export default function ExpensesPage() {
                           )}
                         </div>
                       </div>
-                      <div className="flex items-center gap-3">
-                                                            <div className="text-right">
-                                      <div className="text-xl font-bold text-happy-green">{formatCurrency(expense.amount, expense.currency)}</div>
-                                    </div>
+                      <div className="flex items-center justify-between sm:justify-end gap-3">
+                        <div className="text-right">
+                          <div className="text-lg sm:text-xl font-bold text-happy-green">{formatCurrency(expense.amount, expense.currency)}</div>
+                        </div>
                         <div className="flex gap-2">
                           <Link href={`/expenses/${expense.id}/edit`}>
                             <Button size="sm" variant="outline" className="border-2 border-happy-blue text-happy-blue hover:bg-happy-blue hover:text-white transition-all duration-300">
