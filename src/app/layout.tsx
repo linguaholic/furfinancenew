@@ -9,8 +9,30 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Fur Finance - Pet Expense Tracker",
-  description: "Track your pet expenses, set budgets, and manage your furry friends' finances with ease.",
+  description: "A free, no-login tool to track your pet expenses, set budgets, and manage your furry friends' finances with ease.",
   keywords: "pet expenses, pet budget, pet finance, expense tracker, pet care",
+  openGraph: {
+    title: "Fur Finance – Track Pet Expenses",
+    description: "A free, no-login tool to track your pet expenses, set budgets, and manage your furry friends' finances with ease.",
+    url: "https://furfinance.vercel.app/",
+    siteName: "Fur Finance",
+    images: [
+      {
+        url: "/images/Fur Finance Logo.png",
+        width: 1200,
+        height: 630,
+        alt: "Fur Finance - Pet Expense Tracker",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Fur Finance – Track Pet Expenses",
+    description: "A free, no-login tool to track your pet expenses, set budgets, and manage your furry friends' finances with ease.",
+    images: ["/images/Fur Finance Logo.png"],
+  },
 };
 
 export default function RootLayout({
