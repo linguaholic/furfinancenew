@@ -113,26 +113,20 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
     }
   }, [watchedDate, watchedRecurringType, setValue]);
 
-  // Wait for data to be loaded
-  if (!settings || pets.length === 0 || categories.length === 0) {
-    return (
-      <div className="max-w-2xl mx-auto">
-        <div className="mb-6">
-          <Link href="/expenses" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
-            <ArrowLeft className="h-4 w-4 mr-1" />
-            Back to Expenses
-          </Link>
-        </div>
-        <Card className="bg-gradient-card border-0 shadow-xl">
-          <CardContent className="text-center py-16">
-            <div className="text-lg">Loading expense form...</div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  // Update form when settings are loaded
+  useEffect(() => {
+    if (settings && !expense) {
+      setValue('currency', settings.defaultCurrency);
+    }
+  }, [settings, setValue, expense]);
 
   const onSubmit = async (data: ExpenseFormData) => {
+    // Validate that required data is loaded
+    if (!settings || pets.length === 0 || categories.length === 0) {
+      toast.error('Please wait for data to load before submitting');
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       // Clean up the data - convert empty strings to undefined for optional fields
@@ -193,24 +187,30 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
               {/* Pet Selection */}
               <div className="space-y-2">
                 <Label htmlFor="petId" className="text-foreground">Pet *</Label>
-                <Controller
-                  name="petId"
-                  control={control}
-                  render={({ field }) => (
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger className="bg-secondary border-border focus:border-happy-green">
-                        <SelectValue placeholder="Select a pet" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-black border border-gray-700 z-50">
-                        {pets.map((pet) => (
-                          <SelectItem key={pet.id} value={pet.id} className="bg-black text-white hover:bg-gray-800 focus:bg-gray-800">
-                            {pet.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
+                {pets.length === 0 ? (
+                  <div className="p-3 bg-secondary border border-border rounded-lg text-center text-muted-foreground">
+                    Loading pets...
+                  </div>
+                ) : (
+                  <Controller
+                    name="petId"
+                    control={control}
+                    render={({ field }) => (
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <SelectTrigger className="bg-secondary border-border focus:border-happy-green">
+                          <SelectValue placeholder="Select a pet" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-black border border-gray-700 z-50">
+                          {pets.map((pet) => (
+                            <SelectItem key={pet.id} value={pet.id} className="bg-black text-white hover:bg-gray-800 focus:bg-gray-800">
+                              {pet.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                )}
                 {errors.petId && (
                   <p className="text-sm text-destructive mt-1">{errors.petId.message}</p>
                 )}
@@ -219,30 +219,36 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
               {/* Category Selection */}
               <div className="space-y-2">
                 <Label htmlFor="categoryId" className="text-foreground">Category *</Label>
-                <Controller
-                  name="categoryId"
-                  control={control}
-                  render={({ field }) => (
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger className="bg-secondary border-border focus:border-happy-green">
-                        <SelectValue placeholder="Select category" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-black border border-gray-700 z-50">
-                        {categories.map((category) => (
-                          <SelectItem key={category.id} value={category.id} className="bg-black text-white hover:bg-gray-800 focus:bg-gray-800">
-                            <div className="flex items-center gap-2">
-                              <div 
-                                className="w-3 h-3 rounded-full flex-shrink-0"
-                                style={{ backgroundColor: category.color }}
-                              />
-                              <span>{category.name}</span>
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
+                {categories.length === 0 ? (
+                  <div className="p-3 bg-secondary border border-border rounded-lg text-center text-muted-foreground">
+                    Loading categories...
+                  </div>
+                ) : (
+                  <Controller
+                    name="categoryId"
+                    control={control}
+                    render={({ field }) => (
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <SelectTrigger className="bg-secondary border-border focus:border-happy-green">
+                          <SelectValue placeholder="Select category" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-black border border-gray-700 z-50">
+                          {categories.map((category) => (
+                            <SelectItem key={category.id} value={category.id} className="bg-black text-white hover:bg-gray-800 focus:bg-gray-800">
+                              <div className="flex items-center gap-2">
+                                <div 
+                                  className="w-3 h-3 rounded-full flex-shrink-0"
+                                  style={{ backgroundColor: category.color }}
+                                />
+                                <span>{category.name}</span>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                )}
                 {errors.categoryId && (
                   <p className="text-sm text-destructive mt-1">{errors.categoryId.message}</p>
                 )}
@@ -268,27 +274,33 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
               {/* Currency */}
               <div className="space-y-2">
                 <Label htmlFor="currency" className="text-foreground">Currency *</Label>
-                <Controller
-                  name="currency"
-                  control={control}
-                  render={({ field }) => (
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger className="bg-secondary border-border focus:border-happy-green">
-                        <SelectValue placeholder="Select currency" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-black border border-gray-700 z-50">
-                        {settings.availableCurrencies.map((currency) => (
-                          <SelectItem key={currency} value={currency} className="bg-black text-white hover:bg-gray-800 focus:bg-gray-800">
-                            <div className="flex items-center gap-2">
-                              <span className="font-mono">{getCurrencySymbol(currency)}</span>
-                              <span>{currency}</span>
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
+                {!settings ? (
+                  <div className="p-3 bg-secondary border border-border rounded-lg text-center text-muted-foreground">
+                    Loading settings...
+                  </div>
+                ) : (
+                  <Controller
+                    name="currency"
+                    control={control}
+                    render={({ field }) => (
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <SelectTrigger className="bg-secondary border-border focus:border-happy-green">
+                          <SelectValue placeholder="Select currency" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-black border border-gray-700 z-50">
+                          {settings.availableCurrencies.map((currency) => (
+                            <SelectItem key={currency} value={currency} className="bg-black text-white hover:bg-gray-800 focus:bg-gray-800">
+                              <div className="flex items-center gap-2">
+                                <span className="font-mono">{getCurrencySymbol(currency)}</span>
+                                <span>{currency}</span>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                )}
                 {errors.currency && (
                   <p className="text-sm text-destructive mt-1">{errors.currency.message}</p>
                 )}
@@ -389,7 +401,11 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
 
             {/* Submit Button */}
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto bg-gradient-primary hover:bg-gradient-primary/90 text-white border-0 px-6 sm:px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+              <Button 
+                type="submit" 
+                disabled={isSubmitting || !settings || pets.length === 0 || categories.length === 0} 
+                className="w-full sm:w-auto bg-gradient-primary hover:bg-gradient-primary/90 text-white border-0 px-6 sm:px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 {isSubmitting ? 'Saving...' : (expense ? 'Update Expense' : 'Add Expense')}
               </Button>
               <Link href="/expenses" className="w-full sm:w-auto">
