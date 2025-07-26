@@ -162,7 +162,7 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
         sessionStorage.removeItem('expenseFormData');
         
         // Auto-select the newly created category
-        if (newCategoryId) {
+        if (newCategoryId && newCategoryId !== 'null') {
           setValue('categoryId', newCategoryId);
           sessionStorage.removeItem('newCategoryId');
           toast.success('New category created and selected! 🎨');
