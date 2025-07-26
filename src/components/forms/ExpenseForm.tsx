@@ -154,8 +154,8 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
       try {
         const data = JSON.parse(savedFormData);
         Object.entries(data).forEach(([key, value]) => {
-          if (value !== undefined && value !== '') {
-            setValue(key as keyof ExpenseFormData, value);
+          if (value !== undefined && value !== '' && value !== null) {
+            setValue(key as keyof ExpenseFormData, value as string | number);
           }
         });
         // Clear the saved data
