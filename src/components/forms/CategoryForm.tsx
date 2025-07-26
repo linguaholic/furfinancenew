@@ -106,7 +106,7 @@ export function CategoryForm({ category, onSuccess }: CategoryFormProps) {
         onSuccess?.();
         router.push('/categories');
       } else {
-        const newCategory = addCategory(data);
+        const newCategory = await addCategory(data);
         toast.success('Category added successfully! 🎨');
         
         // Check if user came from expense form
