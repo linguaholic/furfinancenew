@@ -13,8 +13,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useFurFinanceStore } from '@/store';
 import { Expense, Currency } from '@/types';
 import { getCurrencySymbol } from '@/lib/utils';
-import { ArrowLeft, DollarSign } from 'lucide-react';
+import { ArrowLeft, DollarSign, Plus } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { expenseCreationLimiter, generateRateLimitKey } from '@/lib/rate-limiter';
@@ -44,7 +45,9 @@ interface ExpenseFormProps {
 export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
   const { addExpense, updateExpense, pets, categories, settings } = useFurFinanceStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const searchParams = useSearchParams();
+  const router = useRouter();
   const defaultPetId = searchParams.get('petId') || '';
 
   const {
@@ -123,6 +126,52 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
       setValue('currency', settings.defaultCurrency);
     }
   }, [settings, setValue, expense]);
+
+  const handleCreateNewCategory = () => {
+    // Store current form data in sessionStorage to restore it when user returns
+    const currentFormData = {
+      petId: watch('petId'),
+      amount: watch('amount'),
+      currency: watch('currency'),
+      description: watch('description'),
+      date: watch('date'),
+      receipt: watch('receipt'),
+      recurringType: watch('recurringType'),
+      nextDueDate: watch('nextDueDate'),
+    };
+    sessionStorage.setItem('expenseFormData', JSON.stringify(currentFormData));
+    
+    // Navigate to category creation page
+    router.push('/categories/new');
+  };
+
+  // Restore form data when component mounts (if returning from category creation)
+  useEffect(() => {
+    const savedFormData = sessionStorage.getItem('expenseFormData');
+    const newCategoryId = sessionStorage.getItem('newCategoryId');
+    
+    if (savedFormData && !expense) {
+      try {
+        const data = JSON.parse(savedFormData);
+        Object.entries(data).forEach(([key, value]) => {
+          if (value !== undefined && value !== '') {
+            setValue(key as keyof ExpenseFormData, value);
+          }
+        });
+        // Clear the saved data
+        sessionStorage.removeItem('expenseFormData');
+        
+        // Auto-select the newly created category
+        if (newCategoryId) {
+          setValue('categoryId', newCategoryId);
+          sessionStorage.removeItem('newCategoryId');
+          toast.success('New category created and selected! 🎨');
+        }
+      } catch (error) {
+        console.error('Error restoring form data:', error);
+      }
+    }
+  }, [setValue, expense]);
 
   const onSubmit = async (data: ExpenseFormData) => {
     // Validate that required data is loaded
@@ -243,7 +292,11 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
                     name="categoryId"
                     control={control}
                     render={({ field }) => (
-                      <Select onValueChange={field.onChange} value={field.value}>
+                      <Select 
+                        onValueChange={field.onChange} 
+                        value={field.value}
+                        onOpenChange={setIsCategoryDropdownOpen}
+                      >
                         <SelectTrigger className="bg-secondary border-border focus:border-happy-green">
                           <SelectValue placeholder="Select category" />
                         </SelectTrigger>
@@ -259,6 +312,16 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
                               </div>
                             </SelectItem>
                           ))}
+                          <div className="border-t border-gray-700 mt-2 pt-2">
+                            <button
+                              type="button"
+                              onClick={handleCreateNewCategory}
+                              className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-happy-green hover:bg-gray-800 rounded-sm transition-colors"
+                            >
+                              <Plus className="h-3 w-3" />
+                              <span>Create New Category</span>
+                            </button>
+                          </div>
                         </SelectContent>
                       </Select>
                     )}

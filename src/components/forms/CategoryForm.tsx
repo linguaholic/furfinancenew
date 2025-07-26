@@ -103,12 +103,23 @@ export function CategoryForm({ category, onSuccess }: CategoryFormProps) {
       if (category) {
         updateCategory(category.id, data);
         toast.success('Category updated successfully! 🎨');
+        onSuccess?.();
+        router.push('/categories');
       } else {
-        addCategory(data);
+        const newCategory = addCategory(data);
         toast.success('Category added successfully! 🎨');
+        
+        // Check if user came from expense form
+        const cameFromExpenseForm = sessionStorage.getItem('expenseFormData');
+        if (cameFromExpenseForm) {
+          // Store the new category ID to auto-select it when returning to expense form
+          sessionStorage.setItem('newCategoryId', newCategory.id);
+          router.push('/expenses/new');
+        } else {
+          onSuccess?.();
+          router.push('/categories');
+        }
       }
-      onSuccess?.();
-      router.push('/categories');
     } catch (error) {
       console.error('Error saving category:', error);
       toast.error('Failed to save category. Please try again.');

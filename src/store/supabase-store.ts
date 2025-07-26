@@ -28,7 +28,7 @@ interface FurFinanceStore {
   loadExpenses: () => Promise<void>;
 
   // Category actions
-  addCategory: (category: Omit<ExpenseCategory, 'id' | 'createdAt' | 'updatedAt'>) => Promise<void>;
+  addCategory: (category: Omit<ExpenseCategory, 'id' | 'createdAt' | 'updatedAt'>) => Promise<ExpenseCategory>;
   updateCategory: (id: string, updates: Partial<ExpenseCategory>) => Promise<void>;
   deleteCategory: (id: string) => Promise<void>;
   loadCategories: () => Promise<void>;
@@ -220,8 +220,10 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
     try {
       const newCategory = await categoriesService.create(categoryData);
       set((state) => ({ categories: [...state.categories, newCategory] }));
+      return newCategory; // Return the new category
     } catch (error) {
       set({ error: error instanceof Error ? error.message : 'Failed to add category' });
+      throw error; // Re-throw to handle in the component
     } finally {
       set({ isLoading: false });
     }
