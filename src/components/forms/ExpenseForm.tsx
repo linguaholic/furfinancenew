@@ -163,7 +163,8 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
         
         // Auto-select the newly created category
         if (newCategoryId && typeof newCategoryId === 'string' && newCategoryId.trim() !== '') {
-          setValue('categoryId', newCategoryId);
+          const categoryId: string = newCategoryId.trim();
+          setValue('categoryId', categoryId);
           sessionStorage.removeItem('newCategoryId');
           toast.success('New category created and selected! 🎨');
         }
