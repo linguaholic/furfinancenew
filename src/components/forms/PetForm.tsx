@@ -15,12 +15,31 @@ import { Pet } from '@/types';
 import { ArrowLeft, PawPrint, Upload, X } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
+import { petCreationLimiter, generateRateLimitKey } from '@/lib/rate-limiter';
 
 const petSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
+  name: z.string()
+    .min(2, 'Name must be at least 2 characters')
+    .max(50, 'Name must be less than 50 characters')
+    .regex(/^[a-zA-Z\s\-']+$/, 'Name can only contain letters, spaces, hyphens, and apostrophes')
+    .refine(name => !name.includes(';') && !name.includes('--') && !name.includes('/*'), {
+      message: 'Name contains invalid characters'
+    }),
   type: z.enum(['dog', 'cat', 'bird', 'fish', 'reptile', 'chicken', 'other']),
-  breed: z.string().optional(),
-  birthDate: z.string().optional(),
+  breed: z.string()
+    .max(100, 'Breed must be less than 100 characters')
+    .regex(/^[a-zA-Z\s\-']*$/, 'Breed can only contain letters, spaces, hyphens, and apostrophes')
+    .optional(),
+  birthDate: z.string()
+    .refine(date => {
+      if (!date) return true; // Optional field
+      const birthDate = new Date(date);
+      const now = new Date();
+      const minDate = new Date(now.getFullYear() - 30, 0, 1); // 30 years ago
+      const maxDate = new Date(now.getFullYear() + 1, 11, 31); // 1 year in future
+      return birthDate >= minDate && birthDate <= maxDate;
+    }, 'Birth date must be within the last 30 years and not in the future')
+    .optional(),
   photo: z.string().optional(),
 });
 
@@ -61,6 +80,17 @@ export function PetForm({ pet, onSuccess }: PetFormProps) {
   });
 
   const onSubmit = async (data: PetFormData) => {
+    // Rate limiting check for new pet creation
+    if (!pet) {
+      const rateLimitKey = generateRateLimitKey();
+      if (!petCreationLimiter.isAllowed(rateLimitKey)) {
+        const remainingTime = petCreationLimiter.getResetTime(rateLimitKey);
+        const secondsLeft = remainingTime ? Math.ceil((remainingTime - Date.now()) / 1000) : 0;
+        toast.error(`Too many pet creations. Please wait ${secondsLeft} seconds before trying again.`);
+        return;
+      }
+    }
+
     setIsSubmitting(true);
     try {
       if (pet) {

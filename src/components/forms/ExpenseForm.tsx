@@ -17,13 +17,17 @@ import { ArrowLeft, DollarSign } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
+import { expenseCreationLimiter, generateRateLimitKey } from '@/lib/rate-limiter';
 
 const expenseSchema = z.object({
   petId: z.string().min(1, 'Pet is required'),
   categoryId: z.string().min(1, 'Category is required'),
-  amount: z.number().min(0.01, 'Amount must be greater than 0'),
+  amount: z.number().min(0.01, 'Amount must be greater than 0').max(999999.99, 'Amount is too high'),
   currency: z.enum(['USD', 'EUR', 'GBP', 'CAD', 'AUD', 'JPY', 'CHF', 'SEK', 'NOK', 'DKK'] as const),
-  description: z.string().min(0).optional(),
+  description: z.string()
+    .max(200, 'Description must be less than 200 characters')
+    .regex(/^[a-zA-Z0-9\s\-.,!?()]+$/, 'Description contains invalid characters')
+    .optional(),
   date: z.string().min(1, 'Date is required'),
   receipt: z.string().optional(),
   recurringType: z.enum(['none', 'monthly', 'quarterly', 'yearly']),
@@ -125,6 +129,17 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
     if (!settings || pets.length === 0 || categories.length === 0) {
       toast.error('Please wait for data to load before submitting');
       return;
+    }
+
+    // Rate limiting check for new expense creation
+    if (!expense) {
+      const rateLimitKey = generateRateLimitKey();
+      if (!expenseCreationLimiter.isAllowed(rateLimitKey)) {
+        const remainingTime = expenseCreationLimiter.getResetTime(rateLimitKey);
+        const secondsLeft = remainingTime ? Math.ceil((remainingTime - Date.now()) / 1000) : 0;
+        toast.error(`Too many expense creations. Please wait ${secondsLeft} seconds before trying again.`);
+        return;
+      }
     }
 
     setIsSubmitting(true);
