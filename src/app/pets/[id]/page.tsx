@@ -47,6 +47,7 @@ export default function PetDetailPage({ params }: PetDetailPageProps) {
       bird: '🐦',
       fish: '🐠',
       reptile: '🦎',
+      chicken: '🐔',
       other: '🐾'
     };
     return icons[type] || '🐾';
@@ -59,6 +60,7 @@ export default function PetDetailPage({ params }: PetDetailPageProps) {
       bird: 'Bird',
       fish: 'Fish',
       reptile: 'Reptile',
+      chicken: 'Chicken',
       other: 'Other'
     };
     return labels[type] || 'Other';

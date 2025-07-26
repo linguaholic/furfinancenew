@@ -2,7 +2,7 @@
 -- We don't need to enable it manually
 
 -- Create custom types
-CREATE TYPE pet_type AS ENUM ('dog', 'cat', 'bird', 'fish', 'reptile', 'other');
+CREATE TYPE pet_type AS ENUM ('dog', 'cat', 'bird', 'fish', 'reptile', 'chicken', 'other');
 CREATE TYPE budget_period AS ENUM ('monthly', 'yearly');
 CREATE TYPE recurring_type AS ENUM ('none', 'monthly', 'quarterly', 'yearly');
 CREATE TYPE currency AS ENUM ('USD', 'EUR', 'GBP', 'CAD', 'AUD', 'JPY', 'CHF', 'SEK', 'NOK', 'DKK');

@@ -18,7 +18,7 @@ import { toast } from 'sonner';
 
 const petSchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  type: z.enum(['dog', 'cat', 'bird', 'fish', 'reptile', 'other']),
+  type: z.enum(['dog', 'cat', 'bird', 'fish', 'reptile', 'chicken', 'other']),
   breed: z.string().optional(),
   birthDate: z.string().optional(),
   photo: z.string().optional(),
@@ -163,7 +163,7 @@ export function PetForm({ pet, onSuccess }: PetFormProps) {
                 <Label htmlFor="type" className="text-foreground">Pet Type *</Label>
                 <Select
                   value={watch('type')}
-                  onValueChange={(value) => setValue('type', value as 'dog' | 'cat' | 'bird' | 'fish' | 'reptile' | 'other')}
+                  onValueChange={(value) => setValue('type', value as 'dog' | 'cat' | 'bird' | 'fish' | 'reptile' | 'chicken' | 'other')}
                 >
                   <SelectTrigger className="bg-secondary border-border focus:border-happy-green">
                     <SelectValue placeholder="Select pet type" />
@@ -174,6 +174,7 @@ export function PetForm({ pet, onSuccess }: PetFormProps) {
                     <SelectItem value="bird" style={{ backgroundColor: '#000000', color: '#ffffff' }}>Bird</SelectItem>
                     <SelectItem value="fish" style={{ backgroundColor: '#000000', color: '#ffffff' }}>Fish</SelectItem>
                     <SelectItem value="reptile" style={{ backgroundColor: '#000000', color: '#ffffff' }}>Reptile</SelectItem>
+                    <SelectItem value="chicken" style={{ backgroundColor: '#000000', color: '#ffffff' }}>Chicken</SelectItem>
                     <SelectItem value="other" style={{ backgroundColor: '#000000', color: '#ffffff' }}>Other</SelectItem>
                   </SelectContent>
                 </Select>
