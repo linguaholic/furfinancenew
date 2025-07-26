@@ -26,9 +26,13 @@ const expenseSchema = z.object({
   amount: z.number().min(0.01, 'Amount must be greater than 0').max(999999.99, 'Amount is too high'),
   currency: z.enum(['USD', 'EUR', 'GBP', 'CAD', 'AUD', 'JPY', 'CHF', 'SEK', 'NOK', 'DKK'] as const),
   description: z.string()
-    .max(200, 'Description must be less than 200 characters')
-    .regex(/^[a-zA-Z0-9\s\-.,!?()]+$/, 'Description contains invalid characters')
-    .optional(),
+    .transform(val => val.trim() === '' ? undefined : val.trim())
+    .pipe(
+      z.string()
+        .max(200, 'Description must be less than 200 characters')
+        .regex(/^[a-zA-Z0-9\s\-.,!?()]+$/, 'Description contains invalid characters')
+        .optional()
+    ),
   date: z.string().min(1, 'Date is required'),
   receipt: z.string().optional(),
   recurringType: z.enum(['none', 'monthly', 'quarterly', 'yearly']),
