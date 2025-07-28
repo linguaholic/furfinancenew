@@ -436,6 +436,8 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
       set({ userCategoryPreferences: preferences });
       
       console.log('User category preferences updated:', selectedCategories);
+      console.log('All available categories:', allAvailableCategories.map(c => ({ name: c.name, isCustom: c.isCustom })));
+      console.log('Created preferences:', preferences.map(p => ({ buildingBlockId: p.buildingBlockId, isEnabled: p.isEnabled })));
     } catch (error) {
       set({ error: error instanceof Error ? error.message : 'Failed to update user category preferences' });
     } finally {
@@ -451,10 +453,18 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
       .filter(pref => pref.isEnabled)
       .map(pref => pref.buildingBlockId);
 
+    console.log('getUserSelectedCategories debug:');
+    console.log('All categories:', categories.map(c => c.name));
+    console.log('User preferences:', userCategoryPreferences.map(p => ({ buildingBlockId: p.buildingBlockId, isEnabled: p.isEnabled })));
+    console.log('Enabled block names:', enabledBlockNames);
+
     // Filter categories to only show selected ones
-    return categories.filter(category => 
+    const selectedCategories = categories.filter(category => 
       enabledBlockNames.includes(category.name)
     );
+    
+    console.log('Selected categories:', selectedCategories.map(c => c.name));
+    return selectedCategories;
   },
 
   // Computed values (same as before)
