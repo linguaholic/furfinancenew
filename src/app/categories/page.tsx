@@ -10,14 +10,17 @@ import {
   Edit,
   Trash2,
   ArrowLeft,
-  Sparkles
+  Sparkles,
+  Settings
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
+import CategoryCustomizationModal from '@/components/CategoryCustomizationModal';
 
 export default function CategoriesPage() {
   const { categories, getCategoryExpenses, deleteCategory } = useFurFinanceStore();
   const [deletingCategoryId, setDeletingCategoryId] = useState<string | null>(null);
+  const [isCustomizationModalOpen, setIsCustomizationModalOpen] = useState(false);
 
   const handleDeleteCategory = async (categoryId: string) => {
     const categoryExpenses = getCategoryExpenses(categoryId);
@@ -36,6 +39,17 @@ export default function CategoriesPage() {
         setDeletingCategoryId(null);
       }
     }
+  };
+
+  const handleCustomizeCategories = () => {
+    setIsCustomizationModalOpen(true);
+  };
+
+  const handleSaveCategoryCustomization = (selectedCategories: string[]) => {
+    // TODO: Implement saving user category preferences
+    console.log('Selected categories:', selectedCategories);
+    // For now, just close the modal
+    setIsCustomizationModalOpen(false);
   };
 
   const getCategoryIcon = (icon: string) => {
@@ -102,12 +116,23 @@ export default function CategoriesPage() {
               </div>
             </div>
           </div>
-          <Link href="/categories/new">
-            <Button size="lg" className="bg-gradient-primary hover:bg-gradient-primary/90 text-white border-0 px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
-              <Plus className="h-5 w-5 mr-2" />
-              Add Category
+          <div className="flex gap-3">
+            <Button 
+              size="lg" 
+              variant="outline"
+              onClick={handleCustomizeCategories}
+              className="border-2 border-happy-blue text-happy-blue hover:bg-happy-blue hover:text-white px-6 py-3 rounded-xl transition-all duration-300"
+            >
+              <Settings className="h-5 w-5 mr-2" />
+              Customize
             </Button>
-          </Link>
+            <Link href="/categories/new">
+              <Button size="lg" className="bg-gradient-primary hover:bg-gradient-primary/90 text-white border-0 px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+                <Plus className="h-5 w-5 mr-2" />
+                Add Category
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -223,6 +248,14 @@ export default function CategoriesPage() {
           })}
         </div>
       )}
+
+      {/* Category Customization Modal */}
+      <CategoryCustomizationModal
+        isOpen={isCustomizationModalOpen}
+        onClose={() => setIsCustomizationModalOpen(false)}
+        onSave={handleSaveCategoryCustomization}
+        currentCategories={categories.map(cat => cat.name)}
+      />
     </div>
   );
 } 
