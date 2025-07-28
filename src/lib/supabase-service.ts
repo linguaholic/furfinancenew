@@ -361,13 +361,24 @@ export const expensesService = {
 export const categoriesService = {
   async getAll(): Promise<ExpenseCategory[]> {
     // Get all categories (both system and user-specific)
+    console.log('CategoriesService: Fetching all categories from database...');
     const { data, error } = await supabase
       .from('expense_categories')
       .select('*')
       .order('name', { ascending: true })
 
-    if (error) throw error
-    return (data || []).map(toCamelCase) as ExpenseCategory[]
+    if (error) {
+      console.error('CategoriesService: Error fetching categories:', error);
+      throw error;
+    }
+    
+    console.log('CategoriesService: Raw data from database:', data);
+    console.log('CategoriesService: Number of categories found:', data?.length || 0);
+    
+    const categories = (data || []).map(toCamelCase) as ExpenseCategory[];
+    console.log('CategoriesService: Processed categories:', categories.map(c => ({ id: c.id, name: c.name, userId: c.userId })));
+    
+    return categories;
   },
 
   async getById(id: string): Promise<ExpenseCategory | null> {
