@@ -415,24 +415,8 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
     try {
       const { categories } = get();
       
-      // Get all available categories (building blocks + custom categories)
-      const allAvailableCategories = [
-        ...CATEGORY_BUILDING_BLOCKS.map(block => ({
-          id: block.name,
-          name: block.name,
-          isCustom: false
-        })),
-        ...categories.filter(category => 
-          !CATEGORY_BUILDING_BLOCKS.some(block => block.name === category.name)
-        ).map(category => ({
-          id: category.id,
-          name: category.name,
-          isCustom: true
-        }))
-      ];
-
-      // Create preferences for all available categories
-      const preferences = allAvailableCategories.map(category => ({
+      // Create preferences for all available categories (both building blocks and custom categories)
+      const preferences = categories.map(category => ({
         id: `pref_${category.id}`,
         userId: 'current_user', // In real app, this would be the actual user ID
         categoryId: category.id,
@@ -446,7 +430,7 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
       set({ userCategoryPreferences: preferences });
       
       console.log('User category preferences updated:', selectedCategories);
-      console.log('All available categories:', allAvailableCategories.map(c => ({ name: c.name, isCustom: c.isCustom })));
+      console.log('All categories:', categories.map(c => c.name));
       console.log('Created preferences:', preferences.map(p => ({ categoryId: p.categoryId, isEnabled: p.isEnabled })));
     } catch (error) {
       set({ error: error instanceof Error ? error.message : 'Failed to update user category preferences' });
@@ -468,9 +452,9 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
     console.log('User preferences:', userCategoryPreferences.map(p => ({ categoryId: p.categoryId, isEnabled: p.isEnabled })));
     console.log('Enabled category IDs:', enabledCategoryIds);
 
-    // Filter categories to only show selected ones
+    // Filter categories to only show selected ones (using real database IDs)
     const selectedCategories = categories.filter(category => 
-      enabledCategoryIds.includes(category.id) || enabledCategoryIds.includes(category.name)
+      enabledCategoryIds.includes(category.id)
     );
     
     console.log('Selected categories:', selectedCategories.map(c => c.name));
