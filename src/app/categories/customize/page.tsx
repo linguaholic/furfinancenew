@@ -178,29 +178,32 @@ export default function CategoryCustomizationPage() {
       {/* Header */}
       <div className="border-b bg-card">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div className="flex items-center gap-4">
+          <div className="flex flex-col gap-4">
+            {/* Top row with back button and title */}
+            <div className="flex items-center gap-3">
               <Link href="/categories" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 <span className="hidden sm:inline">Back to Categories</span>
                 <span className="sm:hidden">Back</span>
               </Link>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3">
                 <div className="p-2 bg-gradient-primary rounded-lg">
-                  <Blocks className="h-6 w-6 text-white" />
+                  <Blocks className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-xl sm:text-2xl font-bold">Customize Your Categories</h1>
-                  <p className="text-muted-foreground text-sm sm:text-base hidden sm:block">Choose which categories you want to use for tracking your pet expenses</p>
+                  <h1 className="text-lg sm:text-xl lg:text-2xl font-bold">Customize Your Categories</h1>
+                  <p className="text-muted-foreground text-xs sm:text-sm lg:text-base hidden sm:block">Choose which categories you want to use for tracking your pet expenses</p>
                 </div>
               </div>
             </div>
+            
+            {/* Bottom row with action buttons */}
             <div className="flex gap-2 sm:gap-3">
               <Button
                 variant="outline"
                 onClick={handleResetToDefault}
                 size="sm"
-                className="text-xs sm:text-sm"
+                className="text-xs sm:text-sm flex-1 sm:flex-none"
               >
                 <span className="hidden sm:inline">Reset to Default</span>
                 <span className="sm:hidden">Reset</span>
@@ -208,7 +211,7 @@ export default function CategoryCustomizationPage() {
               <Button 
                 onClick={handleSave} 
                 disabled={isSaving}
-                className="bg-gradient-primary hover:bg-gradient-primary/90 text-xs sm:text-sm"
+                className="bg-gradient-primary hover:bg-gradient-primary/90 text-xs sm:text-sm flex-1 sm:flex-none"
               >
                 <Save className="h-4 w-4 mr-1 sm:mr-2" />
                 {isSaving ? 'Saving...' : (
@@ -228,13 +231,13 @@ export default function CategoryCustomizationPage() {
         <div className="space-y-6">
           {/* Search and Filters */}
           <div className="space-y-4">
-            <div className="relative max-w-md">
+            <div className="relative w-full max-w-md">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               <Input
                 placeholder="Search categories..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="pl-10 w-full"
               />
             </div>
 
@@ -243,13 +246,15 @@ export default function CategoryCustomizationPage() {
                 variant={activeTab === 'all' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setActiveTab('all')}
+                className="text-xs sm:text-sm"
               >
-                All Categories
+                All
               </Button>
               <Button
                 variant={activeTab === 'default' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setActiveTab('default')}
+                className="text-xs sm:text-sm"
               >
                 Default
               </Button>
@@ -257,6 +262,7 @@ export default function CategoryCustomizationPage() {
                 variant={activeTab === 'custom' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setActiveTab('custom')}
+                className="text-xs sm:text-sm"
               >
                 Additional
               </Button>
@@ -269,10 +275,11 @@ export default function CategoryCustomizationPage() {
               <Button
                 onClick={() => setShowCreateForm(true)}
                 variant="outline"
-                className="border-2 border-dashed border-happy-blue text-happy-blue hover:bg-happy-blue hover:text-white px-8 py-3 rounded-xl transition-all duration-300"
+                className="border-2 border-dashed border-happy-blue text-happy-blue hover:bg-happy-blue hover:text-white px-4 sm:px-8 py-3 rounded-xl transition-all duration-300 w-full sm:w-auto"
               >
                 <Plus className="h-4 w-4 mr-2" />
-                Create Custom Category
+                <span className="hidden sm:inline">Create Custom Category</span>
+                <span className="sm:hidden">Create Custom Category</span>
               </Button>
             </div>
           )}
@@ -312,7 +319,7 @@ export default function CategoryCustomizationPage() {
                     >
                       {getCategoryIcon(block.icon)} 
                       <span className="hidden sm:inline">{block.name}</span>
-                      <span className="sm:hidden">{block.name.length > 8 ? block.name.substring(0, 8) + '...' : block.name}</span>
+                      <span className="sm:hidden">{block.name.length > 6 ? block.name.substring(0, 6) + '...' : block.name}</span>
                       {block.isCustom && (
                         <span className="ml-1 text-xs opacity-75 hidden sm:inline">(Custom)</span>
                       )}
@@ -324,14 +331,14 @@ export default function CategoryCustomizationPage() {
           </div>
 
           {/* Building Blocks Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
             {filteredBlocks.map((block) => {
               const isSelected = selectedBlocks.includes(block.name);
               
               return (
                 <div
                   key={block.name}
-                  className={`relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 hover:shadow-md ${
+                  className={`relative p-3 sm:p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 hover:shadow-md ${
                     isSelected
                       ? 'border-happy-blue bg-happy-blue/5'
                       : block.isCustom
@@ -371,13 +378,13 @@ export default function CategoryCustomizationPage() {
                   {/* Category Content */}
                   <div className="flex items-start gap-2 sm:gap-3">
                     <div
-                      className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-xl sm:text-2xl flex-shrink-0"
+                      className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-full flex items-center justify-center text-lg sm:text-xl lg:text-2xl flex-shrink-0"
                       style={{ backgroundColor: `${block.color}20` }}
                     >
                       {getCategoryIcon(block.icon)}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-sm mb-1 truncate">
+                      <h3 className="font-semibold text-xs sm:text-sm lg:text-base mb-1 truncate">
                         {block.name}
                       </h3>
                       {block.description && (
