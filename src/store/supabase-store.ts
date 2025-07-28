@@ -216,16 +216,6 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
       const categories = await categoriesService.getAll();
       const endTime = Date.now();
       console.log(`Store: Categories loaded: ${categories.length} (${endTime - startTime}ms)`);
-      console.log('Categories loaded:', categories.map(c => ({ id: c.id, name: c.name })));
-      
-      // Debug: Check if "Show & Competition" exists
-      const showCompetition = categories.find(c => c.name === 'Show & Competition');
-      console.log('Show & Competition found:', showCompetition);
-      
-      // Debug: Check all categories with "Show" in the name
-      const showCategories = categories.filter(c => c.name.toLowerCase().includes('show'));
-      console.log('Categories with "Show" in name:', showCategories);
-      
       set({ categories });
     } catch (error) {
       console.error('Store: Failed to load categories:', error);
@@ -457,19 +447,11 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
       .filter(pref => pref.isEnabled)
       .map(pref => pref.categoryId);
 
-    console.log('=== getUserSelectedCategories DEBUG ===');
-    console.log('All categories loaded:', categories.map(c => ({ id: c.id, name: c.name })));
-    console.log('User preferences:', userCategoryPreferences.map(p => ({ categoryId: p.categoryId, isEnabled: p.isEnabled })));
-    console.log('Enabled category IDs:', enabledCategoryIds);
-    console.log('Looking for "Show & Competition":', categories.find(c => c.name === 'Show & Competition'));
-
     // Filter categories to only show selected ones (using real database IDs)
     const selectedCategories = categories.filter(category => 
       enabledCategoryIds.includes(category.id)
     );
     
-    console.log('Selected categories:', selectedCategories.map(c => c.name));
-    console.log('=== END DEBUG ===');
     return selectedCategories;
   },
 
