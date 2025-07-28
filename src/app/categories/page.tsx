@@ -22,6 +22,7 @@ export default function CategoriesPage() {
   
   // Get only the categories that the user has selected
   const userCategories = getUserSelectedCategories();
+  console.log('Categories page - userCategories:', userCategories.length, userCategories.map(c => c.name));
 
   const handleDeleteCategory = async (categoryId: string) => {
     const categoryExpenses = getCategoryExpenses(categoryId);

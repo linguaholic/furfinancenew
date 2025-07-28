@@ -476,15 +476,22 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
   getUserSelectedCategories: () => {
     const { userCategoryPreferences, categories } = get();
     
+    console.log('getUserSelectedCategories - userCategoryPreferences:', userCategoryPreferences.length);
+    console.log('getUserSelectedCategories - categories:', categories.length);
+    
     // Get enabled category IDs
     const enabledCategoryIds = userCategoryPreferences
       .filter(pref => pref.isEnabled)
       .map(pref => pref.categoryId);
 
+    console.log('getUserSelectedCategories - enabledCategoryIds:', enabledCategoryIds);
+    
     // Filter categories to only show selected ones (using real database IDs)
     const selectedCategories = categories.filter(category => 
       enabledCategoryIds.includes(category.id)
     );
+    
+    console.log('getUserSelectedCategories - selectedCategories:', selectedCategories.length, selectedCategories.map(c => c.name));
     
     return selectedCategories;
   },
