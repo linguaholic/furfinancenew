@@ -213,7 +213,7 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
     try {
       console.log('Store: Loading categories...');
       const startTime = Date.now();
-      const categories = await categoriesService.getOrCreateDefault();
+      const categories = await categoriesService.getAll();
       const endTime = Date.now();
       console.log(`Store: Categories loaded: ${categories.length} (${endTime - startTime}ms)`);
       set({ categories });
