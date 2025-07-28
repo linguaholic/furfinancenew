@@ -25,11 +25,9 @@ export default function CategoryCustomizationPage() {
   const [activeTab, setActiveTab] = useState<'all' | 'default' | 'custom'>('all');
   const [isSaving, setIsSaving] = useState(false);
 
-  // Get current user categories
-  const userCategories = getUserSelectedCategories();
-
+  // Initialize selected blocks on component mount
   useEffect(() => {
-    console.log('User categories:', userCategories);
+    const userCategories = getUserSelectedCategories();
     let categoryNames: string[];
     
     if (userCategories.length > 0) {
@@ -42,14 +40,8 @@ export default function CategoryCustomizationPage() {
         .map(block => block.name);
     }
     
-    console.log('Setting selected blocks to:', categoryNames);
     setSelectedBlocks(categoryNames);
-  }, [userCategories]);
-
-  // Debug: Log current state
-  useEffect(() => {
-    console.log('Current selectedBlocks:', selectedBlocks);
-  }, [selectedBlocks]);
+  }, []); // Only run once on mount
 
   const getCategoryIcon = (icon: string) => {
     const iconMap: Record<string, string> = {
@@ -90,15 +82,11 @@ export default function CategoryCustomizationPage() {
   });
 
   const handleToggleBlock = (blockId: string) => {
-    console.log('Toggling block:', blockId);
-    console.log('Current selectedBlocks:', selectedBlocks);
-    setSelectedBlocks(prev => {
-      const newSelection = prev.includes(blockId) 
+    setSelectedBlocks(prev => 
+      prev.includes(blockId) 
         ? prev.filter(id => id !== blockId)
-        : [...prev, blockId];
-      console.log('New selection:', newSelection);
-      return newSelection;
-    });
+        : [...prev, blockId]
+    );
   };
 
   const handleSave = async () => {
@@ -248,10 +236,7 @@ export default function CategoryCustomizationPage() {
                       ? 'border-happy-blue bg-happy-blue/5'
                       : 'border-border hover:border-happy-blue/50'
                   }`}
-                  onClick={() => {
-                    console.log('Card clicked for:', block.name);
-                    handleToggleBlock(block.name);
-                  }}
+                  onClick={() => handleToggleBlock(block.name)}
                 >
                   {/* Selection Indicator */}
                   <div className={`absolute top-3 right-3 w-6 h-6 rounded-full flex items-center justify-center ${
