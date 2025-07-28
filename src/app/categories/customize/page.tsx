@@ -12,7 +12,6 @@ import {
   ArrowLeft,
   Save,
   Plus,
-  X,
   Trash2
 } from 'lucide-react';
 import { CATEGORY_BUILDING_BLOCKS } from '@/types';
