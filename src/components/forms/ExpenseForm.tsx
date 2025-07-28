@@ -46,7 +46,7 @@ interface ExpenseFormProps {
 }
 
 export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
-  const { addExpense, updateExpense, pets, categories, settings } = useFurFinanceStore();
+  const { addExpense, updateExpense, pets, categories, settings, getUserSelectedCategories } = useFurFinanceStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const searchParams = useSearchParams();
@@ -305,7 +305,7 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
                           <SelectValue placeholder="Select category" />
                         </SelectTrigger>
                         <SelectContent className="bg-black border border-gray-700 z-50">
-                          {categories.map((category) => (
+                          {getUserSelectedCategories().map((category) => (
                             <SelectItem key={category.id} value={category.id} className="bg-black text-white hover:bg-gray-800 focus:bg-gray-800">
                               <div className="flex items-center gap-2">
                                 <div 
