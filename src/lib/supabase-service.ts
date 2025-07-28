@@ -360,11 +360,10 @@ export const expensesService = {
 // Categories
 export const categoriesService = {
   async getAll(): Promise<ExpenseCategory[]> {
-    const userId = await getCurrentUserId()
+    // Get all categories (both system and user-specific)
     const { data, error } = await supabase
       .from('expense_categories')
       .select('*')
-      .eq('user_id', userId)
       .order('name', { ascending: true })
 
     if (error) throw error
@@ -419,6 +418,41 @@ export const categoriesService = {
       .eq('user_id', userId)
 
     if (error) throw error
+  },
+}
+
+// User Category Preferences
+export const userCategoryPreferencesService = {
+  async getAll(): Promise<any[]> {
+    const userId = await getCurrentUserId()
+    const { data, error } = await supabase
+      .from('user_category_preferences')
+      .select('*')
+      .eq('user_id', userId)
+
+    if (error) throw error
+    return (data || []).map(toCamelCase)
+  },
+
+  async updatePreferences(preferences: any[]): Promise<void> {
+    const userId = await getCurrentUserId()
+    
+    // Delete existing preferences
+    const { error: deleteError } = await supabase
+      .from('user_category_preferences')
+      .delete()
+      .eq('user_id', userId)
+
+    if (deleteError) throw deleteError
+
+    // Insert new preferences
+    if (preferences.length > 0) {
+      const { error: insertError } = await supabase
+        .from('user_category_preferences')
+        .insert(preferences.map(pref => ({ ...pref, user_id: userId })))
+
+      if (insertError) throw insertError
+    }
   },
 
   async getOrCreateDefault(): Promise<ExpenseCategory[]> {

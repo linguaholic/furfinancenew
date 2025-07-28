@@ -5,34 +5,47 @@
 -- Note: We'll use NULL for user_id since these are system-wide categories
 -- In the future, we can add a 'is_system_category' boolean field if needed
 
-INSERT INTO expense_categories (id, user_id, name, color, icon, created_at, updated_at) VALUES
--- Default categories (isDefault: true)
-(gen_random_uuid(), NULL, 'Food & Treats', '#10b981', 'utensils', NOW(), NOW()),
-(gen_random_uuid(), NULL, 'Veterinary Care', '#ef4444', 'heart-pulse', NOW(), NOW()),
-(gen_random_uuid(), NULL, 'Grooming', '#8b5cf6', 'scissors', NOW(), NOW()),
-(gen_random_uuid(), NULL, 'Toys & Entertainment', '#f59e0b', 'gamepad-2', NOW(), NOW()),
-(gen_random_uuid(), NULL, 'Supplies & Equipment', '#06b6d4', 'package', NOW(), NOW()),
-(gen_random_uuid(), NULL, 'Training', '#84cc16', 'graduation-cap', NOW(), NOW()),
-(gen_random_uuid(), NULL, 'Insurance', '#6366f1', 'shield', NOW(), NOW()),
-(gen_random_uuid(), NULL, 'Other', '#6b7280', 'more-horizontal', NOW(), NOW()),
+-- Insert building blocks as categories, checking for existing ones first
+INSERT INTO expense_categories (id, user_id, name, color, icon, created_at, updated_at)
+SELECT 
+  gen_random_uuid(), 
+  NULL, 
+  name, 
+  color, 
+  icon, 
+  NOW(), 
+  NOW()
+FROM (VALUES
+  -- Default categories (isDefault: true)
+  ('Food & Treats', '#10b981', 'utensils'),
+  ('Veterinary Care', '#ef4444', 'heart-pulse'),
+  ('Grooming', '#8b5cf6', 'scissors'),
+  ('Toys & Entertainment', '#f59e0b', 'gamepad-2'),
+  ('Supplies & Equipment', '#06b6d4', 'package'),
+  ('Training', '#84cc16', 'graduation-cap'),
+  ('Insurance', '#6366f1', 'shield'),
+  ('Other', '#6b7280', 'more-horizontal'),
 
--- Additional building blocks (isDefault: false)
-(gen_random_uuid(), NULL, 'Boarding & Pet Sitting', '#f97316', 'home', NOW(), NOW()),
-(gen_random_uuid(), NULL, 'Dental Care', '#ec4899', 'tooth', NOW(), NOW()),
-(gen_random_uuid(), NULL, 'Emergency Care', '#dc2626', 'alert-triangle', NOW(), NOW()),
-(gen_random_uuid(), NULL, 'Medication & Supplements', '#7c3aed', 'pill', NOW(), NOW()),
-(gen_random_uuid(), NULL, 'Housing & Rent', '#059669', 'building', NOW(), NOW()),
-(gen_random_uuid(), NULL, 'Transportation', '#0891b2', 'car', NOW(), NOW()),
-(gen_random_uuid(), NULL, 'Licensing & Registration', '#1d4ed8', 'file-text', NOW(), NOW()),
-(gen_random_uuid(), NULL, 'Behavioral Therapy', '#be185d', 'brain', NOW(), NOW()),
-(gen_random_uuid(), NULL, 'Alternative Medicine', '#65a30d', 'leaf', NOW(), NOW()),
-(gen_random_uuid(), NULL, 'Breeding & Reproduction', '#ea580c', 'heart', NOW(), NOW()),
-(gen_random_uuid(), NULL, 'Show & Competition', '#c026d3', 'trophy', NOW(), NOW()),
-(gen_random_uuid(), NULL, 'Pet Photography', '#0d9488', 'camera', NOW(), NOW()),
-(gen_random_uuid(), NULL, 'Pet Clothing & Accessories', '#f59e0b', 'shirt', NOW(), NOW()),
-(gen_random_uuid(), NULL, 'Pet Technology', '#6366f1', 'smartphone', NOW(), NOW()),
-(gen_random_uuid(), NULL, 'Pet Memorial', '#6b7280', 'flower', NOW(), NOW())
-ON CONFLICT (name) DO NOTHING; -- Prevent duplicates if categories already exist
+  -- Additional building blocks (isDefault: false)
+  ('Boarding & Pet Sitting', '#f97316', 'home'),
+  ('Dental Care', '#ec4899', 'tooth'),
+  ('Emergency Care', '#dc2626', 'alert-triangle'),
+  ('Medication & Supplements', '#7c3aed', 'pill'),
+  ('Housing & Rent', '#059669', 'building'),
+  ('Transportation', '#0891b2', 'car'),
+  ('Licensing & Registration', '#1d4ed8', 'file-text'),
+  ('Behavioral Therapy', '#be185d', 'brain'),
+  ('Alternative Medicine', '#65a30d', 'leaf'),
+  ('Breeding & Reproduction', '#ea580c', 'heart'),
+  ('Show & Competition', '#c026d3', 'trophy'),
+  ('Pet Photography', '#0d9488', 'camera'),
+  ('Pet Clothing & Accessories', '#f59e0b', 'shirt'),
+  ('Pet Technology', '#6366f1', 'smartphone'),
+  ('Pet Memorial', '#6b7280', 'flower')
+) AS v(name, color, icon)
+WHERE NOT EXISTS (
+  SELECT 1 FROM expense_categories WHERE expense_categories.name = v.name
+);
 
 -- Create user_category_preferences table for storing user preferences
 CREATE TABLE IF NOT EXISTS user_category_preferences (

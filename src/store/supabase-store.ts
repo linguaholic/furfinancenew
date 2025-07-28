@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { Pet, Expense, ExpenseCategory, Budget, AppSettings, UserCategoryPreference, CATEGORY_BUILDING_BLOCKS } from '@/types';
-import { petsService, expensesService, categoriesService, budgetsService, settingsService } from '@/lib/supabase-service';
+import { petsService, expensesService, categoriesService, budgetsService, settingsService, userCategoryPreferencesService } from '@/lib/supabase-service';
 
 interface FurFinanceStore {
   // Data
@@ -349,8 +349,18 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
     try {
       const { categories } = get();
       
-      // For now, we'll use localStorage to store preferences
-      // In the future, this would be stored in Supabase
+      // Try to load from database first
+      try {
+        const dbPreferences = await userCategoryPreferencesService.getAll();
+        if (dbPreferences && dbPreferences.length > 0) {
+          set({ userCategoryPreferences: dbPreferences });
+          return dbPreferences;
+        }
+      } catch (error) {
+        console.log('No database preferences found, falling back to localStorage');
+      }
+      
+      // Fallback to localStorage for now
       const stored = localStorage.getItem('userCategoryPreferences');
       if (stored) {
         const preferences = JSON.parse(stored);
@@ -379,6 +389,7 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
         const updatedPreferences = [...preferences, ...newCustomPreferences];
         set({ userCategoryPreferences: updatedPreferences });
         localStorage.setItem('userCategoryPreferences', JSON.stringify(updatedPreferences));
+        return updatedPreferences;
       } else {
         // Default to all default categories
         const defaultPreferences = CATEGORY_BUILDING_BLOCKS
@@ -393,10 +404,12 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
           }));
         set({ userCategoryPreferences: defaultPreferences });
         localStorage.setItem('userCategoryPreferences', JSON.stringify(defaultPreferences));
+        return defaultPreferences;
       }
     } catch (error) {
       console.error('Store: Failed to load user category preferences:', error);
       set({ error: error instanceof Error ? error.message : 'Failed to load user category preferences' });
+      return [];
     }
   },
 
