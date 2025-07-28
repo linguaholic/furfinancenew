@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     siteName: "Fur Finance",
     images: [
       {
-        url: "/images/Fur Finance Logo.png",
+        url: "/images/Fur Finance Logo New.png",
         width: 1200,
         height: 630,
         alt: "Fur Finance - Pet Expense Tracker",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Fur Finance – Track Pet Expenses",
     description: "A free, no-login tool to track your pet expenses, set budgets, and manage your furry friends' finances with ease.",
-    images: ["/images/Fur Finance Logo.png"],
+          images: ["/images/Fur Finance Logo New.png"],
   },
 };
 
