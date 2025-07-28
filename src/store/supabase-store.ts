@@ -458,13 +458,33 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
     console.log('User preferences:', userCategoryPreferences.map(p => ({ buildingBlockId: p.buildingBlockId, isEnabled: p.isEnabled })));
     console.log('Enabled block names:', enabledBlockNames);
 
-    // Filter categories to only show selected ones
-    const selectedCategories = categories.filter(category => 
+    // Get existing categories that match enabled preferences
+    const existingSelectedCategories = categories.filter(category => 
       enabledBlockNames.includes(category.name)
     );
+
+    // Get building blocks that are enabled but don't exist as categories yet
+    const enabledBuildingBlocks = CATEGORY_BUILDING_BLOCKS.filter(block => 
+      enabledBlockNames.includes(block.name) && 
+      !categories.some(category => category.name === block.name)
+    );
+
+    // Convert building blocks to category format
+    const buildingBlockCategories = enabledBuildingBlocks.map(block => ({
+      id: `building_block_${block.name}`,
+      name: block.name,
+      color: block.color,
+      icon: block.icon,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }));
+
+    const allSelectedCategories = [...existingSelectedCategories, ...buildingBlockCategories];
     
-    console.log('Selected categories:', selectedCategories.map(c => c.name));
-    return selectedCategories;
+    console.log('Existing selected categories:', existingSelectedCategories.map(c => c.name));
+    console.log('Building block categories:', buildingBlockCategories.map(c => c.name));
+    console.log('All selected categories:', allSelectedCategories.map(c => c.name));
+    return allSelectedCategories;
   },
 
   // Computed values (same as before)
