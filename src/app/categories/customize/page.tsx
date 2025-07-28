@@ -45,7 +45,7 @@ export default function CategoryCustomizationPage() {
     }
     
     setSelectedBlocks(categoryNames);
-  }, []); // Only run once on mount
+  }, [getUserSelectedCategories]); // Include the function as dependency
 
   const getCategoryIcon = (icon: string) => {
     const iconMap: Record<string, string> = {

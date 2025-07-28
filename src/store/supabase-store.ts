@@ -361,8 +361,8 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
         );
         
         const existingCustomCategoryNames = preferences
-          .filter((pref: any) => !CATEGORY_BUILDING_BLOCKS.some(block => block.name === pref.buildingBlockId))
-          .map((pref: any) => pref.buildingBlockId);
+          .filter((pref: UserCategoryPreference) => !CATEGORY_BUILDING_BLOCKS.some(block => block.name === pref.buildingBlockId))
+          .map((pref: UserCategoryPreference) => pref.buildingBlockId);
         
         // Add preferences for new custom categories (disabled by default)
         const newCustomPreferences = customCategories
