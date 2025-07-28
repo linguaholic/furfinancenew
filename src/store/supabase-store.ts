@@ -78,12 +78,22 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
     console.log('Store: Initializing...');
     set({ isLoading: true, error: null });
     try {
-      // Load critical data first (settings, categories, and user preferences needed for forms)
-      await Promise.all([
-        get().loadSettings(),
-        get().loadCategories(),
-        get().loadUserCategoryPreferences(),
-      ]);
+      // Load settings first
+      console.log('Store: Loading settings...');
+      await get().loadSettings();
+
+      // Load categories
+      console.log('Store: Loading categories...');
+      await get().loadCategories();
+
+      // Wait a moment to ensure categories are set in state
+      console.log('Store: Waiting for categories to be set...');
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      // Load user category preferences AFTER categories are loaded
+      console.log('Store: Loading user category preferences...');
+      await get().loadUserCategoryPreferences();
+
       console.log('Store: Critical data loaded');
       
       // Load secondary data in parallel (pets, expenses, budgets)
