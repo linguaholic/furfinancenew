@@ -54,14 +54,14 @@ export default function HomePage() {
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-4 mb-6 p-4 bg-gradient-primary rounded-2xl shadow-xl">
+          <div className="inline-flex items-center gap-4 mb-6">
             <img 
               src="/images/Fur Finance Logo New.png" 
               alt="Fur Finance Logo" 
-              className="h-12 w-12 sm:h-16 sm:w-16 object-contain"
+              className="h-16 w-16 sm:h-20 sm:w-20 object-contain"
             />
-            <h1 className="text-3xl sm:text-4xl font-bold text-white">Fur Finance</h1>
-            <Sparkles className="h-5 w-5 sm:h-6 sm:w-6 text-white/80" />
+            <h1 className="text-3xl sm:text-4xl font-bold">Fur Finance</h1>
+            <Sparkles className="h-5 w-5 sm:h-6 sm:w-6 text-muted-foreground" />
           </div>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Track your pet expenses with love and care. Every penny spent on your furry friends, 
