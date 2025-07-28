@@ -1,5 +1,5 @@
 import { supabase } from './supabase'
-import { Pet, Expense, Budget, ExpenseCategory, AppSettings } from '@/types'
+import { Pet, Expense, Budget, ExpenseCategory, AppSettings, UserCategoryPreference } from '@/types'
 
 // Utility functions to convert between camelCase and snake_case
 const toSnakeCase = (obj: unknown): unknown => {
@@ -423,7 +423,7 @@ export const categoriesService = {
 
 // User Category Preferences
 export const userCategoryPreferencesService = {
-  async getAll(): Promise<any[]> {
+  async getAll(): Promise<UserCategoryPreference[]> {
     const userId = await getCurrentUserId()
     const { data, error } = await supabase
       .from('user_category_preferences')
@@ -431,10 +431,10 @@ export const userCategoryPreferencesService = {
       .eq('user_id', userId)
 
     if (error) throw error
-    return (data || []).map(toCamelCase)
+    return (data || []).map(toCamelCase) as UserCategoryPreference[]
   },
 
-  async updatePreferences(preferences: any[]): Promise<void> {
+  async updatePreferences(preferences: UserCategoryPreference[]): Promise<void> {
     const userId = await getCurrentUserId()
     
     // Delete existing preferences
