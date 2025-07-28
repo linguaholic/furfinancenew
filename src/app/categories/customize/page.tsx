@@ -150,7 +150,7 @@ export default function CategoryCustomizationPage() {
       {
         id: `pref_${categoryName}`,
         userId: 'current_user',
-        buildingBlockId: categoryName,
+        categoryId: categoryName,
         isEnabled: true,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
