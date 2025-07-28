@@ -29,8 +29,27 @@ export default function CategoryCustomizationPage() {
   const userCategories = getUserSelectedCategories();
 
   useEffect(() => {
-    setSelectedBlocks(userCategories.map(cat => cat.name));
+    console.log('User categories:', userCategories);
+    let categoryNames: string[];
+    
+    if (userCategories.length > 0) {
+      // Use user's selected categories
+      categoryNames = userCategories.map(cat => cat.name);
+    } else {
+      // Fallback to default categories if no user preferences exist
+      categoryNames = CATEGORY_BUILDING_BLOCKS
+        .filter(block => block.isDefault)
+        .map(block => block.name);
+    }
+    
+    console.log('Setting selected blocks to:', categoryNames);
+    setSelectedBlocks(categoryNames);
   }, [userCategories]);
+
+  // Debug: Log current state
+  useEffect(() => {
+    console.log('Current selectedBlocks:', selectedBlocks);
+  }, [selectedBlocks]);
 
   const getCategoryIcon = (icon: string) => {
     const iconMap: Record<string, string> = {
@@ -71,11 +90,15 @@ export default function CategoryCustomizationPage() {
   });
 
   const handleToggleBlock = (blockId: string) => {
-    setSelectedBlocks(prev => 
-      prev.includes(blockId) 
+    console.log('Toggling block:', blockId);
+    console.log('Current selectedBlocks:', selectedBlocks);
+    setSelectedBlocks(prev => {
+      const newSelection = prev.includes(blockId) 
         ? prev.filter(id => id !== blockId)
-        : [...prev, blockId]
-    );
+        : [...prev, blockId];
+      console.log('New selection:', newSelection);
+      return newSelection;
+    });
   };
 
   const handleSave = async () => {
@@ -225,7 +248,10 @@ export default function CategoryCustomizationPage() {
                       ? 'border-happy-blue bg-happy-blue/5'
                       : 'border-border hover:border-happy-blue/50'
                   }`}
-                  onClick={() => handleToggleBlock(block.name)}
+                  onClick={() => {
+                    console.log('Card clicked for:', block.name);
+                    handleToggleBlock(block.name);
+                  }}
                 >
                   {/* Selection Indicator */}
                   <div className={`absolute top-3 right-3 w-6 h-6 rounded-full flex items-center justify-center ${
