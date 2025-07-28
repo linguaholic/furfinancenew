@@ -242,8 +242,6 @@ export default function CategoryCustomizationModal({
           )}
         </div>
 
-        </div>
-
         {/* Actions */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between p-4 md:p-6 border-t bg-background gap-3">
           <div className="flex gap-2">
