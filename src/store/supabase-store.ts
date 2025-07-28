@@ -361,8 +361,8 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
         );
         
         const existingCustomCategoryNames = preferences
-          .filter((pref: UserCategoryPreference) => !CATEGORY_BUILDING_BLOCKS.some(block => block.name === pref.buildingBlockId))
-          .map((pref: UserCategoryPreference) => pref.buildingBlockId);
+          .filter((pref: UserCategoryPreference) => !CATEGORY_BUILDING_BLOCKS.some(block => block.name === pref.categoryId))
+          .map((pref: UserCategoryPreference) => pref.categoryId);
         
         // Add preferences for new custom categories (disabled by default)
         const newCustomPreferences = customCategories
@@ -370,7 +370,7 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
           .map(category => ({
             id: `pref_${category.id}`,
             userId: 'current_user',
-            buildingBlockId: category.name,
+            categoryId: category.id, // Use actual category ID
             isEnabled: false, // New custom categories are disabled by default
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
@@ -386,7 +386,7 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
           .map(block => ({
             id: `pref_${block.name}`,
             userId: 'current_user', // In real app, this would be the actual user ID
-            buildingBlockId: block.name,
+            categoryId: block.name, // This will be replaced with actual category ID when we load from DB
             isEnabled: true,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
@@ -425,7 +425,7 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
       const preferences = allAvailableCategories.map(category => ({
         id: `pref_${category.id}`,
         userId: 'current_user', // In real app, this would be the actual user ID
-        buildingBlockId: category.name,
+        categoryId: category.id,
         isEnabled: selectedCategories.includes(category.name),
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
@@ -437,7 +437,7 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
       
       console.log('User category preferences updated:', selectedCategories);
       console.log('All available categories:', allAvailableCategories.map(c => ({ name: c.name, isCustom: c.isCustom })));
-      console.log('Created preferences:', preferences.map(p => ({ buildingBlockId: p.buildingBlockId, isEnabled: p.isEnabled })));
+      console.log('Created preferences:', preferences.map(p => ({ categoryId: p.categoryId, isEnabled: p.isEnabled })));
     } catch (error) {
       set({ error: error instanceof Error ? error.message : 'Failed to update user category preferences' });
     } finally {
@@ -448,43 +448,23 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
   getUserSelectedCategories: () => {
     const { userCategoryPreferences, categories } = get();
     
-    // Get enabled building block names
-    const enabledBlockNames = userCategoryPreferences
+    // Get enabled category IDs
+    const enabledCategoryIds = userCategoryPreferences
       .filter(pref => pref.isEnabled)
-      .map(pref => pref.buildingBlockId);
+      .map(pref => pref.categoryId);
 
     console.log('getUserSelectedCategories debug:');
     console.log('All categories:', categories.map(c => c.name));
-    console.log('User preferences:', userCategoryPreferences.map(p => ({ buildingBlockId: p.buildingBlockId, isEnabled: p.isEnabled })));
-    console.log('Enabled block names:', enabledBlockNames);
+    console.log('User preferences:', userCategoryPreferences.map(p => ({ categoryId: p.categoryId, isEnabled: p.isEnabled })));
+    console.log('Enabled category IDs:', enabledCategoryIds);
 
-    // Get existing categories that match enabled preferences
-    const existingSelectedCategories = categories.filter(category => 
-      enabledBlockNames.includes(category.name)
+    // Filter categories to only show selected ones
+    const selectedCategories = categories.filter(category => 
+      enabledCategoryIds.includes(category.id) || enabledCategoryIds.includes(category.name)
     );
-
-    // Get building blocks that are enabled but don't exist as categories yet
-    const enabledBuildingBlocks = CATEGORY_BUILDING_BLOCKS.filter(block => 
-      enabledBlockNames.includes(block.name) && 
-      !categories.some(category => category.name === block.name)
-    );
-
-    // Convert building blocks to category format
-    const buildingBlockCategories = enabledBuildingBlocks.map(block => ({
-      id: `building_block_${block.name}`,
-      name: block.name,
-      color: block.color,
-      icon: block.icon,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    }));
-
-    const allSelectedCategories = [...existingSelectedCategories, ...buildingBlockCategories];
     
-    console.log('Existing selected categories:', existingSelectedCategories.map(c => c.name));
-    console.log('Building block categories:', buildingBlockCategories.map(c => c.name));
-    console.log('All selected categories:', allSelectedCategories.map(c => c.name));
-    return allSelectedCategories;
+    console.log('Selected categories:', selectedCategories.map(c => c.name));
+    return selectedCategories;
   },
 
   // Computed values (same as before)

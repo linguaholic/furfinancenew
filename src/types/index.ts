@@ -32,7 +32,7 @@ export interface CategoryBuildingBlock {
 export interface UserCategoryPreference {
   id: string;
   userId: string;
-  buildingBlockId: string;
+  categoryId: string;
   isEnabled: boolean;
   customName?: string;
   customColor?: string;
