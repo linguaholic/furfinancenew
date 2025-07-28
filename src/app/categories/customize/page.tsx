@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -9,30 +8,29 @@ import {
   Search, 
   Check, 
   Sparkles,
-  Blocks
+  Blocks,
+  ArrowLeft,
+  Save
 } from 'lucide-react';
 import { CATEGORY_BUILDING_BLOCKS } from '@/types';
+import { useFurFinanceStore } from '@/store';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
-interface CategoryCustomizationModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSave: (selectedBlocks: string[]) => void;
-  currentCategories: string[];
-}
-
-export default function CategoryCustomizationModal({
-  isOpen,
-  onClose,
-  onSave,
-  currentCategories
-}: CategoryCustomizationModalProps) {
+export default function CategoryCustomizationPage() {
+  const { getUserSelectedCategories, updateUserCategoryPreferences } = useFurFinanceStore();
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedBlocks, setSelectedBlocks] = useState<string[]>(currentCategories);
+  const [selectedBlocks, setSelectedBlocks] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState<'all' | 'default' | 'custom'>('all');
+  const [isSaving, setIsSaving] = useState(false);
+
+  // Get current user categories
+  const userCategories = getUserSelectedCategories();
 
   useEffect(() => {
-    setSelectedBlocks(currentCategories);
-  }, [currentCategories]);
+    setSelectedBlocks(userCategories.map(cat => cat.name));
+  }, [userCategories]);
 
   const getCategoryIcon = (icon: string) => {
     const iconMap: Record<string, string> = {
@@ -80,9 +78,17 @@ export default function CategoryCustomizationModal({
     );
   };
 
-  const handleSave = () => {
-    onSave(selectedBlocks);
-    onClose();
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      await updateUserCategoryPreferences(selectedBlocks);
+      router.push('/categories');
+    } catch (error) {
+      console.error('Failed to save category preferences:', error);
+      alert('Failed to save category preferences. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleResetToDefault = () => {
@@ -93,22 +99,53 @@ export default function CategoryCustomizationModal({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-screen h-screen max-w-none max-h-none m-0 rounded-none p-0 flex flex-col">
-        <DialogHeader className="p-4 md:p-6 border-b">
-          <DialogTitle className="flex items-center gap-2 text-xl md:text-2xl">
-            <Blocks className="h-5 w-5 md:h-6 md:w-6 text-happy-blue" />
-            Customize Your Categories
-          </DialogTitle>
-          <p className="text-muted-foreground text-sm md:text-base">
-            Choose which categories you want to use for tracking your pet expenses
-          </p>
-        </DialogHeader>
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <div className="border-b bg-card">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Link href="/categories" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Categories
+              </Link>
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-gradient-primary rounded-lg">
+                  <Blocks className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-2xl font-bold">Customize Your Categories</h1>
+                  <p className="text-muted-foreground">Choose which categories you want to use for tracking your pet expenses</p>
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                onClick={handleResetToDefault}
+                size="sm"
+              >
+                Reset to Default
+              </Button>
+              <Button 
+                onClick={handleSave} 
+                disabled={isSaving}
+                className="bg-gradient-primary hover:bg-gradient-primary/90"
+              >
+                <Save className="h-4 w-4 mr-2" />
+                {isSaving ? 'Saving...' : 'Save Changes'}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-        <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 md:space-y-6">
+      {/* Content */}
+      <div className="container mx-auto px-4 py-6">
+        <div className="space-y-6">
           {/* Search and Filters */}
           <div className="space-y-4">
-            <div className="relative">
+            <div className="relative max-w-md">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               <Input
                 placeholder="Search categories..."
@@ -123,15 +160,13 @@ export default function CategoryCustomizationModal({
                 variant={activeTab === 'all' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setActiveTab('all')}
-                className="flex-1 md:flex-none"
               >
-                All
+                All Categories
               </Button>
               <Button
                 variant={activeTab === 'default' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setActiveTab('default')}
-                className="flex-1 md:flex-none"
               >
                 Default
               </Button>
@@ -139,7 +174,6 @@ export default function CategoryCustomizationModal({
                 variant={activeTab === 'custom' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setActiveTab('custom')}
-                className="flex-1 md:flex-none"
               >
                 Additional
               </Button>
@@ -152,7 +186,7 @@ export default function CategoryCustomizationModal({
               <Sparkles className="h-4 w-4 text-happy-green" />
               <span className="font-medium">Selected Categories ({selectedBlocks.length})</span>
             </div>
-            <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
+            <div className="flex flex-wrap gap-2">
               {selectedBlocks.length === 0 ? (
                 <span className="text-muted-foreground text-sm">No categories selected</span>
               ) : (
@@ -179,14 +213,14 @@ export default function CategoryCustomizationModal({
           </div>
 
           {/* Building Blocks Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {filteredBlocks.map((block) => {
               const isSelected = selectedBlocks.includes(block.name);
               
               return (
                 <div
                   key={block.name}
-                  className={`relative p-3 md:p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 hover:shadow-md ${
+                  className={`relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 hover:shadow-md ${
                     isSelected
                       ? 'border-happy-blue bg-happy-blue/5'
                       : 'border-border hover:border-happy-blue/50'
@@ -194,37 +228,37 @@ export default function CategoryCustomizationModal({
                   onClick={() => handleToggleBlock(block.name)}
                 >
                   {/* Selection Indicator */}
-                  <div className={`absolute top-2 right-2 w-5 h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center ${
+                  <div className={`absolute top-3 right-3 w-6 h-6 rounded-full flex items-center justify-center ${
                     isSelected
                       ? 'bg-happy-blue text-white'
                       : 'bg-secondary border border-border'
                   }`}>
                     {isSelected ? (
-                      <Check className="h-3 w-3 md:h-4 md:w-4" />
+                      <Check className="h-4 w-4" />
                     ) : (
-                      <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-muted-foreground/30" />
+                      <div className="w-2 h-2 rounded-full bg-muted-foreground/30" />
                     )}
                   </div>
 
                   {/* Category Content */}
-                  <div className="flex items-start gap-2 md:gap-3">
+                  <div className="flex items-start gap-3">
                     <div
-                      className="w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-xl md:text-2xl flex-shrink-0"
+                      className="w-12 h-12 rounded-full flex items-center justify-center text-2xl flex-shrink-0"
                       style={{ backgroundColor: `${block.color}20` }}
                     >
                       {getCategoryIcon(block.icon)}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-xs md:text-sm mb-1 truncate">
+                      <h3 className="font-semibold text-sm mb-1 truncate">
                         {block.name}
                       </h3>
                       {block.description && (
-                        <p className="text-xs text-muted-foreground line-clamp-2 hidden sm:block">
+                        <p className="text-xs text-muted-foreground line-clamp-2">
                           {block.description}
                         </p>
                       )}
                       {block.isDefault && (
-                        <Badge variant="outline" className="mt-1 md:mt-2 text-xs">
+                        <Badge variant="outline" className="mt-2 text-xs">
                           Default
                         </Badge>
                       )}
@@ -236,41 +270,12 @@ export default function CategoryCustomizationModal({
           </div>
 
           {filteredBlocks.length === 0 && (
-            <div className="text-center py-8">
-              <p className="text-muted-foreground">No categories found matching your search.</p>
+            <div className="text-center py-12">
+              <p className="text-muted-foreground text-lg">No categories found matching your search.</p>
             </div>
           )}
         </div>
-
-        {/* Actions */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between p-4 md:p-6 border-t bg-background gap-3">
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={handleResetToDefault}
-              size="sm"
-              className="flex-1 sm:flex-none"
-            >
-              Reset to Default
-            </Button>
-          </div>
-          <div className="flex gap-2">
-            <Button 
-              variant="outline" 
-              onClick={onClose}
-              className="flex-1 sm:flex-none"
-            >
-              Cancel
-            </Button>
-            <Button 
-              onClick={handleSave} 
-              className="bg-gradient-primary hover:bg-gradient-primary/90 flex-1 sm:flex-none"
-            >
-              Save Changes
-            </Button>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   );
 } 

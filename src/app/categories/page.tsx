@@ -15,12 +15,10 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
-import CategoryCustomizationModal from '@/components/CategoryCustomizationModal';
 
 export default function CategoriesPage() {
-  const { categories, getCategoryExpenses, deleteCategory, getUserSelectedCategories, updateUserCategoryPreferences } = useFurFinanceStore();
+  const { categories, getCategoryExpenses, deleteCategory, getUserSelectedCategories } = useFurFinanceStore();
   const [deletingCategoryId, setDeletingCategoryId] = useState<string | null>(null);
-  const [isCustomizationModalOpen, setIsCustomizationModalOpen] = useState(false);
   
   // Get only the categories that the user has selected
   const userCategories = getUserSelectedCategories();
@@ -41,20 +39,6 @@ export default function CategoriesPage() {
       } finally {
         setDeletingCategoryId(null);
       }
-    }
-  };
-
-  const handleCustomizeCategories = () => {
-    setIsCustomizationModalOpen(true);
-  };
-
-  const handleSaveCategoryCustomization = async (selectedCategories: string[]) => {
-    try {
-      await updateUserCategoryPreferences(selectedCategories);
-      setIsCustomizationModalOpen(false);
-    } catch (error) {
-      console.error('Failed to save category preferences:', error);
-      alert('Failed to save category preferences. Please try again.');
     }
   };
 
@@ -123,15 +107,16 @@ export default function CategoriesPage() {
             </div>
           </div>
           <div className="flex gap-3">
-            <Button 
-              size="lg" 
-              variant="outline"
-              onClick={handleCustomizeCategories}
-              className="border-2 border-happy-blue text-happy-blue hover:bg-happy-blue hover:text-white px-6 py-3 rounded-xl transition-all duration-300"
-            >
-              <Settings className="h-5 w-5 mr-2" />
-              Customize
-            </Button>
+            <Link href="/categories/customize">
+              <Button 
+                size="lg" 
+                variant="outline"
+                className="border-2 border-happy-blue text-happy-blue hover:bg-happy-blue hover:text-white px-6 py-3 rounded-xl transition-all duration-300"
+              >
+                <Settings className="h-5 w-5 mr-2" />
+                Customize
+              </Button>
+            </Link>
             <Link href="/categories/new">
               <Button size="lg" className="bg-gradient-primary hover:bg-gradient-primary/90 text-white border-0 px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
                 <Plus className="h-5 w-5 mr-2" />
@@ -254,14 +239,6 @@ export default function CategoriesPage() {
           })}
         </div>
       )}
-
-      {/* Category Customization Modal */}
-      <CategoryCustomizationModal
-        isOpen={isCustomizationModalOpen}
-        onClose={() => setIsCustomizationModalOpen(false)}
-        onSave={handleSaveCategoryCustomization}
-        currentCategories={userCategories.map(cat => cat.name)}
-      />
     </div>
   );
 } 
