@@ -217,6 +217,15 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
       const endTime = Date.now();
       console.log(`Store: Categories loaded: ${categories.length} (${endTime - startTime}ms)`);
       console.log('Categories loaded:', categories.map(c => ({ id: c.id, name: c.name })));
+      
+      // Debug: Check if "Show & Competition" exists
+      const showCompetition = categories.find(c => c.name === 'Show & Competition');
+      console.log('Show & Competition found:', showCompetition);
+      
+      // Debug: Check all categories with "Show" in the name
+      const showCategories = categories.filter(c => c.name.toLowerCase().includes('show'));
+      console.log('Categories with "Show" in name:', showCategories);
+      
       set({ categories });
     } catch (error) {
       console.error('Store: Failed to load categories:', error);
