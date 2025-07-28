@@ -94,7 +94,7 @@ export default function CategoryCustomizationModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="w-full max-w-none h-full max-h-none m-0 rounded-none">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-2xl">
             <Blocks className="h-6 w-6 text-happy-blue" />

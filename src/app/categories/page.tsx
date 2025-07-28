@@ -18,9 +18,12 @@ import { useState } from 'react';
 import CategoryCustomizationModal from '@/components/CategoryCustomizationModal';
 
 export default function CategoriesPage() {
-  const { categories, getCategoryExpenses, deleteCategory } = useFurFinanceStore();
+  const { categories, getCategoryExpenses, deleteCategory, getUserSelectedCategories, updateUserCategoryPreferences } = useFurFinanceStore();
   const [deletingCategoryId, setDeletingCategoryId] = useState<string | null>(null);
   const [isCustomizationModalOpen, setIsCustomizationModalOpen] = useState(false);
+  
+  // Get only the categories that the user has selected
+  const userCategories = getUserSelectedCategories();
 
   const handleDeleteCategory = async (categoryId: string) => {
     const categoryExpenses = getCategoryExpenses(categoryId);
@@ -45,11 +48,14 @@ export default function CategoriesPage() {
     setIsCustomizationModalOpen(true);
   };
 
-  const handleSaveCategoryCustomization = (selectedCategories: string[]) => {
-    // TODO: Implement saving user category preferences
-    console.log('Selected categories:', selectedCategories);
-    // For now, just close the modal
-    setIsCustomizationModalOpen(false);
+  const handleSaveCategoryCustomization = async (selectedCategories: string[]) => {
+    try {
+      await updateUserCategoryPreferences(selectedCategories);
+      setIsCustomizationModalOpen(false);
+    } catch (error) {
+      console.error('Failed to save category preferences:', error);
+      alert('Failed to save category preferences. Please try again.');
+    }
   };
 
   const getCategoryIcon = (icon: string) => {
@@ -136,7 +142,7 @@ export default function CategoriesPage() {
         </div>
       </div>
 
-      {categories.length === 0 ? (
+      {userCategories.length === 0 ? (
         <Card className="bg-gradient-card border-0 shadow-xl">
           <CardContent className="text-center py-16">
             <div className="w-20 h-20 mx-auto mb-6 bg-happy-orange/10 rounded-full flex items-center justify-center">
@@ -156,7 +162,7 @@ export default function CategoriesPage() {
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {categories.map((category) => {
+          {userCategories.map((category) => {
             const categoryExpenses = getCategoryExpenses(category.id);
             const totalSpent = categoryExpenses.reduce((sum, expense) => sum + expense.amount, 0);
             const recentExpenses = categoryExpenses
@@ -254,7 +260,7 @@ export default function CategoriesPage() {
         isOpen={isCustomizationModalOpen}
         onClose={() => setIsCustomizationModalOpen(false)}
         onSave={handleSaveCategoryCustomization}
-        currentCategories={categories.map(cat => cat.name)}
+        currentCategories={userCategories.map(cat => cat.name)}
       />
     </div>
   );

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Pet, Expense, ExpenseCategory, Budget, AppSettings } from '@/types';
+import { Pet, Expense, ExpenseCategory, Budget, AppSettings, UserCategoryPreference, CATEGORY_BUILDING_BLOCKS } from '@/types';
 import { petsService, expensesService, categoriesService, budgetsService, settingsService } from '@/lib/supabase-service';
 
 interface FurFinanceStore {
@@ -9,6 +9,7 @@ interface FurFinanceStore {
   categories: ExpenseCategory[];
   budgets: Budget[];
   settings: AppSettings;
+  userCategoryPreferences: UserCategoryPreference[];
   isLoading: boolean;
   error: string | null;
 
@@ -43,6 +44,11 @@ interface FurFinanceStore {
   updateSettings: (settings: Partial<AppSettings>) => Promise<void>;
   loadSettings: () => Promise<void>;
 
+  // User Category Preferences actions
+  updateUserCategoryPreferences: (selectedCategories: string[]) => Promise<void>;
+  loadUserCategoryPreferences: () => Promise<void>;
+  getUserSelectedCategories: () => ExpenseCategory[];
+
   // Computed values
   getPetExpenses: (petId: string) => Expense[];
   getCategoryExpenses: (categoryId: string) => Expense[];
@@ -63,6 +69,7 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
+  userCategoryPreferences: [],
   isLoading: false,
   error: null,
 
@@ -71,10 +78,11 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
     console.log('Store: Initializing...');
     set({ isLoading: true, error: null });
     try {
-      // Load critical data first (settings and categories needed for forms)
+      // Load critical data first (settings, categories, and user preferences needed for forms)
       await Promise.all([
         get().loadSettings(),
         get().loadCategories(),
+        get().loadUserCategoryPreferences(),
       ]);
       console.log('Store: Critical data loaded');
       
@@ -334,6 +342,75 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
     } finally {
       set({ isLoading: false });
     }
+  },
+
+  // User Category Preferences actions
+  loadUserCategoryPreferences: async () => {
+    try {
+      // For now, we'll use localStorage to store preferences
+      // In the future, this would be stored in Supabase
+      const stored = localStorage.getItem('userCategoryPreferences');
+      if (stored) {
+        const preferences = JSON.parse(stored);
+        set({ userCategoryPreferences: preferences });
+      } else {
+        // Default to all default categories
+        const defaultPreferences = CATEGORY_BUILDING_BLOCKS
+          .filter(block => block.isDefault)
+          .map(block => ({
+            id: `pref_${block.name}`,
+            userId: 'current_user', // In real app, this would be the actual user ID
+            buildingBlockId: block.name,
+            isEnabled: true,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          }));
+        set({ userCategoryPreferences: defaultPreferences });
+        localStorage.setItem('userCategoryPreferences', JSON.stringify(defaultPreferences));
+      }
+    } catch (error) {
+      console.error('Store: Failed to load user category preferences:', error);
+      set({ error: error instanceof Error ? error.message : 'Failed to load user category preferences' });
+    }
+  },
+
+  updateUserCategoryPreferences: async (selectedCategories: string[]) => {
+    set({ isLoading: true, error: null });
+    try {
+      // Create preferences for selected categories
+      const preferences = CATEGORY_BUILDING_BLOCKS.map(block => ({
+        id: `pref_${block.name}`,
+        userId: 'current_user', // In real app, this would be the actual user ID
+        buildingBlockId: block.name,
+        isEnabled: selectedCategories.includes(block.name),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      }));
+
+      // Store in localStorage for now
+      localStorage.setItem('userCategoryPreferences', JSON.stringify(preferences));
+      set({ userCategoryPreferences: preferences });
+      
+      console.log('User category preferences updated:', selectedCategories);
+    } catch (error) {
+      set({ error: error instanceof Error ? error.message : 'Failed to update user category preferences' });
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  getUserSelectedCategories: () => {
+    const { userCategoryPreferences, categories } = get();
+    
+    // Get enabled building block names
+    const enabledBlockNames = userCategoryPreferences
+      .filter(pref => pref.isEnabled)
+      .map(pref => pref.buildingBlockId);
+
+    // Filter categories to only show selected ones
+    return categories.filter(category => 
+      enabledBlockNames.includes(category.name)
+    );
   },
 
   // Computed values (same as before)
