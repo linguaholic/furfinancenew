@@ -405,9 +405,30 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
             updatedAt: new Date().toISOString(),
           }));
         
-        const updatedPreferences = [...preferences, ...newCustomPreferences];
-        set({ userCategoryPreferences: updatedPreferences });
-        localStorage.setItem('userCategoryPreferences', JSON.stringify(updatedPreferences));
+        // Ensure default categories are enabled
+        const updatedPreferences = preferences.map(pref => {
+          // Find the category this preference refers to
+          const category = categories.find(cat => cat.id === pref.categoryId);
+          
+          // Check if this preference is for a default category
+          const isDefaultCategory = category && CATEGORY_BUILDING_BLOCKS.some(block => 
+            block.name === category.name && block.isDefault
+          );
+          
+          // If it's a default category and not enabled, enable it
+          if (isDefaultCategory && !pref.isEnabled) {
+            console.log('Enabling default category:', category?.name);
+            return { ...pref, isEnabled: true, updatedAt: new Date().toISOString() };
+          }
+          
+          return pref;
+        });
+        
+        const finalPreferences = [...updatedPreferences, ...newCustomPreferences];
+        set({ userCategoryPreferences: finalPreferences });
+        localStorage.setItem('userCategoryPreferences', JSON.stringify(finalPreferences));
+        
+        console.log('Updated preferences with defaults enabled:', finalPreferences.filter(p => p.isEnabled).length);
       } else {
         // Auto-create default preferences for new users
         console.log('No preferences found, creating default preferences for new user');
