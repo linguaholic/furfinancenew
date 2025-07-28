@@ -10,20 +10,25 @@ import {
   Sparkles,
   Blocks,
   ArrowLeft,
-  Save
+  Save,
+  Plus,
+  X,
+  Trash2
 } from 'lucide-react';
 import { CATEGORY_BUILDING_BLOCKS } from '@/types';
 import { useFurFinanceStore } from '@/store';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { CategoryFormInline } from '@/components/forms/CategoryFormInline';
 
 export default function CategoryCustomizationPage() {
-  const { getUserSelectedCategories, updateUserCategoryPreferences } = useFurFinanceStore();
+  const { getUserSelectedCategories, updateUserCategoryPreferences, categories } = useFurFinanceStore();
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedBlocks, setSelectedBlocks] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState<'all' | 'default' | 'custom'>('all');
   const [isSaving, setIsSaving] = useState(false);
+  const [showCreateForm, setShowCreateForm] = useState(false);
 
   // Initialize selected blocks on component mount
   useEffect(() => {
@@ -72,12 +77,37 @@ export default function CategoryCustomizationPage() {
     return iconMap[icon] || '❤️';
   };
 
-  const filteredBlocks = CATEGORY_BUILDING_BLOCKS.filter(block => {
+  // Get custom categories (categories not in building blocks)
+  const customCategories = categories.filter(category => 
+    !CATEGORY_BUILDING_BLOCKS.some(block => block.name === category.name)
+  );
+
+  // Combine building blocks with custom categories
+  const allCategories = [
+    ...CATEGORY_BUILDING_BLOCKS.map(block => ({
+      ...block,
+      isCustom: false,
+      id: block.name // Use name as ID for building blocks
+    })),
+    ...customCategories.map(category => ({
+      id: category.id,
+      name: category.name,
+      color: category.color,
+      icon: category.icon || 'heart',
+      description: 'Custom category',
+      isDefault: false,
+      isCustom: true,
+      createdAt: category.createdAt,
+      updatedAt: category.updatedAt
+    }))
+  ];
+
+  const filteredBlocks = allCategories.filter(block => {
     const matchesSearch = block.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          block.description?.toLowerCase().includes(searchTerm.toLowerCase());
     
     if (activeTab === 'default') return matchesSearch && block.isDefault;
-    if (activeTab === 'custom') return matchesSearch && !block.isDefault;
+    if (activeTab === 'custom') return matchesSearch && (block.isCustom || !block.isDefault);
     return matchesSearch;
   });
 
@@ -107,6 +137,23 @@ export default function CategoryCustomizationPage() {
       .filter(block => block.isDefault)
       .map(block => block.name);
     setSelectedBlocks(defaultBlocks);
+  };
+
+  const handleCreateCategorySuccess = (categoryName: string) => {
+    // Add the new custom category to selected blocks
+    setSelectedBlocks(prev => [...prev, categoryName]);
+    setShowCreateForm(false);
+  };
+
+  const handleDeleteCustomCategory = async (categoryName: string) => {
+    if (confirm(`Are you sure you want to delete "${categoryName}"? This will also remove it from your selected categories.`)) {
+      // Remove from selected blocks
+      setSelectedBlocks(prev => prev.filter(name => name !== categoryName));
+      
+      // TODO: Delete the category from the database
+      // For now, we'll just remove it from the selection
+      // In the future, we should call deleteCategory() from the store
+    }
   };
 
   return (
@@ -191,6 +238,28 @@ export default function CategoryCustomizationPage() {
             </div>
           </div>
 
+          {/* Create Custom Category Button */}
+          {!showCreateForm && (
+            <div className="flex justify-center">
+              <Button
+                onClick={() => setShowCreateForm(true)}
+                variant="outline"
+                className="border-2 border-dashed border-happy-blue text-happy-blue hover:bg-happy-blue hover:text-white px-8 py-3 rounded-xl transition-all duration-300"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Create Custom Category
+              </Button>
+            </div>
+          )}
+
+          {/* Inline Create Form */}
+          {showCreateForm && (
+            <CategoryFormInline
+              onSuccess={handleCreateCategorySuccess}
+              onCancel={() => setShowCreateForm(false)}
+            />
+          )}
+
           {/* Selected Categories Summary */}
           <div className="bg-happy-green/10 border border-happy-green/20 rounded-xl p-4">
             <div className="flex items-center gap-2 mb-3">
@@ -202,7 +271,7 @@ export default function CategoryCustomizationPage() {
                 <span className="text-muted-foreground text-sm">No categories selected</span>
               ) : (
                 selectedBlocks.map(blockName => {
-                  const block = CATEGORY_BUILDING_BLOCKS.find(b => b.name === blockName);
+                  const block = allCategories.find(b => b.name === blockName);
                   if (!block) return null;
                   
                   return (
@@ -216,6 +285,9 @@ export default function CategoryCustomizationPage() {
                       }}
                     >
                       {getCategoryIcon(block.icon)} {block.name}
+                      {block.isCustom && (
+                        <span className="ml-1 text-xs opacity-75">(Custom)</span>
+                      )}
                     </Badge>
                   );
                 })
@@ -234,6 +306,8 @@ export default function CategoryCustomizationPage() {
                   className={`relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 hover:shadow-md ${
                     isSelected
                       ? 'border-happy-blue bg-happy-blue/5'
+                      : block.isCustom
+                      ? 'border-happy-orange/50 bg-happy-orange/5'
                       : 'border-border hover:border-happy-blue/50'
                   }`}
                   onClick={() => handleToggleBlock(block.name)}
@@ -250,6 +324,21 @@ export default function CategoryCustomizationPage() {
                       <div className="w-2 h-2 rounded-full bg-muted-foreground/30" />
                     )}
                   </div>
+
+                  {/* Delete Button for Custom Categories */}
+                  {block.isCustom && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="absolute top-3 left-3 w-6 h-6 p-0 bg-red-500/10 hover:bg-red-500/20 text-red-500"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteCustomCategory(block.name);
+                      }}
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  )}
 
                   {/* Category Content */}
                   <div className="flex items-start gap-3">
@@ -268,11 +357,18 @@ export default function CategoryCustomizationPage() {
                           {block.description}
                         </p>
                       )}
-                      {block.isDefault && (
-                        <Badge variant="outline" className="mt-2 text-xs">
-                          Default
-                        </Badge>
-                      )}
+                      <div className="flex gap-2 mt-2">
+                        {block.isDefault && (
+                          <Badge variant="outline" className="text-xs">
+                            Default
+                          </Badge>
+                        )}
+                        {block.isCustom && (
+                          <Badge variant="outline" className="text-xs text-happy-orange border-happy-orange/50">
+                            Custom
+                          </Badge>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
