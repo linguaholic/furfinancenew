@@ -347,12 +347,38 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
   // User Category Preferences actions
   loadUserCategoryPreferences: async () => {
     try {
+      const { categories } = get();
+      
       // For now, we'll use localStorage to store preferences
       // In the future, this would be stored in Supabase
       const stored = localStorage.getItem('userCategoryPreferences');
       if (stored) {
         const preferences = JSON.parse(stored);
-        set({ userCategoryPreferences: preferences });
+        
+        // Check if we need to add preferences for new custom categories
+        const customCategories = categories.filter(category => 
+          !CATEGORY_BUILDING_BLOCKS.some(block => block.name === category.name)
+        );
+        
+        const existingCustomCategoryNames = preferences
+          .filter(pref => !CATEGORY_BUILDING_BLOCKS.some(block => block.name === pref.buildingBlockId))
+          .map(pref => pref.buildingBlockId);
+        
+        // Add preferences for new custom categories (disabled by default)
+        const newCustomPreferences = customCategories
+          .filter(category => !existingCustomCategoryNames.includes(category.name))
+          .map(category => ({
+            id: `pref_${category.id}`,
+            userId: 'current_user',
+            buildingBlockId: category.name,
+            isEnabled: false, // New custom categories are disabled by default
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          }));
+        
+        const updatedPreferences = [...preferences, ...newCustomPreferences];
+        set({ userCategoryPreferences: updatedPreferences });
+        localStorage.setItem('userCategoryPreferences', JSON.stringify(updatedPreferences));
       } else {
         // Default to all default categories
         const defaultPreferences = CATEGORY_BUILDING_BLOCKS
@@ -377,12 +403,30 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
   updateUserCategoryPreferences: async (selectedCategories: string[]) => {
     set({ isLoading: true, error: null });
     try {
-      // Create preferences for selected categories
-      const preferences = CATEGORY_BUILDING_BLOCKS.map(block => ({
-        id: `pref_${block.name}`,
+      const { categories } = get();
+      
+      // Get all available categories (building blocks + custom categories)
+      const allAvailableCategories = [
+        ...CATEGORY_BUILDING_BLOCKS.map(block => ({
+          id: block.name,
+          name: block.name,
+          isCustom: false
+        })),
+        ...categories.filter(category => 
+          !CATEGORY_BUILDING_BLOCKS.some(block => block.name === category.name)
+        ).map(category => ({
+          id: category.id,
+          name: category.name,
+          isCustom: true
+        }))
+      ];
+
+      // Create preferences for all available categories
+      const preferences = allAvailableCategories.map(category => ({
+        id: `pref_${category.id}`,
         userId: 'current_user', // In real app, this would be the actual user ID
-        buildingBlockId: block.name,
-        isEnabled: selectedCategories.includes(block.name),
+        buildingBlockId: category.name,
+        isEnabled: selectedCategories.includes(category.name),
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       }));

@@ -143,6 +143,24 @@ export default function CategoryCustomizationPage() {
     // Add the new custom category to selected blocks
     setSelectedBlocks(prev => [...prev, categoryName]);
     setShowCreateForm(false);
+    
+    // Update preferences to include the new custom category as enabled
+    const { userCategoryPreferences } = useFurFinanceStore.getState();
+    const updatedPreferences = [
+      ...userCategoryPreferences,
+      {
+        id: `pref_${categoryName}`,
+        userId: 'current_user',
+        buildingBlockId: categoryName,
+        isEnabled: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      }
+    ];
+    
+    // Update localStorage and store
+    localStorage.setItem('userCategoryPreferences', JSON.stringify(updatedPreferences));
+    useFurFinanceStore.setState({ userCategoryPreferences: updatedPreferences });
   };
 
   const handleDeleteCustomCategory = async (categoryName: string) => {
