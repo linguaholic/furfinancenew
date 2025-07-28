@@ -369,7 +369,13 @@ export const categoriesService = {
       .order('name', { ascending: true })
 
     if (error) throw error
-    return (data || []).map(toCamelCase) as ExpenseCategory[]
+    
+    const categories = (data || []).map(toCamelCase) as ExpenseCategory[]
+    console.log('categoriesService.getAll() - Raw data count:', data?.length || 0);
+    console.log('categoriesService.getAll() - Processed categories count:', categories.length);
+    console.log('categoriesService.getAll() - Category names:', categories.map(c => c.name));
+    
+    return categories
   },
 
   async getById(id: string): Promise<ExpenseCategory | null> {

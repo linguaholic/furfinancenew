@@ -102,30 +102,30 @@ export const DEFAULT_CATEGORIES: Omit<ExpenseCategory, 'id'>[] = [
 ];
 
 export const CATEGORY_BUILDING_BLOCKS: Omit<CategoryBuildingBlock, 'id'>[] = [
-  // Current default categories (marked as default)
+  // Current default categories (marked as default) - MUST MATCH DATABASE EXACTLY
   { name: 'Food & Treats', color: '#10b981', icon: 'utensils', description: 'Pet food, treats, and supplements', isDefault: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-  { name: 'Veterinary Care', color: '#ef4444', icon: 'heart-pulse', description: 'Vet visits, medications, and medical procedures', isDefault: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-  { name: 'Grooming', color: '#8b5cf6', icon: 'scissors', description: 'Grooming services and supplies', isDefault: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-  { name: 'Toys & Entertainment', color: '#f59e0b', icon: 'gamepad-2', description: 'Toys, games, and entertainment items', isDefault: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-  { name: 'Supplies & Equipment', color: '#06b6d4', icon: 'package', description: 'Beds, crates, leashes, and other equipment', isDefault: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-  { name: 'Training', color: '#84cc16', icon: 'graduation-cap', description: 'Training classes, books, and tools', isDefault: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-  { name: 'Insurance', color: '#6366f1', icon: 'shield', description: 'Pet insurance premiums', isDefault: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-  { name: 'Other', color: '#6b7280', icon: 'more-horizontal', description: 'Miscellaneous expenses', isDefault: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+  { name: 'Veterinary Care', color: '#ef4444', icon: 'stethoscope', description: 'Vet visits, medications, and medical procedures', isDefault: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+  { name: 'Grooming & Hygiene', color: '#3b82f6', icon: 'scissors', description: 'Grooming services and supplies', isDefault: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+  { name: 'Toys & Entertainment', color: '#8b5cf6', icon: 'gamepad-2', description: 'Toys, games, and entertainment items', isDefault: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+  { name: 'Training & Classes', color: '#f59e0b', icon: 'graduation-cap', description: 'Training classes, books, and tools', isDefault: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+  { name: 'Insurance', color: '#06b6d4', icon: 'shield', description: 'Pet insurance premiums', isDefault: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+  { name: 'Transportation', color: '#84cc16', icon: 'car', description: 'Pet carriers, car seats, and travel expenses', isDefault: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+  { name: 'Medication & Supplements', color: '#ec4899', icon: 'pill', description: 'Prescription medications and supplements', isDefault: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
   
-  // Additional building blocks
+  // Additional building blocks - MUST MATCH DATABASE EXACTLY
   { name: 'Boarding & Pet Sitting', color: '#f97316', icon: 'home', description: 'Pet boarding, daycare, and pet sitting services', isDefault: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-  { name: 'Dental Care', color: '#ec4899', icon: 'tooth', description: 'Dental cleanings, treatments, and supplies', isDefault: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+  { name: 'Pet Supplies', color: '#6366f1', icon: 'shopping-bag', description: 'Beds, crates, leashes, and other equipment', isDefault: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
   { name: 'Emergency Care', color: '#dc2626', icon: 'alert-triangle', description: 'Emergency vet visits and urgent care', isDefault: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-  { name: 'Medication & Supplements', color: '#7c3aed', icon: 'pill', description: 'Prescription medications and supplements', isDefault: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-  { name: 'Housing & Rent', color: '#059669', icon: 'building', description: 'Pet deposits, pet rent, and housing fees', isDefault: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-  { name: 'Transportation', color: '#0891b2', icon: 'car', description: 'Pet carriers, car seats, and travel expenses', isDefault: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-  { name: 'Licensing & Registration', color: '#1d4ed8', icon: 'file-text', description: 'Pet licenses, microchipping, and registration', isDefault: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-  { name: 'Behavioral Therapy', color: '#be185d', icon: 'brain', description: 'Behavioral consultations and therapy sessions', isDefault: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-  { name: 'Alternative Medicine', color: '#65a30d', icon: 'leaf', description: 'Acupuncture, chiropractic, and holistic treatments', isDefault: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-  { name: 'Breeding & Reproduction', color: '#ea580c', icon: 'heart', description: 'Breeding fees, pregnancy care, and related expenses', isDefault: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-  { name: 'Show & Competition', color: '#c026d3', icon: 'trophy', description: 'Show entry fees, travel, and competition expenses', isDefault: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-  { name: 'Pet Photography', color: '#0d9488', icon: 'camera', description: 'Professional pet photos and portraits', isDefault: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-  { name: 'Pet Clothing & Accessories', color: '#f59e0b', icon: 'shirt', description: 'Clothing, collars, harnesses, and accessories', isDefault: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-  { name: 'Pet Technology', color: '#6366f1', icon: 'smartphone', description: 'GPS trackers, automatic feeders, and pet tech', isDefault: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+  { name: 'Breeding & Mating', color: '#7c3aed', icon: 'heart', description: 'Breeding fees, pregnancy care, and related expenses', isDefault: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+  { name: 'Show & Competition', color: '#059669', icon: 'trophy', description: 'Show entry fees, travel, and competition expenses', isDefault: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+  { name: 'Pet Photography', color: '#0ea5e9', icon: 'camera', description: 'Professional pet photos and portraits', isDefault: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
   { name: 'Pet Memorial', color: '#6b7280', icon: 'flower', description: 'End-of-life care, cremation, and memorial services', isDefault: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+  { name: 'Pet Taxi Services', color: '#fbbf24', icon: 'taxi', description: 'Pet transportation services', isDefault: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+  { name: 'Pet Insurance Claims', color: '#34d399', icon: 'file-text', description: 'Pet insurance claim processing', isDefault: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+  { name: 'Pet Therapy Services', color: '#a78bfa', icon: 'heart-handshake', description: 'Pet therapy and emotional support services', isDefault: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+  { name: 'Pet Adoption Fees', color: '#fb7185', icon: 'users', description: 'Pet adoption fees and related costs', isDefault: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+  { name: 'Pet Microchipping', color: '#60a5fa', icon: 'radio', description: 'Pet microchipping services', isDefault: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+  { name: 'Pet License & Registration', color: '#f472b6', icon: 'id-card', description: 'Pet licenses, registration, and legal requirements', isDefault: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+  { name: 'Pet Cremation Services', color: '#9ca3af', icon: 'flame', description: 'Pet cremation and memorial services', isDefault: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+  { name: 'Pet Behaviorist', color: '#10b981', icon: 'brain', description: 'Pet behaviorist consultations and therapy', isDefault: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
 ]; 
