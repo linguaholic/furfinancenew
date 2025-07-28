@@ -406,7 +406,7 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
           }));
         
         // Ensure default categories are enabled
-        const updatedPreferences = preferences.map(pref => {
+        const updatedPreferences = preferences.map((pref: UserCategoryPreference) => {
           // Find the category this preference refers to
           const category = categories.find(cat => cat.id === pref.categoryId);
           
