@@ -178,37 +178,45 @@ export default function CategoryCustomizationPage() {
       {/* Header */}
       <div className="border-b bg-card">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex items-center gap-4">
               <Link href="/categories" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
                 <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Categories
+                <span className="hidden sm:inline">Back to Categories</span>
+                <span className="sm:hidden">Back</span>
               </Link>
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-gradient-primary rounded-lg">
                   <Blocks className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold">Customize Your Categories</h1>
-                  <p className="text-muted-foreground">Choose which categories you want to use for tracking your pet expenses</p>
+                  <h1 className="text-xl sm:text-2xl font-bold">Customize Your Categories</h1>
+                  <p className="text-muted-foreground text-sm sm:text-base hidden sm:block">Choose which categories you want to use for tracking your pet expenses</p>
                 </div>
               </div>
             </div>
-            <div className="flex gap-3">
+            <div className="flex gap-2 sm:gap-3">
               <Button
                 variant="outline"
                 onClick={handleResetToDefault}
                 size="sm"
+                className="text-xs sm:text-sm"
               >
-                Reset to Default
+                <span className="hidden sm:inline">Reset to Default</span>
+                <span className="sm:hidden">Reset</span>
               </Button>
               <Button 
                 onClick={handleSave} 
                 disabled={isSaving}
-                className="bg-gradient-primary hover:bg-gradient-primary/90"
+                className="bg-gradient-primary hover:bg-gradient-primary/90 text-xs sm:text-sm"
               >
-                <Save className="h-4 w-4 mr-2" />
-                {isSaving ? 'Saving...' : 'Save Changes'}
+                <Save className="h-4 w-4 mr-1 sm:mr-2" />
+                {isSaving ? 'Saving...' : (
+                  <>
+                    <span className="hidden sm:inline">Save Changes</span>
+                    <span className="sm:hidden">Save</span>
+                  </>
+                )}
               </Button>
             </div>
           </div>
@@ -278,12 +286,12 @@ export default function CategoryCustomizationPage() {
           )}
 
           {/* Selected Categories Summary */}
-          <div className="bg-happy-green/10 border border-happy-green/20 rounded-xl p-4">
+          <div className="bg-happy-green/10 border border-happy-green/20 rounded-xl p-3 sm:p-4">
             <div className="flex items-center gap-2 mb-3">
               <Sparkles className="h-4 w-4 text-happy-green" />
-              <span className="font-medium">Selected Categories ({selectedBlocks.length})</span>
+              <span className="font-medium text-sm sm:text-base">Selected Categories ({selectedBlocks.length})</span>
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1 sm:gap-2">
               {selectedBlocks.length === 0 ? (
                 <span className="text-muted-foreground text-sm">No categories selected</span>
               ) : (
@@ -295,15 +303,18 @@ export default function CategoryCustomizationPage() {
                     <Badge
                       key={blockName}
                       variant="secondary"
+                      className="text-xs"
                       style={{
                         backgroundColor: `${block.color}20`,
                         color: block.color,
                         borderColor: `${block.color}30`
                       }}
                     >
-                      {getCategoryIcon(block.icon)} {block.name}
+                      {getCategoryIcon(block.icon)} 
+                      <span className="hidden sm:inline">{block.name}</span>
+                      <span className="sm:hidden">{block.name.length > 8 ? block.name.substring(0, 8) + '...' : block.name}</span>
                       {block.isCustom && (
-                        <span className="ml-1 text-xs opacity-75">(Custom)</span>
+                        <span className="ml-1 text-xs opacity-75 hidden sm:inline">(Custom)</span>
                       )}
                     </Badge>
                   );
@@ -330,15 +341,15 @@ export default function CategoryCustomizationPage() {
                   onClick={() => handleToggleBlock(block.name)}
                 >
                   {/* Selection Indicator */}
-                  <div className={`absolute top-3 right-3 w-6 h-6 rounded-full flex items-center justify-center ${
+                  <div className={`absolute top-2 right-2 sm:top-3 sm:right-3 w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center ${
                     isSelected
                       ? 'bg-happy-blue text-white'
                       : 'bg-secondary border border-border'
                   }`}>
                     {isSelected ? (
-                      <Check className="h-4 w-4" />
+                      <Check className="h-3 w-3 sm:h-4 sm:w-4" />
                     ) : (
-                      <div className="w-2 h-2 rounded-full bg-muted-foreground/30" />
+                      <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-muted-foreground/30" />
                     )}
                   </div>
 
@@ -347,20 +358,20 @@ export default function CategoryCustomizationPage() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="absolute top-3 left-3 w-6 h-6 p-0 bg-red-500/10 hover:bg-red-500/20 text-red-500"
+                      className="absolute top-2 left-2 sm:top-3 sm:left-3 w-5 h-5 sm:w-6 sm:h-6 p-0 bg-red-500/10 hover:bg-red-500/20 text-red-500"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleDeleteCustomCategory(block.name);
                       }}
                     >
-                      <Trash2 className="h-3 w-3" />
+                      <Trash2 className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                     </Button>
                   )}
 
                   {/* Category Content */}
-                  <div className="flex items-start gap-3">
+                  <div className="flex items-start gap-2 sm:gap-3">
                     <div
-                      className="w-12 h-12 rounded-full flex items-center justify-center text-2xl flex-shrink-0"
+                      className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-xl sm:text-2xl flex-shrink-0"
                       style={{ backgroundColor: `${block.color}20` }}
                     >
                       {getCategoryIcon(block.icon)}
@@ -370,11 +381,11 @@ export default function CategoryCustomizationPage() {
                         {block.name}
                       </h3>
                       {block.description && (
-                        <p className="text-xs text-muted-foreground line-clamp-2">
+                        <p className="text-xs text-muted-foreground line-clamp-2 hidden sm:block">
                           {block.description}
                         </p>
                       )}
-                      <div className="flex gap-2 mt-2">
+                      <div className="flex gap-1 sm:gap-2 mt-2">
                         {block.isDefault && (
                           <Badge variant="outline" className="text-xs">
                             Default
