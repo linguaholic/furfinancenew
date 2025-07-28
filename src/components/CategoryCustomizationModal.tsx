@@ -5,16 +5,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { 
   Search, 
   Check, 
-  X, 
-  Settings,
   Sparkles,
-  BuildingBlocks
+  Blocks
 } from 'lucide-react';
-import { CategoryBuildingBlock, UserCategoryPreference, CATEGORY_BUILDING_BLOCKS } from '@/types';
+import { CATEGORY_BUILDING_BLOCKS } from '@/types';
 
 interface CategoryCustomizationModalProps {
   isOpen: boolean;
@@ -100,7 +97,7 @@ export default function CategoryCustomizationModal({
       <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-2xl">
-            <BuildingBlocks className="h-6 w-6 text-happy-blue" />
+            <Blocks className="h-6 w-6 text-happy-blue" />
             Customize Your Categories
           </DialogTitle>
           <p className="text-muted-foreground">
