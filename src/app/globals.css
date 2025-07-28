@@ -384,3 +384,14 @@ input[type="date"]::-ms-expand {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* Full screen modal overrides */
+[data-radix-dialog-content] {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+}
