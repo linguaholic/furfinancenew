@@ -347,13 +347,19 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
   // User Category Preferences actions
   loadUserCategoryPreferences: async () => {
     try {
+      console.log('=== loadUserCategoryPreferences START ===');
       const { categories } = get();
+      console.log('Categories available:', categories.length);
+      console.log('Category names:', categories.map(c => c.name));
       
       // Try to load from database first
       try {
+        console.log('Trying to load from database...');
         const dbPreferences = await userCategoryPreferencesService.getAll();
+        console.log('Database preferences found:', dbPreferences?.length || 0);
         if (dbPreferences && dbPreferences.length > 0) {
           set({ userCategoryPreferences: dbPreferences });
+          console.log('Using database preferences');
           return;
         }
       } catch (error) {
@@ -362,8 +368,11 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
       
       // Fallback to localStorage for now
       const stored = localStorage.getItem('userCategoryPreferences');
+      console.log('localStorage preferences found:', stored ? 'yes' : 'no');
+      
       if (stored) {
         const preferences = JSON.parse(stored);
+        console.log('Using existing localStorage preferences:', preferences.length);
         
         // Check if we need to add preferences for new custom categories
         const customCategories = categories.filter(category => 
@@ -401,6 +410,7 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
         );
         
         console.log('Found default categories:', defaultCategories.map(c => c.name));
+        console.log('CATEGORY_BUILDING_BLOCKS default ones:', CATEGORY_BUILDING_BLOCKS.filter(b => b.isDefault).map(b => b.name));
         
         // Create preferences for default categories
         const defaultPreferences = defaultCategories.map(category => ({
@@ -417,6 +427,7 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
         
         console.log('Created default preferences for new user:', defaultPreferences.length);
       }
+      console.log('=== loadUserCategoryPreferences END ===');
     } catch (error) {
       console.error('Store: Failed to load user category preferences:', error);
       set({ error: error instanceof Error ? error.message : 'Failed to load user category preferences' });
