@@ -420,6 +420,8 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
                 categoryId: realCategory.id,
                 updatedAt: new Date().toISOString()
               };
+            } else {
+              console.log('Could not find category for preference:', pref.categoryId);
             }
           }
           
@@ -431,15 +433,28 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
           // Find the category this preference refers to
           const category = categories.find(cat => cat.id === pref.categoryId);
           
+          if (!category) {
+            console.log('No category found for preference ID:', pref.categoryId);
+            return pref;
+          }
+          
           // Check if this preference is for a default category
-          const isDefaultCategory = category && CATEGORY_BUILDING_BLOCKS.some(block => 
+          const isDefaultCategory = CATEGORY_BUILDING_BLOCKS.some(block => 
             block.name === category.name && block.isDefault
           );
           
-          // If it's a default category and not enabled, enable it
-          if (isDefaultCategory && !pref.isEnabled) {
-            console.log('Enabling default category:', category?.name);
+          console.log('Checking category:', category.name, 'isDefault:', isDefaultCategory, 'currently enabled:', pref.isEnabled);
+          
+          // If it's a default category and not enabled (or missing isEnabled), enable it
+          if (isDefaultCategory && (!pref.isEnabled || pref.isEnabled === undefined)) {
+            console.log('Enabling default category:', category.name);
             return { ...pref, isEnabled: true, updatedAt: new Date().toISOString() };
+          }
+          
+          // Ensure isEnabled property exists for all preferences
+          if (pref.isEnabled === undefined) {
+            console.log('Adding missing isEnabled property for category:', category.name);
+            return { ...pref, isEnabled: false, updatedAt: new Date().toISOString() };
           }
           
           return pref;
