@@ -354,7 +354,7 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
         const dbPreferences = await userCategoryPreferencesService.getAll();
         if (dbPreferences && dbPreferences.length > 0) {
           set({ userCategoryPreferences: dbPreferences });
-          return dbPreferences;
+          return;
         }
       } catch (error) {
         console.log('No database preferences found, falling back to localStorage');
@@ -389,7 +389,6 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
         const updatedPreferences = [...preferences, ...newCustomPreferences];
         set({ userCategoryPreferences: updatedPreferences });
         localStorage.setItem('userCategoryPreferences', JSON.stringify(updatedPreferences));
-        return updatedPreferences;
       } else {
         // Default to all default categories
         const defaultPreferences = CATEGORY_BUILDING_BLOCKS
@@ -404,12 +403,10 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
           }));
         set({ userCategoryPreferences: defaultPreferences });
         localStorage.setItem('userCategoryPreferences', JSON.stringify(defaultPreferences));
-        return defaultPreferences;
       }
     } catch (error) {
       console.error('Store: Failed to load user category preferences:', error);
       set({ error: error instanceof Error ? error.message : 'Failed to load user category preferences' });
-      return [];
     }
   },
 
