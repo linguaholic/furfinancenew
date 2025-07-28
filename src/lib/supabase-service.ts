@@ -113,19 +113,21 @@ export const testSupabaseConnection = async () => {
   try {
     console.log('Testing Supabase connection...')
     
-    // Test 1: Check if we can connect
+    // Test 1: Check if we can connect to categories (which should work for anonymous users)
     const { data: testData, error: testError } = await supabase
-      .from('pets')
+      .from('expense_categories')
       .select('count')
       .limit(1)
     
     console.log('Connection test result:', { testData, testError })
     
-    // Test 2: Check auth status
+    // Test 2: Check auth status (but don't fail if no auth - anonymous users are fine)
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     console.log('Auth status:', { user: user?.id, authError })
     
-    return { success: !testError && !authError, testError, authError }
+    // Only fail if we can't connect to the database at all
+    // Auth errors are OK for anonymous users
+    return { success: !testError, testError, authError }
   } catch (error) {
     console.error('Connection test failed:', error)
     return { success: false, error }
