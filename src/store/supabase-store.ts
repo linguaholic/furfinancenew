@@ -405,8 +405,29 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
             updatedAt: new Date().toISOString(),
           }));
         
-        // Ensure default categories are enabled
+        // Fix preferences to use real database IDs instead of category names
         const updatedPreferences = preferences.map((pref: UserCategoryPreference) => {
+          // Check if this preference is using category name instead of database ID
+          const category = categories.find(cat => cat.id === pref.categoryId);
+          
+          if (!category) {
+            // This preference is using category name, find the real category
+            const realCategory = categories.find(cat => cat.name === pref.categoryId);
+            if (realCategory) {
+              console.log('Fixing preference from name to ID:', pref.categoryId, '->', realCategory.id);
+              return {
+                ...pref,
+                categoryId: realCategory.id,
+                updatedAt: new Date().toISOString()
+              };
+            }
+          }
+          
+          return pref;
+        });
+        
+        // Now ensure default categories are enabled
+        const finalPreferences = updatedPreferences.map((pref: UserCategoryPreference) => {
           // Find the category this preference refers to
           const category = categories.find(cat => cat.id === pref.categoryId);
           
@@ -424,11 +445,11 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
           return pref;
         });
         
-        const finalPreferences = [...updatedPreferences, ...newCustomPreferences];
-        set({ userCategoryPreferences: finalPreferences });
-        localStorage.setItem('userCategoryPreferences', JSON.stringify(finalPreferences));
+        const finalPreferencesWithCustom = [...finalPreferences, ...newCustomPreferences];
+        set({ userCategoryPreferences: finalPreferencesWithCustom });
+        localStorage.setItem('userCategoryPreferences', JSON.stringify(finalPreferencesWithCustom));
         
-        console.log('Updated preferences with defaults enabled:', finalPreferences.filter(p => p.isEnabled).length);
+        console.log('Updated preferences with defaults enabled:', finalPreferencesWithCustom.filter(p => p.isEnabled).length);
       } else {
         // Auto-create default preferences for new users
         console.log('No preferences found, creating default preferences for new user');
