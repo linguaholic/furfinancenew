@@ -384,6 +384,17 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
         const preferences = JSON.parse(stored);
         console.log('Using existing localStorage preferences:', preferences.length);
         
+        // Check if we have any enabled preferences
+        const enabledCount = preferences.filter((p: UserCategoryPreference) => p.isEnabled).length;
+        console.log('Currently enabled preferences:', enabledCount);
+        
+        // If no preferences are enabled, clear localStorage and recreate defaults
+        if (enabledCount === 0) {
+          console.log('No enabled preferences found, clearing localStorage and recreating defaults');
+          localStorage.removeItem('userCategoryPreferences');
+          // Fall through to the else block to recreate defaults
+        } else {
+        
         // Check if we need to add preferences for new custom categories
         const customCategories = categories.filter(category => 
           !CATEGORY_BUILDING_BLOCKS.some(block => block.name === category.name)
@@ -465,6 +476,7 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
         localStorage.setItem('userCategoryPreferences', JSON.stringify(finalPreferencesWithCustom));
         
         console.log('Updated preferences with defaults enabled:', finalPreferencesWithCustom.filter(p => p.isEnabled).length);
+        }
       } else {
         // Auto-create default preferences for new users
         console.log('No preferences found, creating default preferences for new user');
