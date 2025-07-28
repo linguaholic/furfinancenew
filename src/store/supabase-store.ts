@@ -390,19 +390,32 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
         set({ userCategoryPreferences: updatedPreferences });
         localStorage.setItem('userCategoryPreferences', JSON.stringify(updatedPreferences));
       } else {
-        // Default to all default categories
-        const defaultPreferences = CATEGORY_BUILDING_BLOCKS
-          .filter(block => block.isDefault)
-          .map(block => ({
-            id: `pref_${block.name}`,
-            userId: 'current_user', // In real app, this would be the actual user ID
-            categoryId: block.name, // This will be replaced with actual category ID when we load from DB
-            isEnabled: true,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          }));
+        // Auto-create default preferences for new users
+        console.log('No preferences found, creating default preferences for new user');
+        
+        // Find the default categories in the database
+        const defaultCategories = categories.filter(category => 
+          CATEGORY_BUILDING_BLOCKS.some(block => 
+            block.name === category.name && block.isDefault
+          )
+        );
+        
+        console.log('Found default categories:', defaultCategories.map(c => c.name));
+        
+        // Create preferences for default categories
+        const defaultPreferences = defaultCategories.map(category => ({
+          id: `pref_${category.id}`,
+          userId: 'current_user',
+          categoryId: category.id, // Use actual database category ID
+          isEnabled: true,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        }));
+        
         set({ userCategoryPreferences: defaultPreferences });
         localStorage.setItem('userCategoryPreferences', JSON.stringify(defaultPreferences));
+        
+        console.log('Created default preferences for new user:', defaultPreferences.length);
       }
     } catch (error) {
       console.error('Store: Failed to load user category preferences:', error);
