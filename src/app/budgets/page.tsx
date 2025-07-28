@@ -67,20 +67,20 @@ export default function BudgetsPage() {
 
       {/* Header */}
       <div className="mb-12">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <div className="flex items-center gap-3 mb-2">
-              <div className="p-3 bg-gradient-primary rounded-xl">
-                <Target className="h-8 w-8 text-white" />
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-2">
+              <div className="p-3 bg-gradient-primary rounded-xl w-fit">
+                <Target className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
               </div>
               <div>
-                <h1 className="text-4xl font-bold">Budgets</h1>
-                <p className="text-xl text-muted-foreground">Track spending limits for your pets</p>
+                <h1 className="text-2xl sm:text-4xl font-bold">Budgets</h1>
+                <p className="text-base sm:text-xl text-muted-foreground">Track spending limits for your pets</p>
               </div>
             </div>
           </div>
-          <Link href="/budgets/new">
-            <Button size="lg" className="bg-gradient-primary hover:bg-gradient-primary/90 text-white border-0 px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+          <Link href="/budgets/new" className="w-full sm:w-auto">
+            <Button size="lg" className="w-full sm:w-auto bg-gradient-primary hover:bg-gradient-primary/90 text-white border-0 px-6 sm:px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
               <Plus className="h-5 w-5 mr-2" />
               Set Budget
             </Button>
@@ -120,21 +120,21 @@ export default function BudgetsPage() {
 
             return (
               <Card key={budget.id} className="bg-gradient-card border-0 shadow-xl hover:shadow-2xl transition-all duration-300">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-4">
+                <CardContent className="p-4 sm:p-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+                    <div className="flex items-center gap-3 sm:gap-4">
                       <div 
-                        className="w-4 h-4 rounded-full"
+                        className="w-4 h-4 rounded-full flex-shrink-0"
                         style={{ backgroundColor: category?.color }}
                       />
-                      <div>
-                        <h3 className="text-lg font-semibold">{category?.name} Budget</h3>
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
+                      <div className="min-w-0 flex-1">
+                        <h3 className="text-base sm:text-lg font-semibold truncate">{category?.name} Budget</h3>
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-sm text-muted-foreground mt-1">
                           <span className="flex items-center gap-1">
                             <PawPrint className="h-3 w-3" />
                             {pet?.name}
                           </span>
-                          <span>•</span>
+                          <span className="hidden sm:inline">•</span>
                           <span className="flex items-center gap-1">
                             <Calendar className="h-3 w-3" />
                             {budget.period === 'monthly' ? 'Monthly' : 'Yearly'}
@@ -142,12 +142,12 @@ export default function BudgetsPage() {
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-between sm:justify-end gap-3">
                       <div className="text-right">
-                        <div className="text-xl font-bold text-happy-green">
+                        <div className="text-lg sm:text-xl font-bold text-happy-green">
                           {formatCurrency(budgetAmount, budget.currency)}
                         </div>
-                        <div className="text-sm text-muted-foreground">
+                        <div className="text-xs sm:text-sm text-muted-foreground">
                           {budget.period === 'monthly' ? 'per month' : 'per year'}
                         </div>
                       </div>
