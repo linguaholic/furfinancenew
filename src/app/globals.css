@@ -181,6 +181,10 @@
   color: hsl(24.6 95% 53.1%);
 }
 
+.text-happy-pink {
+  color: hsl(330 100% 71%);
+}
+
 .bg-happy-green {
   background-color: hsl(142.1 76.2% 36.3%);
 }
@@ -195,6 +199,10 @@
 
 .bg-happy-orange {
   background-color: hsl(24.6 95% 53.1%);
+}
+
+.bg-happy-pink {
+  background-color: hsl(330 100% 71%);
 }
 
 /* Fix text contrast issues */

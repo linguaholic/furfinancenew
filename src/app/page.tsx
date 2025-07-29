@@ -17,7 +17,8 @@ import {
   Users,
   Heart,
   Star,
-  Download
+  Download,
+  Calculator
 } from 'lucide-react';
 import Link from 'next/link';
 import ExportModal from '@/components/ExportModal';
@@ -307,6 +308,15 @@ export default function HomePage() {
                   <div className="text-left">
                     <div className="font-medium">Set Budgets</div>
                     <div className="text-xs opacity-75">Track spending limits</div>
+                  </div>
+                </Button>
+              </Link>
+              <Link href="/estimator">
+                <Button variant="outline" className="w-full justify-start h-12 border-2 border-happy-pink text-happy-pink hover:bg-happy-pink hover:text-white transition-all duration-300">
+                  <Calculator className="h-5 w-5 mr-3" />
+                  <div className="text-left">
+                    <div className="font-medium">Pet Cost Estimator</div>
+                    <div className="text-xs opacity-75">Calculate pet ownership costs</div>
                   </div>
                 </Button>
               </Link>
