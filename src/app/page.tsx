@@ -58,7 +58,7 @@ export default function HomePage() {
             <img 
               src="/images/Fur Finance Logo New.png" 
               alt="Fur Finance Logo" 
-              className="h-30 w-30 sm:h-54 sm:w-54 object-contain mx-auto"
+              className="h-30 w-30 sm:h-108 sm:w-108 object-contain mx-auto"
             />
           </div>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
