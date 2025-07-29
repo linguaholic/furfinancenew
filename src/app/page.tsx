@@ -11,7 +11,6 @@ import {
   DollarSign, 
   TrendingUp, 
   Plus,
-  Sparkles,
   Target,
   Calendar,
   Users,

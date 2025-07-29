@@ -372,7 +372,7 @@ export const useFurFinanceStore = create<FurFinanceStore>((set, get) => ({
           console.log('Using database preferences');
           return;
         }
-      } catch (error) {
+      } catch {
         console.log('No database preferences found, falling back to localStorage');
       }
       

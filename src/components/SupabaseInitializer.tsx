@@ -6,7 +6,7 @@ import { testSupabaseConnection } from '@/lib/supabase-service';
 
 export function SupabaseInitializer() {
   const initialize = useFurFinanceStore((state) => state.initialize);
-  const isLoading = useFurFinanceStore((state) => state.isLoading);
+
   const error = useFurFinanceStore((state) => state.error);
 
   useEffect(() => {

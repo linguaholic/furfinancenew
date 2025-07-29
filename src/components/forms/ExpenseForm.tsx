@@ -48,7 +48,7 @@ interface ExpenseFormProps {
 export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
   const { addExpense, updateExpense, pets, categories, settings, getUserSelectedCategories, isLoading } = useFurFinanceStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
+
   const searchParams = useSearchParams();
   const router = useRouter();
   const defaultPetId = searchParams.get('petId') || '';

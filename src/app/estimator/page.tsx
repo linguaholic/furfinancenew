@@ -5,10 +5,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+
 import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Calculator, PawPrint, DollarSign, TrendingUp, Calendar, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Calculator, PawPrint, DollarSign, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 
 // Pet type definitions
@@ -300,7 +300,7 @@ export default function PetExpenseEstimator() {
                 {/* Lifestyle Selection */}
                 {state.age > 0 && (
                   <div className="space-y-3">
-                    <Label className="text-white text-lg">4. What's your care style?</Label>
+                    <Label className="text-white text-lg">4. What&apos;s your care style?</Label>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                       {LIFESTYLES.map((lifestyle) => (
                         <button
@@ -345,9 +345,9 @@ export default function PetExpenseEstimator() {
                     <DollarSign className="h-6 w-6 text-happy-green" />
                     Your Pet Cost Summary
                   </CardTitle>
-                  <CardDescription className="text-gray-400">
-                    Here's what you can expect to spend on your {getSelectedBreed()?.name}
-                  </CardDescription>
+                                     <CardDescription className="text-gray-400">
+                     Here&apos;s what you can expect to spend on your {getSelectedBreed()?.name}
+                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
