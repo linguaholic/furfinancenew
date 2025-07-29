@@ -68,21 +68,21 @@ export default function HomePage() {
         </div>
 
       {/* Quick Actions */}
-      <div className="mb-12 flex justify-center gap-4 flex-wrap">
+      <div className="mb-12 flex justify-center gap-4 flex-wrap mt-6 sm:mt-8">
         <Link href="/pets/new">
-          <Button size="lg" className="bg-gradient-to-r from-happy-green to-happy-purple hover:from-happy-green/90 hover:to-happy-purple/90 text-white border-0 px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+          <Button size="lg" className="bg-gradient-to-r from-happy-green to-happy-purple hover:from-happy-green/90 hover:to-happy-purple/90 text-white border-0 px-8 sm:px-12 py-3 sm:py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-base sm:text-lg">
             <Plus className="h-5 w-5 mr-2" />
             Add Pet
           </Button>
         </Link>
         <Link href="/expenses/new">
-          <Button size="lg" className="bg-gradient-to-r from-happy-blue to-happy-green hover:from-happy-blue/90 hover:to-happy-green/90 text-white border-0 px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+          <Button size="lg" className="bg-gradient-to-r from-happy-blue to-happy-green hover:from-happy-blue/90 hover:to-happy-green/90 text-white border-0 px-8 sm:px-12 py-3 sm:py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-base sm:text-lg">
             <DollarSign className="h-5 w-5 mr-2" />
             Add Expense
           </Button>
         </Link>
         <Link href="/budgets">
-          <Button size="lg" className="bg-gradient-to-r from-happy-purple to-happy-orange hover:from-happy-purple/90 hover:to-happy-orange/90 text-white border-0 px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+          <Button size="lg" className="bg-gradient-to-r from-happy-purple to-happy-orange hover:from-happy-purple/90 hover:to-happy-orange/90 text-white border-0 px-8 sm:px-12 py-3 sm:py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-base sm:text-lg">
             <TrendingUp className="h-5 w-5 mr-2" />
             Set Budget
           </Button>
@@ -95,7 +95,7 @@ export default function HomePage() {
             <Button 
               size="lg" 
               disabled={!isClient || expenses.length === 0}
-              className="bg-gradient-to-r from-happy-orange to-happy-pink hover:from-happy-orange/90 hover:to-happy-pink/90 text-white border-0 px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+              className="bg-gradient-to-r from-happy-orange to-happy-pink hover:from-happy-orange/90 hover:to-happy-pink/90 text-white border-0 px-8 sm:px-12 py-3 sm:py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-base sm:text-lg"
             >
               <Download className="h-5 w-5 mr-2" />
               Export
