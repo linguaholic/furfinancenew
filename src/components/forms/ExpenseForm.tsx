@@ -312,7 +312,6 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
                       <Select 
                         onValueChange={field.onChange} 
                         value={field.value}
-                        onOpenChange={setIsCategoryDropdownOpen}
                       >
                         <SelectTrigger className="bg-secondary border-border focus:border-happy-green">
                           <SelectValue placeholder="Select category" />
