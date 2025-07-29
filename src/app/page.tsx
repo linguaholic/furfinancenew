@@ -51,9 +51,9 @@ export default function HomePage() {
 
   return (
     <>
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-2">
         {/* Hero Section */}
-        <div className="text-center mb-4">
+        <div className="text-center mb-2">
           <div className="mb-1">
             <img 
               src="/images/Fur Finance Logo New.png" 
