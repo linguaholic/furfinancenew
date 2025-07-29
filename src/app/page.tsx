@@ -53,8 +53,8 @@ export default function HomePage() {
     <>
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
-        <div className="text-center mb-12">
-          <div className="mb-6">
+        <div className="text-center mb-8">
+          <div className="mb-4">
             <img 
               src="/images/Fur Finance Logo New.png" 
               alt="Fur Finance Logo" 
