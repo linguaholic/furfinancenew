@@ -46,7 +46,7 @@ interface ExpenseFormProps {
 }
 
 export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
-  const { addExpense, updateExpense, pets, categories, settings, getUserSelectedCategories } = useFurFinanceStore();
+  const { addExpense, updateExpense, pets, categories, settings, getUserSelectedCategories, isLoading } = useFurFinanceStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const searchParams = useSearchParams();
@@ -179,7 +179,7 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
 
   const onSubmit = async (data: ExpenseFormData) => {
     // Validate that required data is loaded
-    if (!settings || pets.length === 0 || categories.length === 0) {
+    if (!settings || isLoading || pets.length === 0 || categories.length === 0) {
       toast.error('Please wait for data to load before submitting');
       return;
     }
@@ -255,9 +255,18 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
               {/* Pet Selection */}
               <div className="space-y-2">
                 <Label htmlFor="petId" className="text-foreground">Pet *</Label>
-                {pets.length === 0 ? (
+                {isLoading ? (
                   <div className="p-3 bg-secondary border border-border rounded-lg text-center text-muted-foreground">
                     Loading pets...
+                  </div>
+                ) : pets.length === 0 ? (
+                  <div className="p-4 bg-secondary border border-border rounded-lg text-center">
+                    <p className="text-muted-foreground mb-3">No pets found. You need to add a pet first before creating expenses.</p>
+                    <Link href="/pets/new">
+                      <Button type="button" className="bg-gradient-primary hover:bg-gradient-primary/90 text-white border-0 px-4 py-2 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
+                        Add Your First Pet
+                      </Button>
+                    </Link>
                   </div>
                 ) : (
                   <Controller
@@ -287,9 +296,13 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
               {/* Category Selection */}
               <div className="space-y-2">
                 <Label htmlFor="categoryId" className="text-foreground">Category *</Label>
-                {categories.length === 0 ? (
+                {isLoading ? (
                   <div className="p-3 bg-secondary border border-border rounded-lg text-center text-muted-foreground">
                     Loading categories...
+                  </div>
+                ) : categories.length === 0 ? (
+                  <div className="p-4 bg-secondary border border-border rounded-lg text-center">
+                    <p className="text-muted-foreground mb-3">No categories found. Please wait for categories to load or contact support.</p>
                   </div>
                 ) : (
                   <Controller
@@ -485,7 +498,7 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <Button 
                 type="submit" 
-                disabled={isSubmitting || !settings || pets.length === 0 || categories.length === 0} 
+                disabled={isSubmitting || !settings || isLoading || pets.length === 0 || categories.length === 0} 
                 className="w-full sm:w-auto bg-gradient-primary hover:bg-gradient-primary/90 text-white border-0 px-6 sm:px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? 'Saving...' : (expense ? 'Update Expense' : 'Add Expense')}
