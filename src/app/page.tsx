@@ -61,7 +61,7 @@ export default function HomePage() {
               className="h-30 w-30 sm:h-54 sm:w-54 object-contain mx-auto"
             />
           </div>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
             Track your pet expenses with love and care. Every penny spent on your furry friends, 
             beautifully organized and analyzed.
           </p>
@@ -107,61 +107,61 @@ export default function HomePage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-        <Card className="bg-gradient-card border-0 shadow-xl hover:shadow-2xl transition-all duration-300 group">
+        <Card className="bg-gray-800 border-gray-700 shadow-xl hover:shadow-2xl transition-all duration-300 group">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Expenses</CardTitle>
+            <CardTitle className="text-sm font-medium text-white">Total Expenses</CardTitle>
             <div className="p-2 bg-happy-green/20 rounded-lg group-hover:bg-happy-green/30 transition-colors">
               <DollarSign className="h-4 w-4 text-happy-green" />
             </div>
           </CardHeader>
           <CardContent>
-                          <div className="text-3xl font-bold text-happy-green">{formatCurrency(totalExpenses, settings.defaultCurrency)}</div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <div className="text-3xl font-bold text-happy-green">{formatCurrency(totalExpenses, settings.defaultCurrency)}</div>
+            <p className="text-xs text-gray-400 mt-1">
               All time spending
             </p>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-card border-0 shadow-xl hover:shadow-2xl transition-all duration-300 group">
+        <Card className="bg-gray-800 border-gray-700 shadow-xl hover:shadow-2xl transition-all duration-300 group">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">This Month</CardTitle>
+            <CardTitle className="text-sm font-medium text-white">This Month</CardTitle>
             <div className="p-2 bg-happy-blue/20 rounded-lg group-hover:bg-happy-blue/30 transition-colors">
               <Calendar className="h-4 w-4 text-happy-blue" />
             </div>
           </CardHeader>
           <CardContent>
-                          <div className="text-3xl font-bold text-happy-blue">{formatCurrency(monthlyExpenses, settings.defaultCurrency)}</div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <div className="text-3xl font-bold text-happy-blue">{formatCurrency(monthlyExpenses, settings.defaultCurrency)}</div>
+            <p className="text-xs text-gray-400 mt-1">
               {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
             </p>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-card border-0 shadow-xl hover:shadow-2xl transition-all duration-300 group">
+        <Card className="bg-gray-800 border-gray-700 shadow-xl hover:shadow-2xl transition-all duration-300 group">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Furry Friends</CardTitle>
+            <CardTitle className="text-sm font-medium text-white">Furry Friends</CardTitle>
             <div className="p-2 bg-happy-purple/20 rounded-lg group-hover:bg-happy-purple/30 transition-colors">
               <PawPrint className="h-4 w-4 text-happy-purple" />
             </div>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-happy-purple">{totalPets}</div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-xs text-gray-400 mt-1">
               {totalPets === 1 ? 'Pet' : 'Pets'} in your family
             </p>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-card border-0 shadow-xl hover:shadow-2xl transition-all duration-300 group">
+        <Card className="bg-gray-800 border-gray-700 shadow-xl hover:shadow-2xl transition-all duration-300 group">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Categories</CardTitle>
+            <CardTitle className="text-sm font-medium text-white">Categories</CardTitle>
             <div className="p-2 bg-happy-orange/20 rounded-lg group-hover:bg-happy-orange/30 transition-colors">
               <Users className="h-4 w-4 text-happy-orange" />
             </div>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-happy-orange">{totalCategories}</div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-xs text-gray-400 mt-1">
               Expense categories
             </p>
           </CardContent>
@@ -171,15 +171,15 @@ export default function HomePage() {
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Recent Expenses */}
-        <Card className="bg-gradient-card border-0 shadow-xl">
+        <Card className="bg-gray-800 border-gray-700 shadow-xl">
           <CardHeader>
             <div className="flex items-center gap-2">
               <div className="p-2 bg-happy-green/20 rounded-lg">
                 <Heart className="h-5 w-5 text-happy-green" />
               </div>
               <div>
-                <CardTitle>Recent Expenses</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-white">Recent Expenses</CardTitle>
+                <CardDescription className="text-gray-400">
                   Your latest pet expenses and updates
                 </CardDescription>
               </div>
@@ -191,10 +191,10 @@ export default function HomePage() {
                 <div className="w-16 h-16 mx-auto mb-4 bg-happy-green/10 rounded-full flex items-center justify-center">
                   <DollarSign className="h-8 w-8 text-happy-green" />
                 </div>
-                <h3 className="text-lg font-semibold mb-2">No expenses yet</h3>
-                <p className="text-muted-foreground mb-6">Start tracking your pet expenses to see them here</p>
+                <h3 className="text-lg font-semibold mb-2 text-white">No expenses yet</h3>
+                <p className="text-gray-400 mb-6">Start tracking your pet expenses to see them here</p>
                 <Link href="/expenses/new">
-                  <Button className="bg-gradient-primary hover:bg-gradient-primary/90 text-white border-0">
+                  <Button className="bg-gradient-to-r from-happy-green to-happy-purple hover:from-happy-green/90 hover:to-happy-purple/90 text-white border-0">
                     <Plus className="h-4 w-4 mr-2" />
                     Add First Expense
                   </Button>
@@ -207,7 +207,7 @@ export default function HomePage() {
                   const category = categories.find(c => c.id === expense.categoryId);
                   
                   return (
-                    <div key={expense.id} className="p-4 bg-secondary/50 rounded-xl border border-border/50 hover:border-border transition-colors">
+                    <div key={expense.id} className="p-4 bg-gray-700/50 rounded-xl border border-gray-600/50 hover:border-gray-500 transition-colors">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <div 
@@ -215,8 +215,8 @@ export default function HomePage() {
                             style={{ backgroundColor: category?.color }}
                           />
                           <div>
-                            <p className="font-medium">{expense.description}</p>
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <p className="font-medium text-white">{expense.description}</p>
+                            <div className="flex items-center gap-2 text-sm text-gray-400">
                               <span className="flex items-center gap-1">
                                 <PawPrint className="h-3 w-3" />
                                 {pet?.name}
@@ -228,7 +228,7 @@ export default function HomePage() {
                         </div>
                         <div className="text-right">
                           <p className="font-bold text-happy-green">{formatCurrency(expense.amount, expense.currency)}</p>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-sm text-gray-400">
                             {new Date(expense.date).toLocaleDateString()}
                           </p>
                         </div>
@@ -249,15 +249,15 @@ export default function HomePage() {
         </Card>
 
         {/* Quick Actions */}
-        <Card className="bg-gradient-card border-0 shadow-xl">
+        <Card className="bg-gray-800 border-gray-700 shadow-xl">
           <CardHeader>
             <div className="flex items-center gap-2">
               <div className="p-2 bg-happy-blue/20 rounded-lg">
                 <Star className="h-5 w-5 text-happy-blue" />
               </div>
               <div>
-                <CardTitle>Quick Actions</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-white">Quick Actions</CardTitle>
+                <CardDescription className="text-gray-400">
                   Everything you need to manage your pet finances
                 </CardDescription>
               </div>

@@ -43,17 +43,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.className} bg-gradient-modern min-h-screen text-foreground`}>
-        <div className="relative min-h-screen">
-          {/* Subtle animated background elements */}
-          <div className="fixed inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute -top-40 -right-40 w-80 h-80 bg-happy-green/10 rounded-full blur-3xl animate-pulse"></div>
-            <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-happy-blue/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-happy-purple/5 rounded-full blur-3xl animate-pulse delay-2000"></div>
-          </div>
+      <body className={`${inter.className} min-h-screen text-foreground`}>
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
           
                                           {/* Main content */}
-          <div className="relative z-10 flex flex-col min-h-screen">
+          <div className="flex flex-col min-h-screen">
             <SupabaseInitializer />
             <main className="flex-1">
               {children}
