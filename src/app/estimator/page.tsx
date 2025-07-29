@@ -219,7 +219,19 @@ export default function PetExpenseEstimator() {
         <div className="max-w-4xl mx-auto">
           {!showResults ? (
             /* Calculator Form */
-            <Card className="bg-gray-800 border-gray-700 shadow-xl">
+            <div className="space-y-6">
+              {/* VS Mode Button */}
+              <div className="text-center">
+                <Link href="/estimator/vs">
+                  <Button className="bg-gradient-to-r from-happy-green to-happy-purple hover:from-happy-green/90 hover:to-happy-purple/90 text-white border-0 px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-lg font-bold">
+                    <Zap className="h-5 w-5 mr-2" />
+                    Battle Mode: Compare Pet Costs
+                  </Button>
+                </Link>
+                <p className="text-gray-400 mt-2">Or continue with single pet calculation below</p>
+              </div>
+
+              <Card className="bg-gray-800 border-gray-700 shadow-xl">
               <CardHeader>
                 <CardTitle className="text-2xl text-white flex items-center gap-2">
                   <PawPrint className="h-6 w-6 text-happy-green" />
@@ -335,6 +347,7 @@ export default function PetExpenseEstimator() {
                 )}
               </CardContent>
             </Card>
+            </div>
           ) : (
             /* Results Display */
             <div className="space-y-6">
