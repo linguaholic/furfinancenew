@@ -260,10 +260,10 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
                     Loading pets...
                   </div>
                 ) : pets.length === 0 ? (
-                  <div className="p-4 bg-secondary border border-border rounded-lg text-center">
-                    <p className="text-muted-foreground mb-3">No pets found. You need to add a pet first before creating expenses.</p>
-                    <Link href="/pets/new">
-                      <Button type="button" className="bg-gradient-primary hover:bg-gradient-primary/90 text-white border-0 px-4 py-2 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
+                  <div className="p-4 sm:p-6 bg-secondary border border-border rounded-lg text-center">
+                    <p className="text-muted-foreground mb-3 text-sm sm:text-base">No pets found. You need to add a pet first before creating expenses.</p>
+                    <Link href="/pets/new" className="block w-full sm:w-auto">
+                      <Button type="button" className="w-full sm:w-auto bg-gradient-primary hover:bg-gradient-primary/90 text-white border-0 px-4 py-2 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 text-sm sm:text-base">
                         Add Your First Pet
                       </Button>
                     </Link>
@@ -301,8 +301,8 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
                     Loading categories...
                   </div>
                 ) : categories.length === 0 ? (
-                  <div className="p-4 bg-secondary border border-border rounded-lg text-center">
-                    <p className="text-muted-foreground mb-3">No categories found. Please wait for categories to load or contact support.</p>
+                  <div className="p-4 sm:p-6 bg-secondary border border-border rounded-lg text-center">
+                    <p className="text-muted-foreground mb-3 text-sm sm:text-base">No categories found. Please wait for categories to load or contact support.</p>
                   </div>
                 ) : (
                   <Controller
