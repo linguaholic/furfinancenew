@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 
 import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Calculator, PawPrint, DollarSign, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Calculator, PawPrint, DollarSign, AlertCircle, Zap } from 'lucide-react';
 import Link from 'next/link';
 
 // Pet type definitions
@@ -411,6 +411,14 @@ export default function PetExpenseEstimator() {
                 >
                   Calculate Another Pet
                 </Button>
+                <Link href="/estimator/vs" className="flex-1">
+                  <Button
+                    className="w-full bg-gradient-to-r from-happy-green to-happy-purple hover:from-happy-green/90 hover:to-happy-purple/90 text-white border-0 px-6 py-3 rounded-xl"
+                  >
+                    <Zap className="h-4 w-4 mr-2" />
+                    VS Mode
+                  </Button>
+                </Link>
                 <Button
                   onClick={() => {/* TODO: Share functionality */}}
                   className="flex-1 bg-gradient-primary hover:bg-gradient-primary/90 text-white border-0 px-6 py-3 rounded-xl"
