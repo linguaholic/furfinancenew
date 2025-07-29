@@ -45,6 +45,49 @@ const CAT_BREEDS = [
   { id: 'mixed-cat', name: 'Mixed Breed', costMultiplier: 0.8 },
 ];
 
+// Bird breeds
+const BIRD_BREEDS = [
+  { id: 'parakeet', name: 'Parakeet', costMultiplier: 0.8 },
+  { id: 'cockatiel', name: 'Cockatiel', costMultiplier: 1.0 },
+  { id: 'lovebird', name: 'Lovebird', costMultiplier: 0.9 },
+  { id: 'canary', name: 'Canary', costMultiplier: 0.7 },
+  { id: 'finch', name: 'Finch', costMultiplier: 0.6 },
+  { id: 'parrot', name: 'Parrot', costMultiplier: 1.5 },
+  { id: 'mixed-bird', name: 'Mixed Breed', costMultiplier: 0.8 },
+];
+
+// Fish breeds
+const FISH_BREEDS = [
+  { id: 'goldfish', name: 'Goldfish', costMultiplier: 0.5 },
+  { id: 'betta', name: 'Betta', costMultiplier: 0.8 },
+  { id: 'tetra', name: 'Tetra', costMultiplier: 0.6 },
+  { id: 'guppy', name: 'Guppy', costMultiplier: 0.4 },
+  { id: 'angelfish', name: 'Angelfish', costMultiplier: 1.2 },
+  { id: 'tropical', name: 'Tropical Fish', costMultiplier: 1.0 },
+  { id: 'mixed-fish', name: 'Mixed Breed', costMultiplier: 0.7 },
+];
+
+// Rabbit breeds
+const RABBIT_BREEDS = [
+  { id: 'holland-lop', name: 'Holland Lop', costMultiplier: 1.1 },
+  { id: 'netherland-dwarf', name: 'Netherland Dwarf', costMultiplier: 1.0 },
+  { id: 'mini-rex', name: 'Mini Rex', costMultiplier: 1.2 },
+  { id: 'lionhead', name: 'Lionhead', costMultiplier: 1.3 },
+  { id: 'flemish-giant', name: 'Flemish Giant', costMultiplier: 1.5 },
+  { id: 'dutch', name: 'Dutch', costMultiplier: 0.9 },
+  { id: 'mixed-rabbit', name: 'Mixed Breed', costMultiplier: 0.8 },
+];
+
+// Hamster breeds
+const HAMSTER_BREEDS = [
+  { id: 'syrian', name: 'Syrian Hamster', costMultiplier: 1.0 },
+  { id: 'dwarf', name: 'Dwarf Hamster', costMultiplier: 0.8 },
+  { id: 'roborovski', name: 'Roborovski', costMultiplier: 0.9 },
+  { id: 'winter-white', name: 'Winter White', costMultiplier: 0.9 },
+  { id: 'chinese', name: 'Chinese Hamster', costMultiplier: 0.8 },
+  { id: 'mixed-hamster', name: 'Mixed Breed', costMultiplier: 0.7 },
+];
+
 // Lifestyle options
 const LIFESTYLES = [
   { id: 'budget', name: 'Budget-Friendly', description: 'Basic care, DIY grooming', costMultiplier: 0.7 },
@@ -137,6 +180,14 @@ export default function PetVSMode() {
         return DOG_BREEDS;
       case 'cat':
         return CAT_BREEDS;
+      case 'bird':
+        return BIRD_BREEDS;
+      case 'fish':
+        return FISH_BREEDS;
+      case 'rabbit':
+        return RABBIT_BREEDS;
+      case 'hamster':
+        return HAMSTER_BREEDS;
       default:
         return [];
     }
