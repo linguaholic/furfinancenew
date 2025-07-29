@@ -70,19 +70,19 @@ export default function HomePage() {
       {/* Quick Actions */}
       <div className="mb-12 flex justify-center gap-4 flex-wrap">
         <Link href="/pets/new">
-          <Button size="lg" className="bg-gradient-primary hover:bg-gradient-primary/90 text-white border-0 px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+          <Button size="lg" className="bg-gradient-to-r from-happy-green to-happy-purple hover:from-happy-green/90 hover:to-happy-purple/90 text-white border-0 px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
             <Plus className="h-5 w-5 mr-2" />
             Add Pet
           </Button>
         </Link>
         <Link href="/expenses/new">
-          <Button size="lg" variant="outline" className="border-2 border-happy-blue text-happy-blue hover:bg-happy-blue hover:text-white px-8 py-3 rounded-xl transition-all duration-300">
+          <Button size="lg" className="bg-gradient-to-r from-happy-blue to-happy-green hover:from-happy-blue/90 hover:to-happy-green/90 text-white border-0 px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
             <DollarSign className="h-5 w-5 mr-2" />
             Add Expense
           </Button>
         </Link>
         <Link href="/budgets">
-          <Button size="lg" variant="outline" className="border-2 border-happy-purple text-happy-purple hover:bg-happy-purple hover:text-white px-8 py-3 rounded-xl transition-all duration-300">
+          <Button size="lg" className="bg-gradient-to-r from-happy-purple to-happy-orange hover:from-happy-purple/90 hover:to-happy-orange/90 text-white border-0 px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
             <TrendingUp className="h-5 w-5 mr-2" />
             Set Budget
           </Button>
@@ -94,9 +94,8 @@ export default function HomePage() {
           trigger={
             <Button 
               size="lg" 
-              variant="outline"
               disabled={!isClient || expenses.length === 0}
-              className="border-2 border-happy-green text-happy-green hover:bg-happy-green hover:text-white px-8 py-3 rounded-xl transition-all duration-300"
+              className="bg-gradient-to-r from-happy-orange to-happy-pink hover:from-happy-orange/90 hover:to-happy-pink/90 text-white border-0 px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
             >
               <Download className="h-5 w-5 mr-2" />
               Export
@@ -238,7 +237,7 @@ export default function HomePage() {
                 })}
                 <div className="pt-4">
                   <Link href="/expenses">
-                    <Button variant="outline" size="sm" className="w-full border-2 border-happy-green text-happy-green hover:bg-happy-green hover:text-white">
+                    <Button size="sm" className="w-full bg-gradient-to-r from-happy-green to-happy-blue hover:from-happy-green/90 hover:to-happy-blue/90 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
                       View All Expenses
                     </Button>
                   </Link>
@@ -266,7 +265,7 @@ export default function HomePage() {
           <CardContent>
             <div className="grid grid-cols-1 gap-4">
               <Link href="/pets">
-                <Button variant="outline" className="w-full justify-start h-12 border-2 border-happy-purple text-happy-purple hover:bg-happy-purple hover:text-white transition-all duration-300">
+                <Button className="w-full justify-start h-12 bg-gradient-to-r from-happy-purple to-happy-pink hover:from-happy-purple/90 hover:to-happy-pink/90 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
                   <PawPrint className="h-5 w-5 mr-3" />
                   <div className="text-left">
                     <div className="font-medium">Manage Pets</div>
@@ -275,7 +274,7 @@ export default function HomePage() {
                 </Button>
               </Link>
               <Link href="/expenses">
-                <Button variant="outline" className="w-full justify-start h-12 border-2 border-happy-green text-happy-green hover:bg-happy-green hover:text-white transition-all duration-300">
+                <Button className="w-full justify-start h-12 bg-gradient-to-r from-happy-green to-happy-blue hover:from-happy-green/90 hover:to-happy-blue/90 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
                   <DollarSign className="h-5 w-5 mr-3" />
                   <div className="text-left">
                     <div className="font-medium">View All Expenses</div>
@@ -284,7 +283,7 @@ export default function HomePage() {
                 </Button>
               </Link>
               <Link href="/analytics">
-                <Button variant="outline" className="w-full justify-start h-12 border-2 border-happy-blue text-happy-blue hover:bg-happy-blue hover:text-white transition-all duration-300">
+                <Button className="w-full justify-start h-12 bg-gradient-to-r from-happy-blue to-happy-purple hover:from-happy-blue/90 hover:to-happy-purple/90 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
                   <TrendingUp className="h-5 w-5 mr-3" />
                   <div className="text-left">
                     <div className="font-medium">Analytics & Reports</div>
@@ -293,7 +292,7 @@ export default function HomePage() {
                 </Button>
               </Link>
               <Link href="/categories">
-                <Button variant="outline" className="w-full justify-start h-12 border-2 border-happy-orange text-happy-orange hover:bg-happy-orange hover:text-white transition-all duration-300">
+                <Button className="w-full justify-start h-12 bg-gradient-to-r from-happy-orange to-happy-green hover:from-happy-orange/90 hover:to-happy-green/90 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
                   <Users className="h-5 w-5 mr-3" />
                   <div className="text-left">
                     <div className="font-medium">Manage Categories</div>
@@ -302,7 +301,7 @@ export default function HomePage() {
                 </Button>
               </Link>
               <Link href="/budgets">
-                <Button variant="outline" className="w-full justify-start h-12 border-2 border-happy-yellow text-happy-yellow hover:bg-happy-yellow hover:text-white transition-all duration-300">
+                <Button className="w-full justify-start h-12 bg-gradient-to-r from-happy-yellow to-happy-orange hover:from-happy-yellow/90 hover:to-happy-orange/90 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
                   <Target className="h-5 w-5 mr-3" />
                   <div className="text-left">
                     <div className="font-medium">Set Budgets</div>
@@ -311,7 +310,7 @@ export default function HomePage() {
                 </Button>
               </Link>
               <Link href="/estimator">
-                <Button variant="outline" className="w-full justify-start h-12 border-2 border-happy-pink text-happy-pink hover:bg-happy-pink hover:text-white transition-all duration-300">
+                <Button className="w-full justify-start h-12 bg-gradient-to-r from-happy-pink to-happy-purple hover:from-happy-pink/90 hover:to-happy-purple/90 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
                   <Calculator className="h-5 w-5 mr-3" />
                   <div className="text-left">
                     <div className="font-medium">Pet Cost Estimator</div>
@@ -326,14 +325,14 @@ export default function HomePage() {
 
       {/* Feedback Section - Full Width */}
       <div className="w-full px-4 py-8">
-          <Card className="bg-gradient-card border-0 shadow-xl overflow-hidden rounded-xl">
+          <Card className="bg-gray-800 border-gray-700 shadow-xl overflow-hidden rounded-xl">
             <div className="bg-gradient-to-r from-happy-green/10 to-happy-blue/10 p-8">
               <div className="text-center mb-6">
                 <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-happy-green to-happy-blue rounded-full mb-4">
                   <Heart className="h-8 w-8 text-white" />
                 </div>
-                <h2 className="text-3xl font-bold mb-2">We&apos;d Love Your Feedback!</h2>
-                <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                <h2 className="text-3xl font-bold mb-2 text-white">We&apos;d Love Your Feedback!</h2>
+                <p className="text-xl text-gray-400 max-w-2xl mx-auto">
                   Help us make Fur Finance even better for pet parents like you. Share your thoughts, suggestions, or report any issues.
                 </p>
               </div>
@@ -345,39 +344,39 @@ export default function HomePage() {
               >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="name" className="block text-sm font-medium mb-2">
+                    <label htmlFor="name" className="block text-sm font-medium mb-2 text-white">
                       Your Name (Optional)
                     </label>
                     <input
                       type="text"
                       id="name"
                       name="name"
-                      className="w-full px-4 py-3 bg-secondary border border-border rounded-lg focus:border-happy-green focus:outline-none transition-colors"
+                      className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:border-happy-green focus:outline-none transition-colors text-white placeholder-gray-400"
                       placeholder="Enter your name"
                     />
                   </div>
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium mb-2">
+                    <label htmlFor="email" className="block text-sm font-medium mb-2 text-white">
                       Email Address (Optional)
                     </label>
                     <input
                       type="email"
                       id="email"
                       name="email"
-                      className="w-full px-4 py-3 bg-secondary border border-border rounded-lg focus:border-happy-green focus:outline-none transition-colors"
+                      className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:border-happy-green focus:outline-none transition-colors text-white placeholder-gray-400"
                       placeholder="your@email.com"
                     />
                   </div>
                 </div>
                 
                 <div>
-                  <label htmlFor="feedback-type" className="block text-sm font-medium mb-2">
+                  <label htmlFor="feedback-type" className="block text-sm font-medium mb-2 text-white">
                     Feedback Type
                   </label>
                   <select
                     id="feedback-type"
                     name="feedbackType"
-                    className="w-full px-4 py-3 bg-secondary border border-border rounded-lg focus:border-happy-green focus:outline-none transition-colors"
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:border-happy-green focus:outline-none transition-colors text-white"
                     required
                   >
                     <option value="">Select feedback type</option>
@@ -390,14 +389,14 @@ export default function HomePage() {
                 </div>
                 
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium mb-2">
+                  <label htmlFor="message" className="block text-sm font-medium mb-2 text-white">
                     Your Message *
                   </label>
                   <textarea
                     id="message"
                     name="message"
                     rows={5}
-                    className="w-full px-4 py-3 bg-secondary border border-border rounded-lg focus:border-happy-green focus:outline-none transition-colors resize-none"
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:border-happy-green focus:outline-none transition-colors resize-none text-white placeholder-gray-400"
                     placeholder="Tell us what you think about Fur Finance, what features you&apos;d like to see, or any issues you&apos;ve encountered..."
                     required
                   ></textarea>
@@ -413,7 +412,7 @@ export default function HomePage() {
                   </button>
                 </div>
                 
-                <p className="text-center text-sm text-muted-foreground">
+                <p className="text-center text-sm text-gray-400">
                   Your feedback helps us improve Fur Finance for all pet parents. Thank you! 🐾
                 </p>
               </form>
