@@ -28,7 +28,7 @@ const expenseSchema = z.object({
   description: z.string()
     .max(200, 'Description must be less than 200 characters')
     .refine(
-      (val) => val === '' || /^[a-zA-Z0-9\s\-.,!?()]+$/.test(val),
+      (val) => val === '' || /^[a-zA-Z0-9\s\-\.,!?()\/;&]+$/.test(val),
       'Description contains invalid characters'
     )
     .optional(),
